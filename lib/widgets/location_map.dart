@@ -32,7 +32,7 @@ class _LocationMapState extends State<LocationMap> {
 
   Future<void> _fetchBusLocations() async {
     try {
-      final response = await apiService.fetchAllBusLocations();
+      final response = await apiService.fetchLatestBusLocation();
       if (response['status'] == 'success') {
         List locations = response['locations'];
         setState(() {
