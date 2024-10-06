@@ -27,7 +27,7 @@ class _LocationMapState extends State<LocationMap> {
   List<Marker> _userMarkers = []; // ใช้สำหรับแสดงตำแหน่งของผู้ใช้หลายคน
   final ApiService apiService = ApiService();
   Timer? _markerTimer; // Timer สำหรับลบ marker หลัง 2 นาที
-  Timer? _refreshTimer; // Timer สำหรับรีเฟรชทุกๆ 1 นาที
+  Timer? _refreshTimer; // Timer สำหรับรีเฟรชทุกๆ 20 นาที
 
   @override
   void initState() {
@@ -38,12 +38,12 @@ class _LocationMapState extends State<LocationMap> {
       _fetchUserLocations(); // ถ้าเป็น driver ให้ดึงตำแหน่งของผู้ใช้ทั้งหมด
     }
 
-    // ตั้ง Timer เพื่อรีเฟรชข้อมูลทุกๆ 1 นาที
-    _refreshTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+    // ตั้ง Timer เพื่อรีเฟรชข้อมูลทุกๆ 20 นาที
+    _refreshTimer = Timer.periodic(Duration(minutes: 20), (timer) {
       if (widget.role == 'driver') {
-        _fetchUserLocations(); // รีเฟรชตำแหน่งของผู้ใช้ทุกๆ 1 นาที
+        _fetchUserLocations(); // รีเฟรชตำแหน่งของผู้ใช้ทุกๆ 20 นาที
       } else {
-        _sendUserLocation(); // ส่งตำแหน่งของผู้ใช้ทุกๆ 1 นาที
+        _sendUserLocation(); // ส่งตำแหน่งของผู้ใช้ทุกๆ 20 นาที
       }
     });
   }
@@ -89,7 +89,7 @@ class _LocationMapState extends State<LocationMap> {
                     size: 40.0,
                   ),
                   Text(
-                    '$username', // แสดงชื่อผู้ส่ง
+                    'Sent by: $username', // แสดงชื่อผู้ส่ง
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 12.0,
@@ -253,6 +253,13 @@ class _LocationMapState extends State<LocationMap> {
           options: MapOptions(
             center: LatLng(17.280525, 104.123622), // ตำแหน่ง default
             zoom: 14.5,
+            maxZoom: 18.0, // เพิ่มข้อจำกัดการซูมสูงสุด
+            onPositionChanged: (MapPosition position, bool hasGesture) {
+              // ตรวจสอบว่าการซูมไม่เกินค่าที่กำหนด
+              if (position.zoom! > 16.0) {
+                print('Zoom limit reached');
+              }
+            },
           ),
           children: [
             TileLayer(
