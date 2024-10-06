@@ -104,21 +104,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 20),
             // Dropdown สำหรับเลือกบทบาท
-            DropdownButtonFormField<String>(
-              value: _selectedRole,
-              decoration: const InputDecoration(labelText: 'Role'),
-              items: ['user', 'driver'].map((String role) {
-                return DropdownMenuItem<String>(
-                  value: role,
-                  child: Text(role),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  _selectedRole = newValue!;
-                });
-              },
-            ),
             const SizedBox(height: 20),
             _isLoading
                 ? const CircularProgressIndicator()
