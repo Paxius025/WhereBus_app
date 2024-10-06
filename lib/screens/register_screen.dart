@@ -13,7 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  String _selectedRole = 'user';  // กำหนดค่าเริ่มต้นเป็น user
+  String _selectedRole = 'user'; // กำหนดค่าเริ่มต้นเป็น user
 
   final ApiService apiService = ApiService();
 
@@ -28,12 +28,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _successMessage = '';
     });
 
+    // ตรวจสอบความยาวของ username และ password
+    if (_usernameController.text.length < 5 ||
+        _usernameController.text.length > 10) {
+      setState(() {
+        _errorMessage = 'Username must be between 5 and 10 characters long.';
+        _isLoading = false;
+      });
+      return;
+    }
+    if (_passwordController.text.length < 4 ||
+        _passwordController.text.length > 8) {
+      setState(() {
+        _errorMessage = 'Password must be between 4 and 8 characters long.';
+        _isLoading = false;
+      });
+      return;
+    }
+
     try {
       final response = await apiService.register(
         _usernameController.text,
         _emailController.text,
         _passwordController.text,
-        _selectedRole,  // ส่ง role ที่เลือกจาก dropdown
+        _selectedRole, // ส่ง role ที่เลือกจาก dropdown
       );
 
       if (response['status'] == 'success') {
@@ -43,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => LoginScreen()),
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
           );
         });
       } else {
