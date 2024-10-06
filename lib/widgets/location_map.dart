@@ -81,10 +81,11 @@ class _LocationMapState extends State<LocationMap> {
                   Text(
                     username.toUpperCase(), // แปลงเป็นตัวพิมพ์ใหญ่
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold, // ทำให้ตัวหนา
-                    ),
+                        color: Colors.black,
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        backgroundColor: const Color(0xFFEFEFEF) // ทำให้ตัวหนา
+                        ),
                   ),
                 ],
               ),

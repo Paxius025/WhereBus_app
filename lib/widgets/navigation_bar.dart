@@ -5,6 +5,7 @@ class NavigationBarWidget extends StatefulWidget {
   final String username;
   final String email;
   final int userId;
+  final String role;  // เพิ่ม role
   final Function refreshLocation;  // เพิ่มฟังก์ชัน refreshLocation เพื่อเรียกจาก LocationMap
 
   const NavigationBarWidget({
@@ -12,6 +13,7 @@ class NavigationBarWidget extends StatefulWidget {
     required this.username,
     required this.email,
     required this.userId,
+    required this.role,  // รับ role มาใน constructor
     required this.refreshLocation,  // รับฟังก์ชันจาก LocationMap
   });
 
@@ -37,6 +39,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             username: widget.username,
             email: widget.email,
             userId: widget.userId,
+            role: widget.role,  // ส่ง role ไปใน EditProfileScreen
           ),
         ),
       );

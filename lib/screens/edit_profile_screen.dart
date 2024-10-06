@@ -7,9 +7,13 @@ class EditProfileScreen extends StatefulWidget {
   final String username;
   final String email;
   final int userId;
+  final String role; // เพิ่ม role เพื่อเก็บสถานะ
 
   EditProfileScreen(
-      {required this.username, required this.email, required this.userId});
+      {required this.username,
+      required this.email,
+      required this.userId,
+      required this.role}); // รับ role มาใน constructor
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -55,12 +59,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         // หน่วงเวลา 1 วินาทีก่อนกลับไปหน้า MainScreen
         await Future.delayed(Duration(seconds: 1));
 
-        // ถ้าอัปเดตสำเร็จ นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป
+        // ถ้าอัปเดตสำเร็จ นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป และคง role เดิม
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MainScreen(
-              role: 'user', // สามารถแก้ไขได้ตาม role ของผู้ใช้
+              role: widget.role, // คง role เดิม
               username: _usernameController.text, // อัปเดต username
               userId: widget.userId, // userId เดิม
             ),
