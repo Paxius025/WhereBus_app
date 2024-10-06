@@ -28,7 +28,6 @@ class _LocationMapState extends State<LocationMap> {
   List<Marker> _userMarkers = [];
   final ApiService apiService = ApiService();
   Timer? _markerTimer;
-  Timer? _refreshTimer;
   Timer? _removeBusMarkerTimer;
   bool _isSendingLocation = false; // ป้องกันการส่งข้อมูลซ้ำ
   LatLng? _lastSentUserLocation; // เก็บตำแหน่งผู้ใช้ที่ส่งล่าสุด
@@ -38,28 +37,18 @@ class _LocationMapState extends State<LocationMap> {
     super.initState();
 
     // ดึงข้อมูลตำแหน่งรถบัสทุกๆ 5 วินาที
-    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    _removeBusMarkerTimer = Timer.periodic(Duration(seconds: 10), (timer) {
       _fetchLatestBusLocation();
     });
 
     if (widget.role == 'driver') {
       _fetchUserLocations();
     }
-
-    // ตั้งค่าให้รีเฟรชข้อมูลทุกๆ 10 วินาที
-    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
-      if (widget.role == 'driver') {
-        _fetchUserLocations();
-      } else {
-        _sendUserLocation();
-      }
-    });
   }
 
   @override
   void dispose() {
     _markerTimer?.cancel();
-    _refreshTimer?.cancel();
     _removeBusMarkerTimer?.cancel();
     super.dispose();
   }
@@ -195,14 +184,6 @@ class _LocationMapState extends State<LocationMap> {
       double userLatitude = position.latitude;
       double userLongitude = position.longitude;
 
-      // ถ้าเป็นตำแหน่งเดียวกันกับที่ส่งล่าสุด จะไม่ส่งซ้ำ
-      if (_lastSentUserLocation != null &&
-          _lastSentUserLocation!.latitude == userLatitude &&
-          _lastSentUserLocation!.longitude == userLongitude) {
-        print('Position has not changed. Skipping send.');
-        return;
-      }
-
       final response = await apiService.sendUserLocation(
           widget.userId, userLatitude, userLongitude);
 
@@ -318,23 +299,6 @@ class _LocationMapState extends State<LocationMap> {
             ),
           ],
         ),
-        if (widget.role != 'driver')
-          Positioned(
-            bottom: 50,
-            left: 20,
-            child: ElevatedButton.icon(
-              onPressed: _isSendingLocation
-                  ? null
-                  : _sendUserLocation, // ปิดปุ่มขณะส่ง
-              icon: Icon(Icons.send),
-              label: Text('Send location'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _isSendingLocation ? Colors.grey : Colors.green,
-                foregroundColor: Colors.white,
-              ),
-            ),
-          ),
       ],
     );
   }
