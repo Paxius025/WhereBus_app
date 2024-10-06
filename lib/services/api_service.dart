@@ -1,3 +1,4 @@
+// api_service.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -98,7 +99,8 @@ class ApiService {
   }
 
   // ฟังก์ชันสำหรับส่งตำแหน่งของผู้ใช้
-  Future<Map<String, dynamic>> sendUserLocation(int userId, double latitude, double longitude) async {
+  Future<Map<String, dynamic>> sendUserLocation(
+      int userId, double latitude, double longitude) async {
     final url = Uri.parse('${baseUrl}send_user_location.php');
     final response = await http.post(
       url,
@@ -117,17 +119,10 @@ class ApiService {
     }
   }
 
-  // ฟังก์ชันสำหรับดึงตำแหน่งของผู้ใช้หรือ Driver
-  Future<Map<String, dynamic>> fetchUserLocations(int userId, String role) async {
-    final url = Uri.parse('${baseUrl}fetch_user_location.php');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'userId': userId,
-        'role': role,
-      }),
-    );
+  // ฟังก์ชันสำหรับดึงตำแหน่งของผู้ใช้ทั้งหมด (เฉพาะ driver)
+  Future<Map<String, dynamic>> fetchUserLocations(String role) async {
+    final url = Uri.parse('${baseUrl}fetch_user_location.php?role=$role');
+    final response = await http.get(url);
 
     if (response.statusCode == 200) {
       return json.decode(response.body);
