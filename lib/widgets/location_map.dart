@@ -195,6 +195,14 @@ class _LocationMapState extends State<LocationMap> {
       double userLatitude = position.latitude;
       double userLongitude = position.longitude;
 
+      // ถ้าเป็นตำแหน่งเดียวกันกับที่ส่งล่าสุด จะไม่ส่งซ้ำ
+      if (_lastSentUserLocation != null &&
+          _lastSentUserLocation!.latitude == userLatitude &&
+          _lastSentUserLocation!.longitude == userLongitude) {
+        print('Position has not changed. Skipping send.');
+        return;
+      }
+
       final response = await apiService.sendUserLocation(
           widget.userId, userLatitude, userLongitude);
 
@@ -238,9 +246,6 @@ class _LocationMapState extends State<LocationMap> {
         print(
             '${widget.username}: location sent successfully: Lat: $userLatitude, Lon: $userLongitude');
 
-        // Show popup after sending location
-        _showLocationSentPopup();
-
         _markerTimer?.cancel();
         _markerTimer = Timer(Duration(minutes: 2), () {
           setState(() {
@@ -260,27 +265,6 @@ class _LocationMapState extends State<LocationMap> {
         _isSendingLocation = false; // รีเซ็ตสถานะหลังจากส่งเสร็จ
       });
     }
-  }
-
-  // ฟังก์ชันสำหรับการแสดง Popup
-  void _showLocationSentPopup() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Location Sent'),
-          content: Text('Your location has been sent successfully!'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // ปิด popup
-              },
-              child: Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   // ฟังก์ชันสำหรับการขอสิทธิ์การเข้าถึงตำแหน่ง
