@@ -28,6 +28,7 @@ class _LocationMapState extends State<LocationMap> {
   List<Marker> _userMarkers = [];
   final ApiService apiService = ApiService();
   Timer? _markerTimer;
+  Timer? _refreshTimer;
   Timer? _removeBusMarkerTimer;
   bool _isSendingLocation = false; // ป้องกันการส่งข้อมูลซ้ำ
   LatLng? _lastSentUserLocation; // เก็บตำแหน่งผู้ใช้ที่ส่งล่าสุด
@@ -36,8 +37,8 @@ class _LocationMapState extends State<LocationMap> {
   void initState() {
     super.initState();
 
-    // ดึงข้อมูลตำแหน่งรถบัสทุกๆ 5 วินาที
-    _removeBusMarkerTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    // ดึงข้อมูลตำแหน่งรถบัสทุกๆ 10 วินาที
+    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
       _fetchLatestBusLocation();
     });
 
@@ -49,6 +50,7 @@ class _LocationMapState extends State<LocationMap> {
   @override
   void dispose() {
     _markerTimer?.cancel();
+    _refreshTimer?.cancel();
     _removeBusMarkerTimer?.cancel();
     super.dispose();
   }
@@ -109,11 +111,9 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  // ฟังก์ชันสำหรับการดึงตำแหน่งรถบัสล่าสุด (เพิ่ม delay 5 วินาที)
+  // ฟังก์ชันสำหรับการดึงตำแหน่งรถบัสล่าสุด
   Future<void> _fetchLatestBusLocation() async {
     try {
-      await Future.delayed(Duration(seconds: 5)); // เพิ่ม delay 5 วินาที
-
       final response = await apiService.fetchLatestBusLocation();
 
       if (response['status'] == 'success') {
@@ -166,7 +166,7 @@ class _LocationMapState extends State<LocationMap> {
     });
   }
 
-  // ฟังก์ชันสำหรับการส่งตำแหน่งผู้ใช้
+  // ฟังก์ชันสำหรับการส่งตำแหน่งผู้ใช้ (เฉพาะตอนกดปุ่มเท่านั้น)
   Future<void> _sendUserLocation() async {
     if (_isSendingLocation) return; // ป้องกันการส่งซ้ำ
 
@@ -183,6 +183,14 @@ class _LocationMapState extends State<LocationMap> {
       );
       double userLatitude = position.latitude;
       double userLongitude = position.longitude;
+
+      // ถ้าเป็นตำแหน่งเดียวกันกับที่ส่งล่าสุด จะไม่ส่งซ้ำ
+      if (_lastSentUserLocation != null &&
+          _lastSentUserLocation!.latitude == userLatitude &&
+          _lastSentUserLocation!.longitude == userLongitude) {
+        print('Position has not changed. Skipping send.');
+        return;
+      }
 
       final response = await apiService.sendUserLocation(
           widget.userId, userLatitude, userLongitude);
@@ -299,6 +307,23 @@ class _LocationMapState extends State<LocationMap> {
             ),
           ],
         ),
+        if (widget.role != 'driver')
+          Positioned(
+            bottom: 50,
+            left: 20,
+            child: ElevatedButton.icon(
+              onPressed: _isSendingLocation
+                  ? null
+                  : _sendUserLocation, // ปิดปุ่มขณะส่ง
+              icon: Icon(Icons.send),
+              label: Text('Send location'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    _isSendingLocation ? Colors.grey : Colors.green,
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ),
       ],
     );
   }
