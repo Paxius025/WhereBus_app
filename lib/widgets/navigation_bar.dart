@@ -5,12 +5,14 @@ class NavigationBarWidget extends StatefulWidget {
   final String username;
   final String email;
   final int userId;
+  final Function refreshLocation;  // เพิ่มฟังก์ชัน refreshLocation เพื่อเรียกจาก LocationMap
 
   const NavigationBarWidget({
     super.key,
     required this.username,
     required this.email,
     required this.userId,
+    required this.refreshLocation,  // รับฟังก์ชันจาก LocationMap
   });
 
   @override
@@ -38,6 +40,9 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
           ),
         ),
       );
+    } else if (index == 2) {
+      // เมื่อกดปุ่ม Refresh จะเรียกฟังก์ชัน refreshLocation
+      widget.refreshLocation();
     }
   }
 
@@ -52,6 +57,10 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Profile',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.refresh),  // เพิ่มปุ่มรีเฟรช
+          label: 'Refresh',
         ),
       ],
       currentIndex: _selectedIndex,

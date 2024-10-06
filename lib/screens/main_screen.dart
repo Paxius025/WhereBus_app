@@ -8,7 +8,8 @@ class MainScreen extends StatefulWidget {
   final String username;
   final int userId;
 
-  MainScreen({required this.role, required this.username, required this.userId});
+  MainScreen(
+      {required this.role, required this.username, required this.userId});
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -47,6 +48,12 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  // ฟังก์ชัน refreshLocation สำหรับรีเฟรชตำแหน่ง
+  void refreshLocation() {
+    print('Refreshing locations...');
+    // คุณสามารถเพิ่มโค้ดที่ใช้ในการรีเฟรชข้อมูลได้ที่นี่
+  }
+
   @override
   void initState() {
     super.initState();
@@ -63,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
             Text('WhereBus'),
             if (_latitude.isNotEmpty && _longitude.isNotEmpty)
               Text(
-                'Bus Location: Lat: $_latitude, Lon: $_longitude',  // แสดงตำแหน่งรถบัส
+                'Bus Location: Lat: $_latitude, Lon: $_longitude', // แสดงตำแหน่งรถบัส
                 style: TextStyle(fontSize: 12, color: Colors.white),
               ),
           ],
@@ -86,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
             child: LocationMap(
               role: widget.role,
               userId: widget.userId,
-              updateLocation: updateLocation,  // รับตำแหน่งรถบัสจาก LocationMap
+              updateLocation: updateLocation, // รับตำแหน่งรถบัสจาก LocationMap
             ),
           ),
         ],
@@ -96,6 +103,7 @@ class _MainScreenState extends State<MainScreen> {
         username: _currentUsername,
         email: _currentEmail,
         userId: widget.userId,
+        refreshLocation: refreshLocation, // ส่งฟังก์ชัน refreshLocation
       ),
     );
   }
