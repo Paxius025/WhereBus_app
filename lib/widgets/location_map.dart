@@ -1,4 +1,3 @@
-
 //location_map.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -114,7 +113,8 @@ class _LocationMapState extends State<LocationMap> {
         double lat = location['latitude'];
         double lon = location['longitude'];
         int busId = location['bus_id'];
-
+        print(
+            'Bus fetching successfull [Bus ID :$busId] :[latitude : $lat, [longitude  : $lon]');
         setState(() {
           widget.updateLocation(lat, lon);
 
@@ -146,12 +146,11 @@ class _LocationMapState extends State<LocationMap> {
     } catch (e) {
       print('Error fetching bus location: $e');
     }
-
-    _removeBusMarkerTimer = Timer(Duration(seconds: 10), () {
+    _removeBusMarkerTimer = Timer(Duration(seconds: 58), () {
       setState(() {
         _busMarker = null;
       });
-      print('No bus location received within 10 seconds. Marker removed.');
+      print('No bus location received within 60 seconds. Marker removed.');
     });
   }
 
