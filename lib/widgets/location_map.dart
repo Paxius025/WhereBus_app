@@ -21,43 +21,55 @@ class LocationMap extends StatefulWidget {
 }
 
 class _LocationMapState extends State<LocationMap> {
-  List<Marker> _markers = [];
+  Marker? _busMarker; // ใช้แค่ marker เดียว
   final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    _fetchBusLocations();
+    _fetchLatestBusLocation(); // ดึงข้อมูลแค่ตำแหน่งเดียว
   }
 
-  Future<void> _fetchBusLocations() async {
+  Future<void> _fetchLatestBusLocation() async {
     try {
       final response = await apiService.fetchLatestBusLocation();
       if (response['status'] == 'success') {
-        List locations = response['locations'];
+        Map location = response['location'];
         setState(() {
-          _markers = locations.map((location) {
-            double lat = double.parse(location['latitude']);
-            double lon = double.parse(location['longitude']);
-            widget.updateLocation(
-                lat, lon); // ส่งตำแหน่งรถบัสกลับไปยัง MainScreen ผ่าน callback
-            return Marker(
-              width: 80.0,
-              height: 80.0,
-              point: LatLng(lat, lon),
-              builder: (ctx) => const Icon(
-                Icons.directions_bus,
-                color: Colors.green,
-                size: 40.0,
-              ),
-            );
-          }).toList();
+          double lat = location['latitude']; // ใช้ค่า double โดยตรง
+          double lon = location['longitude']; // ใช้ค่า double โดยตรง
+          int busId = location['bus_id']; // ใช้ bus_id เป็น int
+          widget.updateLocation(
+              lat, lon); // ส่งตำแหน่งกลับไปยัง MainScreen ผ่าน callback
+
+          // สร้าง marker สำหรับตำแหน่งล่าสุด
+          _busMarker = Marker(
+            width: 80.0,
+            height: 80.0,
+            point: LatLng(lat, lon),
+            builder: (ctx) => Column(
+              children: [
+                Icon(
+                  Icons.directions_bus,
+                  color: Colors.green,
+                  size: 40.0,
+                ),
+                Text(
+                  'Bus ID: ${busId.toString()}', // แปลง bus_id เป็น String ก่อนแสดงผล
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ],
+            ),
+          );
         });
       } else {
-        print('Failed to fetch bus locations');
+        print('Failed to fetch bus location');
       }
     } catch (e) {
-      print('Error fetching bus locations: $e');
+      print('Error fetching bus location: $e');
     }
   }
 
@@ -74,7 +86,9 @@ class _LocationMapState extends State<LocationMap> {
           subdomains: const ['a', 'b', 'c'],
         ),
         MarkerLayer(
-          markers: _markers, // แสดงตำแหน่งรถบัสที่ fetch จาก API
+          markers: _busMarker != null
+              ? [_busMarker!]
+              : [], // แสดง marker ตำแหน่งล่าสุด
         ),
       ],
     );
