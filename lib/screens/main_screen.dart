@@ -91,6 +91,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Expanded(
             child: LocationMap(
+              username: _currentUsername,
               role: widget.role,
               userId: widget.userId,
               updateLocation: updateLocation, // รับตำแหน่งรถบัสจาก LocationMap
