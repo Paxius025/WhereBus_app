@@ -70,38 +70,53 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                'Bus ID: $busId',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: screenWidth *
-                                      0.05, // Responsive font size
-                                ),
+                              // เพิ่มไอคอนรูปรถบัสที่น่ารัก
+                              Icon(
+                                Icons.directions_bus,
+                                color: Colors.orange,
+                                size: screenWidth *
+                                    0.1, // Responsive size for bus icon
                               ),
-                              SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Text(
-                                    'Status: ',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: screenWidth * 0.045,
+                              const SizedBox(
+                                  width: 20), // ระยะห่างระหว่างไอคอนกับข้อความ
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Bus ID: $busId',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: screenWidth *
+                                            0.05, // Responsive font size
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    _getBusStatus(timestamp),
-                                    style: TextStyle(
-                                      color:
-                                          _getBusStatus(timestamp) == 'Online'
-                                              ? Colors.green
-                                              : Colors.red,
-                                      fontSize: screenWidth * 0.045,
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          'Status: ',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: screenWidth * 0.045,
+                                          ),
+                                        ),
+                                        Text(
+                                          _getBusStatus(timestamp),
+                                          style: TextStyle(
+                                            color: _getBusStatus(timestamp) ==
+                                                    'Online'
+                                                ? Colors.green
+                                                : Colors.red,
+                                            fontSize: screenWidth * 0.045,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ],
                           ),
