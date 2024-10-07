@@ -82,12 +82,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFFFFF), // ตั้งค่าสีพื้นหลังเป็นสีขาว
+      backgroundColor:
+          const Color.fromARGB(255, 170, 67, 67), // ตั้งค่าสีพื้นหลังเป็นสีขาว
       appBar: AppBar(
-        title: const Text('Register'),
+        automaticallyImplyLeading: false,
+        title: const Text(
+          'Enjoy Your Ride!',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        leading: const Icon(Icons.person_add), // เพิ่มไอคอนที่นี่
       ),
       body: Center(
         child: SingleChildScrollView(
