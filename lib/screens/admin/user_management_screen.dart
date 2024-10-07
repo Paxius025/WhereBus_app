@@ -69,28 +69,33 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         title: const Text('User Overview'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage.isNotEmpty
-                ? Center(child: Text(_errorMessage))
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 20),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              _buildUserTable(),
-                            ],
+      body: Center(
+        child: FractionallySizedBox(
+          widthFactor: 0.9, // กำหนดให้ความกว้างของคอนเทนต์เป็น 90% ของหน้าจอ
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage.isNotEmpty
+                    ? Center(child: Text(_errorMessage))
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const SizedBox(height: 20),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  _buildUserTable(),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
+                          _buildPaginationControls(), // ย้ายปุ่ม Pagination ออกมาให้อยู่ด้านล่างสุดเสมอ
+                        ],
                       ),
-                      _buildPaginationControls(),
-                    ],
-                  ),
+          ),
+        ),
       ),
     );
   }
@@ -157,6 +162,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     int totalPages = (users.length / _itemsPerPage).ceil();
     return Column(
       children: [
+        const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -183,7 +189,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             ),
           ],
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Text(
           'Amount of ${users.length} users',
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
