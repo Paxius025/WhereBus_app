@@ -84,11 +84,11 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           child: Column(
                             children: [
                               _buildUserTable(),
-                              _buildPaginationControls(),
                             ],
                           ),
                         ),
                       ),
+                      _buildPaginationControls(),
                     ],
                   ),
       ),
@@ -155,11 +155,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
   Widget _buildPaginationControls() {
     int totalPages = (users.length / _itemsPerPage).ceil();
-    int startIndex = _currentPage * _itemsPerPage + 1;
-    int endIndex = (_currentPage + 1) * _itemsPerPage > users.length
-        ? users.length
-        : (_currentPage + 1) * _itemsPerPage;
-
     return Column(
       children: [
         Row(
