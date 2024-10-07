@@ -64,15 +64,11 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('WhereBus'),
-            if (_latitude.isNotEmpty && _longitude.isNotEmpty)
-              Text(
-                'Bus Location: Lat: $_latitude, Lon: $_longitude', // แสดงตำแหน่งรถบัส
-                style: TextStyle(fontSize: 12, color: Colors.white),
-              ),
           ],
         ),
         actions: [
