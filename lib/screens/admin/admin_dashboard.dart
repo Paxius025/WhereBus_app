@@ -29,8 +29,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -49,7 +51,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 40),
                 _buildAdminMenuItem(
-                  icon: Icons.person,
+                  icon: Image.asset(
+                    'user_avatar.png', // ใส่ path รูปภาพของคุณ
+                    height: 110, // ขนาดความสูงของรูป
+                    width: 110, // ขนาดความกว้างของรูป
+                  ),
                   label: 'User Management',
                   onTap: () {
                     // Navigate to User Management
@@ -68,7 +74,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
-                  icon: Icons.person_pin,
+                  icon: Image.asset(
+                    'driver_avatar.png', // ใส่ path รูปภาพของคุณ
+                    height: 120, // ขนาดความสูงของรูป
+                    width: 120, // ขนาดความกว้างของรูป
+                  ),
                   label: 'Driver Management',
                   onTap: () {
                     // Navigate to Driver Management
@@ -87,7 +97,11 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
-                  icon: Icons.directions_bus,
+                  icon: Image.asset(
+                    'bus_avatar.png', // ใส่ path รูปภาพของคุณ
+                    height: 130, // ขนาดความสูงของรูป
+                    width: 130, // ขนาดความกว้างของรูป
+                  ),
                   label: 'Bus Status',
                   onTap: () {
                     // Navigate to Bus Status Management
@@ -119,7 +133,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   }
 
   Widget _buildAdminMenuItem({
-    required IconData icon,
+    required Widget icon,
     required String label,
     required VoidCallback onTap,
   }) {
@@ -129,13 +143,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 50,
-            backgroundColor: Colors.grey[300],
-            child: Icon(
-              icon,
-              size: 50,
-              color: Colors.blue,
-            ),
+            radius: 60,
+            child: icon,
           ),
           const SizedBox(height: 10),
           Text(

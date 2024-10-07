@@ -38,7 +38,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             username: widget.username,
             userId: widget.userId,
             email: widget.email, // เพิ่ม email
-            role: widget.role,   // เพิ่ม role
+            role: widget.role, // เพิ่ม role
           ),
         ),
       );
@@ -61,6 +61,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       items: [
         const BottomNavigationBarItem(
           icon: Icon(Icons.map),
