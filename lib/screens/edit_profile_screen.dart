@@ -201,7 +201,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                     const SizedBox(height: 40),
                     const Text(
-                      'WhereBus Version 1.01\nPantong | Jedsada | Tharathep | Apirak',
+                      'WhereBus Version 1.0.1\nPantong | Jedsada | Tharathep | Apirak',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 12),
                     ),

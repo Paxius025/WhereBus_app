@@ -67,5 +67,8 @@ flutter:
     - assets/register_icon.png
     - assets/bus_avatar.png
     - assets/register-svgrepo-com.svg
-    - assets/admin.png
     - assets/users.png
+    # navigation icon
+    - assets/icons/admin.png
+    - assets/icons/edit_profile.png
+    - assets/icons/map.png
