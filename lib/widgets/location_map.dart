@@ -113,58 +113,67 @@ class _LocationMapState extends State<LocationMap> {
 
   // ฟังก์ชันสำหรับการดึงตำแหน่งรถบัสล่าสุด
   Future<void> _fetchLatestBusLocation() async {
-    try {
-      final response = await apiService.fetchLatestBusLocation();
+  try {
+    final response = await apiService.fetchLatestBusLocation();
 
-      if (response['status'] == 'success') {
-        Map location = response['location'];
-        double lat = location['latitude'];
-        double lon = location['longitude'];
-        int busId = location['bus_id'];
+    if (response['status'] == 'success') {
+      Map location = response['location'];
+      double lat = location['latitude'];
+      double lon = location['longitude'];
+      int busId = location['bus_id'];
+      String busStatus = location['status']; // อ่านสถานะของรถบัส
 
-        print(
-            'Bus fetch successfull [Bus ID :$busId :latitude : $lat, longitude  : $lon]');
+      print('Bus fetch successfull [Bus ID :$busId :latitude : $lat, longitude  : $lon]');
 
-        setState(() {
-          widget.updateLocation(lat, lon);
-
-          // ปรับให้ marker ของรถไม่ซ้อนกับผู้ใช้ (shift ตำแหน่งเล็กน้อย)
-          _busMarker = Marker(
-            width: 80.0,
-            height: 80.0,
-            point: LatLng(lat + 0.0001, lon + 0.0001), // Shift เล็กน้อย
-            builder: (ctx) => Column(
-              children: [
-                Icon(
-                  Icons.directions_bus,
-                  color: Colors.green,
-                  size: 40.0,
-                ),
-                Text(
-                  'Bus ID: $busId',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
-
-        _removeBusMarkerTimer?.cancel(); // ยกเลิกการลบ Marker ถ้าตำแหน่งได้รับ
-      }
-    } catch (e) {
-      print('Error fetching bus location: $e');
-    }
-
-    _removeBusMarkerTimer = Timer(Duration(seconds: 58), () {
       setState(() {
-        _busMarker = null;
+        widget.updateLocation(lat, lon);
+
+        // ปรับให้ marker ของรถไม่ซ้อนกับผู้ใช้ (shift ตำแหน่งเล็กน้อย)
+        _busMarker = Marker(
+          width: 80.0,
+          height: 80.0,
+          point: LatLng(lat + 0.0001, lon + 0.0001), // Shift เล็กน้อย
+          builder: (ctx) => Column(
+            children: [
+              Icon(
+                Icons.directions_bus,
+                color: busStatus == 'Online' ? Colors.green : Colors.red, // สีขึ้นกับสถานะ Online หรือ Offline
+                size: 40.0,
+              ),
+              Text(
+                'Bus ID: $busId',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12.0,
+                ),
+              ),
+              Text(
+                busStatus, // แสดงสถานะ Online/Offline
+                style: TextStyle(
+                  color: busStatus == 'Online' ? Colors.green : Colors.red,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        );
       });
-      print('No bus location received within 60 seconds. Marker removed.');
-    });
+
+      _removeBusMarkerTimer?.cancel(); // ยกเลิกการลบ Marker ถ้าตำแหน่งได้รับ
+    }
+  } catch (e) {
+    print('Error fetching bus location: $e');
   }
+
+  _removeBusMarkerTimer = Timer(Duration(seconds: 58), () {
+    setState(() {
+      _busMarker = null;
+    });
+    print('No bus location received within 60 seconds. Marker removed.');
+  });
+}
+
 
   // ฟังก์ชันสำหรับการส่งตำแหน่งผู้ใช้ (เฉพาะตอนกดปุ่มเท่านั้น)
   Future<void> _sendUserLocation() async {
