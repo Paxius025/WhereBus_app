@@ -62,13 +62,10 @@ flutter:
   uses-material-design: true
  
   assets:
+    - assets/admin.png
     - assets/user_avatar.png
     - assets/driver_avatar.png
     - assets/register_icon.png
     - assets/bus_avatar.png
     - assets/register-svgrepo-com.svg
     - assets/users.png
-    # navigation icon
-    - assets/icons/admin.png
-    - assets/icons/edit_profile.png
-    - assets/icons/map.png
