@@ -60,6 +60,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Bus Status'),
         centerTitle: true,
       ),
