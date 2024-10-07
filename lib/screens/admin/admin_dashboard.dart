@@ -32,7 +32,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Admin Dashboard'),
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       ),
       body: Center(
@@ -44,7 +43,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  'WhereBus',
+                  'Admin Dashboard',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -53,9 +52,9 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const SizedBox(height: 40),
                 _buildAdminMenuItem(
                   icon: Image.asset(
-                    'user_avatar.png', // ใส่ path รูปภาพของคุณ
-                    height: 110, // ขนาดความสูงของรูป
-                    width: 110, // ขนาดความกว้างของรูป
+                    'users.png', // ใส่ path รูปภาพของคุณ
+                    height: 120, // ขนาดความสูงของรูป
+                    width: 120, // ขนาดความกว้างของรูป
                   ),
                   label: 'User Management',
                   onTap: () {
@@ -144,6 +143,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
             radius: 60,
             child: icon,
           ),

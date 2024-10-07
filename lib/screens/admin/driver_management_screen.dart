@@ -93,7 +93,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         title: const Text('Driver Management'),
         centerTitle: true,
       ),
