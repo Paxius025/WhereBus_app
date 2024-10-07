@@ -104,7 +104,6 @@ class _MainScreenState extends State<MainScreen> {
         username: _currentUsername,
         email: _currentEmail,
         userId: widget.userId,
-        refreshLocation: refreshLocation,
         role: widget.role, // ส่งฟังก์ชัน refreshLocation
       ),
     );

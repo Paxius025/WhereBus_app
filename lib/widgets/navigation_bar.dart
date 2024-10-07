@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:wherebus_app/screens/edit_profile_screen.dart'; // Import EditProfileScreen
+import 'package:wherebus_app/screens/edit_profile_screen.dart';
+import 'package:wherebus_app/screens/admin/admin_dashboard.dart'; // Import Admin Dashboard
 
 class NavigationBarWidget extends StatefulWidget {
   final String username;
   final String email;
   final int userId;
-  final String role; // เพิ่ม role
-  final Function
-      refreshLocation; // เพิ่มฟังก์ชัน refreshLocation เพื่อเรียกจาก LocationMap
+  final String role; // รับ role ของผู้ใช้ (user, driver, admin)
 
   const NavigationBarWidget({
     super.key,
     required this.username,
     required this.email,
     required this.userId,
-    required this.role, // รับ role มาใน constructor
-    required this.refreshLocation, // รับฟังก์ชันจาก LocationMap
+    required this.role,
   });
 
   @override
@@ -31,8 +29,19 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
       _selectedIndex = index;
     });
 
-    if (index == 1) {
-      // เมื่อกดปุ่ม Profile จะไปที่ EditProfileScreen
+    if (index == 1 && widget.role == 'admin') {
+      // ถ้าผู้ใช้เป็น Admin จะไปที่ Admin Dashboard
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AdminDashboardScreen(
+            username: widget.username,
+            userId: widget.userId,
+          ),
+        ),
+      );
+    } else if (index == (widget.role == 'admin' ? 2 : 1)) {
+      // ไปที่ EditProfileScreen สำหรับทุก role
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -40,25 +49,27 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
             username: widget.username,
             email: widget.email,
             userId: widget.userId,
-            role: widget.role, // ส่ง role ไปใน EditProfileScreen
+            role: widget.role,
           ),
         ),
       );
-    } else if (index == 2) {
-      // เมื่อกดปุ่ม Refresh จะเรียกฟังก์ชัน refreshLocation
-      widget.refreshLocation();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
+      items: [
+        const BottomNavigationBarItem(
           icon: Icon(Icons.map),
           label: 'Map',
         ),
-        BottomNavigationBarItem(
+        if (widget.role == 'admin') // แสดงไอคอน Dashboard เฉพาะ Admin
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Admin',
+          ),
+        const BottomNavigationBarItem(
           icon: Icon(Icons.person),
           label: 'Profile',
         ),
