@@ -160,4 +160,73 @@ class ApiService {
       throw Exception('Failed to delete user');
     }
   }
+
+  // ฟังก์ชันสำหรับดึงข้อมูลคนขับทั้งหมด
+  Future<Map<String, dynamic>> getDrivers() async {
+    final url = Uri.parse('${baseUrl}drivers/get_drivers.php');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch drivers');
+    }
+  }
+
+  // ฟังก์ชันสำหรับเพิ่มข้อมูลคนขับใหม่
+  Future<Map<String, dynamic>> addDriver(String username, String password) async {
+    final url = Uri.parse('${baseUrl}drivers/add_driver.php');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to add driver');
+    }
+  }
+
+  // ฟังก์ชันสำหรับอัปเดตข้อมูลคนขับ
+  Future<Map<String, dynamic>> updateDriver(int driverId, String username, String password) async {
+    final url = Uri.parse('${baseUrl}drivers/update_driver.php');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'driverId': driverId,
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update driver');
+    }
+  }
+
+  // ฟังก์ชันสำหรับลบข้อมูลคนขับ
+  Future<Map<String, dynamic>> deleteDriver(int driverId) async {
+    final url = Uri.parse('${baseUrl}drivers/delete_driver.php');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'driverId': driverId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete driver');
+    }
+  }
 }
