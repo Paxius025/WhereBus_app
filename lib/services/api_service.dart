@@ -130,4 +130,16 @@ class ApiService {
       throw Exception('Failed to fetch user locations');
     }
   }
+  
+  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ทั้งหมด
+  Future<Map<String, dynamic>> getUsers() async {
+    final url = Uri.parse('${baseUrl}users/get_users.php');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to fetch users');
+    }
+  }
 }
