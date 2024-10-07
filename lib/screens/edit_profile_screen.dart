@@ -1,4 +1,3 @@
-// lib/screens/edit_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:wherebus_app/screens/main_screen.dart'; // Import MainScreen เพื่อกลับไปหลังอัปเดต
@@ -11,11 +10,12 @@ class EditProfileScreen extends StatefulWidget {
   final int userId;
   final String role; // เพิ่ม role เพื่อเก็บสถานะ
 
-  EditProfileScreen(
-      {required this.username,
-      required this.email,
-      required this.userId,
-      required this.role}); // รับ role มาใน constructor
+  EditProfileScreen({
+    required this.username,
+    required this.email,
+    required this.userId,
+    required this.role,
+  }); // รับ role มาใน constructor
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -58,17 +58,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _successMessage = 'Profile updated successfully';
         });
 
-        // หน่วงเวลา 1 วินาทีก่อนกลับไปหน้า MainScreen
-        await Future.delayed(Duration(seconds: 1));
+        // หน่วงเวลา 0.5 วินาทีก่อนแสดง pop-up การบันทึกสำเร็จ
+        await Future.delayed(Duration(milliseconds: 500));
 
-        // ถ้าอัปเดตสำเร็จ นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป และคง role เดิม
+        // แสดงข้อความสำเร็จใน pop-up
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully')),
+        );
+
+        // นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป และคง role เดิม
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => MainScreen(
-              role: widget.role, // คง role เดิม
-              username: _usernameController.text, // อัปเดต username
-              userId: widget.userId, // userId เดิม
+              role: widget.role,
+              username: _usernameController.text,
+              userId: widget.userId,
             ),
           ),
         );
@@ -90,21 +95,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // ฟังก์ชันสำหรับ Logout
   void _logout() {
-    // ล้างข้อมูล session หรือ token ที่นี่ถ้ามี (อาจเพิ่มการจัดการ token)
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-          builder: (context) => LoginScreen()), // นำผู้ใช้กลับไปหน้า Login
-      (Route<dynamic> route) => false, // ล้าง Stack ทั้งหมดเพื่อไม่ให้กลับมาได้
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (Route<dynamic> route) => false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
       appBar: AppBar(
+        backgroundColor: Color(0xFF1A3636),
         automaticallyImplyLeading: false,
-        title: Text('Edit Profile'),
+        title: Text('EDIT PROFILE'),
+        foregroundColor: Colors.white,
         centerTitle: true,
       ),
       body: _isLoading
@@ -115,16 +121,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Colors.grey[300],
-                      child: Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.blue,
+                    Container(
+                      width: 180,
+                      height: 180,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey[300],
+                        image: DecorationImage(
+                          image: AssetImage(
+                            widget.role == 'admin'
+                                ? 'admin.png' // รูปภาพของ admin
+                                : widget.role == 'driver'
+                                    ? 'driver_avatar.png' // รูปภาพของ driver
+                                    : 'user_avatar.png', // รูปภาพของ user ทั่วไป
+                          ),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 40),
                     FractionallySizedBox(
                       widthFactor:
                           0.7, // บีบให้ช่องข้อความกว้างเพียง 70% ของหน้าจอ
@@ -132,19 +147,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextField(
                             controller: _usernameController,
+                            style: TextStyle(color: Color(0xFF7F7777)),
                             decoration: InputDecoration(
-                              labelText: 'USERNAME',
+                              labelStyle: TextStyle(color: Color(0xFF7F7777)),
                               filled: true,
                               fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
                             controller: _passwordController,
+                            style: TextStyle(color: Color(0xFF7F7777)),
                             decoration: InputDecoration(
                               labelText: 'PASSWORD',
+                              labelStyle: TextStyle(color: Color(0xFF7F7777)),
                               filled: true,
                               fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
                             ),
                             obscureText: true,
                           ),
@@ -155,30 +179,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        ElevatedButton(
-                          onPressed: _updateProfile,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                        SizedBox(
+                          width: 110, // กำหนดความกว้างของปุ่ม SAVE
+                          child: ElevatedButton(
+                            onPressed: _updateProfile,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF40534C),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
                             ),
+                            child: const Text('SAVE'),
                           ),
-                          child: const Text('SAVE'),
                         ),
                         const SizedBox(width: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                        SizedBox(
+                          width: 110, // กำหนดความกว้างของปุ่ม CANCEL
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              foregroundColor: Color(0xFF7F7777),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
+                              ),
                             ),
+                            child: const Text('CANCEL'),
                           ),
-                          child: const Text('CANCEL'),
                         ),
                       ],
                     ),
@@ -199,21 +229,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           style: TextStyle(color: Colors.green),
                         ),
                       ),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 50),
                     const Text(
                       'WhereBus Version 1.0.1\nPantong | Jedsada | Tharathep | Apirak',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12, color: Colors.white),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     ElevatedButton(
-                      onPressed: _logout, // ปุ่ม Logout
+                      onPressed: _logout,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
+                        backgroundColor: Color(0xFFE96464),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(2),
                         ),
+                        minimumSize: Size(45, 35),
                       ),
                       child: Text('LOGOUT'),
                     ),
@@ -226,7 +257,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         email: widget.email,
         userId: widget.userId,
         role: widget.role,
-      ), // เพิ่ม Navigation Bar
+      ),
     );
   }
 }
