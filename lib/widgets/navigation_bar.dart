@@ -64,16 +64,16 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       items: [
         const BottomNavigationBarItem(
-          icon: Icon(Icons.map),
+          icon: Icon(Icons.pin_drop),
           label: 'Map',
         ),
         if (widget.role == 'admin') // แสดงไอคอน Dashboard เฉพาะ Admin
           const BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard),
+            icon: Icon(Icons.handyman),
             label: 'Admin',
           ),
         const BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(Icons.manage_accounts),
           label: 'Profile',
         ),
       ],
