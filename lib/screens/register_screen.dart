@@ -28,7 +28,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _successMessage = '';
     });
 
-    // ตรวจสอบความยาวของ username และ password
     if (_usernameController.text.length < 5 ||
         _usernameController.text.length > 10) {
       setState(() {
@@ -83,51 +82,140 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Register')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            // Dropdown สำหรับเลือกบทบาท
-            const SizedBox(height: 20),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _register,
-                    child: const Text('Register'),
+      backgroundColor: const Color(0xFFFFFFFF), // ตั้งค่าสีพื้นหลังเป็นสีขาว
+      appBar: AppBar(
+        title: const Text('Register'),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        leading: const Icon(Icons.person_add), // เพิ่มไอคอนที่นี่
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30),
+
+                // เพิ่ม Image widget ตรงนี้
+                Image.asset(
+                  'register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
+                  height: 200, // กำหนดขนาดความสูงของรูปภาพ
+                  width: 200, // กำหนดขนาดความกว้างของรูปภาพ
+                ),
+
+                const SizedBox(height: 20),
+                FractionallySizedBox(
+                  widthFactor: 0.85,
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: const TextStyle(color: Color(0xFF7F7777)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _usernameController,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          labelStyle: const TextStyle(color: Color(0xFF7F7777)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: const TextStyle(color: Color(0xFF7F7777)),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                        obscureText: true,
+                      ),
+                      const SizedBox(height: 30),
+                      _isLoading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: _register,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF1A3636),
+                                foregroundColor: Colors.white,
+                                textStyle: const TextStyle(fontSize: 15),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 40, vertical: 10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              child: const Text('Register'),
+                            ),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            _errorMessage,
+                            style: const TextStyle(color: Colors.red),
+                          ),
+                        ),
+                      if (_successMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            _successMessage,
+                            style: const TextStyle(color: Colors.green),
+                          ),
+                        ),
+                      const SizedBox(height: 20),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Already have an account? ',
+                            style: TextStyle(color: Color(0xFF7F7777)),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              'Login now!',
+                              style: TextStyle(
+                                color: Color(0xFF1A3636),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-            if (_errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _errorMessage,
-                  style: const TextStyle(color: Colors.red),
                 ),
-              ),
-            if (_successMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _successMessage,
-                  style: const TextStyle(color: Colors.green),
-                ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );
