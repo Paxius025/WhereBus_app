@@ -130,7 +130,7 @@ class ApiService {
       throw Exception('Failed to fetch user locations');
     }
   }
-  
+
   // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ทั้งหมด
   Future<Map<String, dynamic>> getUsers() async {
     final url = Uri.parse('${baseUrl}users/get_users.php');
@@ -140,6 +140,24 @@ class ApiService {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to fetch users');
+    }
+  }
+
+  // ฟังก์ชันสำหรับลบผู้ใช้
+  Future<Map<String, dynamic>> deleteUser(int userId) async {
+    final url = Uri.parse('${baseUrl}users/delete_user.php');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'userId': userId,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete user');
     }
   }
 }

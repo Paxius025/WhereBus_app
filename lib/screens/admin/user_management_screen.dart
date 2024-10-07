@@ -13,7 +13,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
   int _currentPage = 0;
-  final int _itemsPerPage = 10; // เปลี่ยนเป็น 10 คนต่อหน้า
+  final int _itemsPerPage = 10;
 
   @override
   void initState() {
@@ -21,7 +21,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     _fetchUsers();
   }
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ทั้งหมด
   Future<void> _fetchUsers() async {
     try {
       final response = await apiService.getUsers();
@@ -40,6 +39,25 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       setState(() {
         _errorMessage = 'Error fetching users: $e';
         _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _deleteUser(int userId) async {
+    try {
+      final response = await apiService.deleteUser(userId);
+      if (response['status'] == 'success') {
+        setState(() {
+          users.removeWhere((user) => user['id'] == userId);
+        });
+      } else {
+        setState(() {
+          _errorMessage = response['message'] ?? 'Failed to delete user';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error deleting user: $e';
       });
     }
   }
@@ -78,7 +96,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   }
 
   Widget _buildUserTable() {
-    // คำนวณตำแหน่งเริ่มต้นและสิ้นสุดของรายการที่จะนำมาแสดงในหน้าปัจจุบัน
     int startIndex = _currentPage * _itemsPerPage;
     int endIndex = (_currentPage + 1) * _itemsPerPage > users.length
         ? users.length
@@ -123,10 +140,8 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                         Icons.delete,
                         color: Colors.red,
                       ),
-                      onPressed: () {
-                        setState(() {
-                          users.remove(user);
-                        });
+                      onPressed: () async {
+                        await _deleteUser(user['id']);
                       },
                     ),
                   ),
@@ -138,7 +153,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     );
   }
 
-  // ฟังก์ชันสำหรับการควบคุมการเปลี่ยนหน้า (Pagination)
   Widget _buildPaginationControls() {
     int totalPages = (users.length / _itemsPerPage).ceil();
     int startIndex = _currentPage * _itemsPerPage + 1;
