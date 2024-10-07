@@ -62,6 +62,23 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Icon icon;
+
+    // เปรียบเทียบ role เพื่อกำหนดไอคอน
+    switch (widget.role) {
+      case 'admin':
+        icon = Icon(Icons.admin_panel_settings, color: Colors.red);
+        break;
+      case 'user':
+        icon = Icon(Icons.person, color: Colors.blue);
+        break;
+      case 'driver':
+        icon = Icon(Icons.directions_bus, color: Colors.green);
+        break;
+      default:
+        icon = Icon(Icons.help, color: Colors.grey);
+    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
@@ -74,11 +91,31 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                '${widget.username} (${widget.role})',
-                style: TextStyle(fontSize: 16),
-              ),
+            child: Row(
+              children: [
+                // แสดง Role ก่อน
+                Text(
+                  '${widget.role} : '.toUpperCase(),
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w300,
+                    color: Colors.black, // สีของบทบาท
+                  ),
+                ),
+                SizedBox(width: 8), // ระยะห่างระหว่างบทบาทและชื่อผู้ใช้
+                // แสดง Username
+                Text(
+                  '${widget.username}',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black, // สีของชื่อผู้ใช้
+                  ),
+                ),
+                SizedBox(width: 8), // ระยะห่างระหว่างชื่อผู้ใช้และไอคอน
+                // แสดง Icon
+                icon,
+              ],
             ),
           ),
         ],
