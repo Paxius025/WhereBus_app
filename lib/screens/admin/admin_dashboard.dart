@@ -1,5 +1,8 @@
 // lib/screens/admin/admin_dashboard.dart
 import 'package:flutter/material.dart';
+import 'user_management_screen.dart';
+import 'driver_management_screen.dart';
+import 'bus_status_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   final String username;
@@ -109,37 +112,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
         ],
       ),
-    );
-  }
-}
-
-// หน้าจอที่จะแสดงหลังจากกดปุ่มแต่ละอัน (User, Driver, Tracking Device)
-class UserManagementScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('User Management')),
-      body: const Center(child: Text('User Management Page')),
-    );
-  }
-}
-
-class DriverManagementScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Driver Management')),
-      body: const Center(child: Text('Driver Management Page')),
-    );
-  }
-}
-
-class BusStatusScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Bus Status')),
-      body: const Center(child: Text('Bus Status Page')),
     );
   }
 }
