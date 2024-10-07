@@ -23,6 +23,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   final ApiService apiService = ApiService();
@@ -34,6 +35,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _usernameController.text = widget.username;
+    _emailController.text = widget.email;
   }
 
   void _updateProfile() async {
@@ -47,7 +49,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final response = await apiService.updateProfile(
         widget.userId,
         _usernameController.text,
-        widget.email,
+        _emailController.text,
         _passwordController.text.isNotEmpty ? _passwordController.text : null,
       );
 
@@ -99,110 +101,125 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 60,
-                backgroundColor: Colors.grey[300],
-                child: Icon(
-                  Icons.person,
-                  size: 60,
-                  color: Colors.blue,
-                ),
-              ),
-              const SizedBox(height: 20),
-              FractionallySizedBox(
-                widthFactor:
-                    0.5, // กล่องข้อความขนาด 50% ของหน้าจอ ทำให้มีระยะขอบด้านละ 25%
-                child: TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: 'USERNAME',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-              FractionallySizedBox(
-                widthFactor: 0.25, // กล่องข้อความขนาด 25% ของหน้าจอ
-                child: TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'PASSWORD',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                  ),
-                  obscureText: true,
-                ),
-              ),
-              const SizedBox(height: 30),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: _updateProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.grey[300],
+                      child: Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.blue,
+                      ),
                     ),
-                    child: const Text('SAVE'),
-                  ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey,
+                    const SizedBox(height: 20),
+                    FractionallySizedBox(
+                      widthFactor:
+                          0.7, // บีบให้ช่องข้อความกว้างเพียง 70% ของหน้าจอ
+                      child: Column(
+                        children: [
+                          TextField(
+                            controller: _usernameController,
+                            decoration: InputDecoration(
+                              labelText: 'USERNAME',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: _passwordController,
+                            decoration: InputDecoration(
+                              labelText: 'PASSWORD',
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                            ),
+                            obscureText: true,
+                          ),
+                        ],
+                      ),
                     ),
-                    child: const Text('CANCEL'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_errorMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    _errorMessage,
-                    style: TextStyle(color: Colors.red),
-                  ),
+                    const SizedBox(height: 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: _updateProfile,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text('SAVE'),
+                        ),
+                        const SizedBox(width: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: const Text('CANCEL'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    if (_errorMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _errorMessage,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    if (_successMessage.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _successMessage,
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    const SizedBox(height: 40),
+                    const Text(
+                      'WhereBus Version 1.01\nPantong | Jedsada | Tharathep | Apirak',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _logout, // ปุ่ม Logout
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: Text('LOGOUT'),
+                    ),
+                  ],
                 ),
-              if (_successMessage.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    _successMessage,
-                    style: TextStyle(color: Colors.green),
-                  ),
-                ),
-              const SizedBox(height: 40),
-              const Text(
-                'WhereBus Version 1.01\nPantong | Jedsada | Tharathep | Apirak',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _logout, // ปุ่ม Logout
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: Text('LOGOUT'),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: NavigationBarWidget(
         username: widget.username,
         email: widget.email,
