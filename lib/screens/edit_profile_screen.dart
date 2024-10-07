@@ -1,7 +1,9 @@
+// lib/screens/edit_profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:wherebus_app/screens/main_screen.dart'; // Import MainScreen เพื่อกลับไปหลังอัปเดต
 import 'package:wherebus_app/screens/login_screen.dart'; // Import LoginScreen เพื่อใช้สำหรับ logout
+import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
 
 class EditProfileScreen extends StatefulWidget {
   final String username;
@@ -21,7 +23,6 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _usernameController = TextEditingController();
-  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   final ApiService apiService = ApiService();
@@ -33,7 +34,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _usernameController.text = widget.username;
-    _emailController.text = widget.email;
   }
 
   void _updateProfile() async {
@@ -47,7 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final response = await apiService.updateProfile(
         widget.userId,
         _usernameController.text,
-        _emailController.text,
+        widget.email,
         _passwordController.text.isNotEmpty ? _passwordController.text : null,
       );
 
@@ -99,60 +99,116 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Profile'),
+        centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
-            ),
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  labelText: 'Password (leave blank to keep current)'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-            _isLoading
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _updateProfile,
-                    child: Text('Update Profile'),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 60,
+                backgroundColor: Colors.grey[300],
+                child: Icon(
+                  Icons.person,
+                  size: 60,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 20),
+              FractionallySizedBox(
+                widthFactor:
+                    0.5, // กล่องข้อความขนาด 50% ของหน้าจอ ทำให้มีระยะขอบด้านละ 25%
+                child: TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    labelText: 'USERNAME',
+                    filled: true,
+                    fillColor: Colors.grey[200],
                   ),
-            if (_errorMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _errorMessage,
-                  style: TextStyle(color: Colors.red),
                 ),
               ),
-            if (_successMessage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  _successMessage,
-                  style: TextStyle(color: Colors.green),
+              const SizedBox(height: 20),
+              FractionallySizedBox(
+                widthFactor: 0.25, // กล่องข้อความขนาด 25% ของหน้าจอ
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: 'PASSWORD',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                  ),
+                  obscureText: true,
                 ),
               ),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _logout, // ปุ่ม Logout
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Logout'),
-            ),
-          ],
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: _updateProfile,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: const Text('SAVE'),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: const Text('CANCEL'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              if (_errorMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _errorMessage,
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              if (_successMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _successMessage,
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+              const SizedBox(height: 40),
+              const Text(
+                'WhereBus Version 1.01\nPantong | Jedsada | Tharathep | Apirak',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout, // ปุ่ม Logout
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                child: Text('LOGOUT'),
+              ),
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: NavigationBarWidget(
+        username: widget.username,
+        email: widget.email,
+        userId: widget.userId,
+        role: widget.role,
+      ), // เพิ่ม Navigation Bar
     );
   }
 }

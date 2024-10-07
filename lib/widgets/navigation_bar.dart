@@ -37,6 +37,8 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
           builder: (context) => AdminDashboardScreen(
             username: widget.username,
             userId: widget.userId,
+            email: widget.email, // เพิ่ม email
+            role: widget.role,   // เพิ่ม role
           ),
         ),
       );

@@ -1,8 +1,22 @@
 // lib/screens/admin/bus_status_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import NavigationBarWidget
 
 class BusStatusScreen extends StatefulWidget {
+  final String username;
+  final String email;
+  final int userId;
+  final String role;
+
+  const BusStatusScreen({
+    super.key,
+    required this.username,
+    required this.email,
+    required this.userId,
+    required this.role,
+  });
+
   @override
   _BusStatusScreenState createState() => _BusStatusScreenState();
 }
@@ -24,9 +38,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
       final response = await apiService.fetchLatestBusLocation();
       if (response['status'] == 'success') {
         setState(() {
-          buses = [
-            response['location'] ?? {}
-          ]; // จัดการกรณี response['location'] เป็น null
+          buses = [response['location'] ?? {}]; // จัดการกรณี response['location'] เป็น null
           _isLoading = false;
         });
       } else {
@@ -61,10 +73,8 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                     itemCount: buses.length,
                     itemBuilder: (context, index) {
                       final bus = buses[index];
-                      String busId = bus['bus_id']?.toString() ??
-                          'N/A'; // กำหนดค่าเริ่มต้นหาก bus_id เป็น null
-                      String timestamp = bus['timestamp'] ??
-                          ''; // กำหนดค่าเริ่มต้นหาก timestamp เป็น null
+                      String busId = bus['bus_id']?.toString() ?? 'N/A'; // กำหนดค่าเริ่มต้นหาก bus_id เป็น null
+                      String timestamp = bus['timestamp'] ?? ''; // กำหนดค่าเริ่มต้นหาก timestamp เป็น null
 
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -72,15 +82,12 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Row(
                             children: [
-                              // เพิ่มไอคอนรูปรถบัสที่น่ารัก
                               Icon(
                                 Icons.directions_bus,
                                 color: Colors.orange,
-                                size: screenWidth *
-                                    0.1, // Responsive size for bus icon
+                                size: screenWidth * 0.1, // Responsive size for bus icon
                               ),
-                              const SizedBox(
-                                  width: 20), // ระยะห่างระหว่างไอคอนกับข้อความ
+                              const SizedBox(width: 20),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +96,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                                       'Bus ID: $busId',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth *
-                                            0.05, // Responsive font size
+                                        fontSize: screenWidth * 0.05, // Responsive font size
                                       ),
                                     ),
                                     SizedBox(height: 8),
@@ -106,8 +112,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                                         Text(
                                           _getBusStatus(timestamp),
                                           style: TextStyle(
-                                            color: _getBusStatus(timestamp) ==
-                                                    'Online'
+                                            color: _getBusStatus(timestamp) == 'Online'
                                                 ? Colors.green
                                                 : Colors.red,
                                             fontSize: screenWidth * 0.045,
@@ -125,6 +130,12 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                     },
                   ),
       ),
+      bottomNavigationBar: NavigationBarWidget(
+        username: widget.username,
+        email: widget.email,
+        userId: widget.userId,
+        role: widget.role,
+      ), // เพิ่ม NavigationBarWidget
     );
   }
 

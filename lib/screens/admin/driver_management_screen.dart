@@ -1,8 +1,22 @@
 // lib/screens/admin/driver_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
 
 class DriverManagementScreen extends StatefulWidget {
+  final String username;
+  final String email;
+  final int userId;
+  final String role;
+
+  const DriverManagementScreen({
+    super.key,
+    required this.username,
+    required this.email,
+    required this.userId,
+    required this.role,
+  });
+
   @override
   _DriverManagementScreenState createState() => _DriverManagementScreenState();
 }
@@ -110,6 +124,12 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
                     ],
                   ),
       ),
+      bottomNavigationBar: NavigationBarWidget(
+        username: widget.username,
+        email: widget.email,
+        userId: widget.userId,
+        role: widget.role,
+      ), // เพิ่ม Navigation Bar ที่ด้านล่าง
     );
   }
 
@@ -119,13 +139,11 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         ? drivers.length
         : (_currentPage + 1) * _itemsPerPage;
 
-    List<Map<String, dynamic>> currentItems =
-        drivers.sublist(startIndex, endIndex);
+    List<Map<String, dynamic>> currentItems = drivers.sublist(startIndex, endIndex);
 
     // Adjusting column widths to fit in smaller screens (min screen width: 320px)
     double idWidth = screenWidth * 0.10; // 10% of screen width for ID
-    double usernameWidth =
-        screenWidth * 0.50; // 50% of screen width for USERNAME
+    double usernameWidth = screenWidth * 0.50; // 50% of screen width for USERNAME
     double actionWidth = screenWidth * 0.30; // 30% of screen width for ACTION
 
     return DataTable(
@@ -143,9 +161,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         ),
         DataColumn(
           label: SizedBox(
-            width: usernameWidth < 100
-                ? 100
-                : usernameWidth, // Minimum width for USERNAME column.
+            width: usernameWidth < 100 ? 100 : usernameWidth, // Minimum width for USERNAME column.
             child: const Text(
               'USERNAME',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -154,9 +170,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         ),
         DataColumn(
           label: SizedBox(
-            width: actionWidth < 80
-                ? 80
-                : actionWidth, // Minimum width for ACTION column.
+            width: actionWidth < 80 ? 80 : actionWidth, // Minimum width for ACTION column.
             child: const Text(
               'ACTION',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
@@ -168,14 +182,11 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
           .map(
             (driver) => DataRow(
               cells: [
-                DataCell(Text(driver['id'].toString(),
-                    style: const TextStyle(fontSize: 12))),
-                DataCell(Text(driver['username'],
-                    style: const TextStyle(fontSize: 12))),
+                DataCell(Text(driver['id'].toString(), style: const TextStyle(fontSize: 12))),
+                DataCell(Text(driver['username'], style: const TextStyle(fontSize: 12))),
                 DataCell(
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // Center the action icons
+                    mainAxisAlignment: MainAxisAlignment.center, // Center the action icons
                     children: [
                       IconButton(
                         icon: const Icon(

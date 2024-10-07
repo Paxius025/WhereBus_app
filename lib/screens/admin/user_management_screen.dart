@@ -1,8 +1,22 @@
 // lib/screens/admin/user_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
 
 class UserManagementScreen extends StatefulWidget {
+  final String username;
+  final String email;
+  final int userId;
+  final String role;
+
+  const UserManagementScreen({
+    super.key,
+    required this.username,
+    required this.email,
+    required this.userId,
+    required this.role,
+  });
+
   @override
   _UserManagementScreenState createState() => _UserManagementScreenState();
 }
@@ -91,12 +105,18 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                               ),
                             ),
                           ),
-                          _buildPaginationControls(), // ย้ายปุ่ม Pagination ออกมาให้อยู่ด้านล่างสุดเสมอ
+                          _buildPaginationControls(),
                         ],
                       ),
           ),
         ),
       ),
+      bottomNavigationBar: NavigationBarWidget(
+        username: widget.username,
+        email: widget.email,
+        userId: widget.userId,
+        role: widget.role,
+      ), // เพิ่ม Navigation Bar ที่ด้านล่าง
     );
   }
 
