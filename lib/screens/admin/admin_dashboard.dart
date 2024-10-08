@@ -57,10 +57,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           children: [
             // แสดงรูปไอคอน (ไม่รองรับการกด)
             _buildAdminMenuIcon(
-              'assets/users.png',
+              'users_no_border.png',
               Icons.groups,
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 12), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Manage User',
               onTap: () {
@@ -77,10 +77,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 12), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
-              'assets/driver_avatar.png',
+              'driver_avatar.png',
               Icons.assignment_ind,
             ),
             const SizedBox(height: 5), // ระยะห่างระหว่างไอคอนกับป้าย
@@ -100,10 +100,10 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 15), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
-              'assets/bus_avatar.png',
+              'bus_avatar.png',
               Icons.directions_bus,
             ),
             const SizedBox(height: 5), // ระยะห่างระหว่างไอคอนกับป้าย
@@ -140,7 +140,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return CircleAvatar(
       backgroundColor:
           const Color.fromARGB(255, 255, 255, 255), // พื้นหลังเป็นสีขาว
-      radius: 45, // ขนาดวงกลมของไอคอน
+      radius: 60, // ขนาดวงกลมของไอคอน
       child: _loadImageWithFallback(
           imagePath, fallbackIcon), // โหลดไอคอนหรือรูปภาพ
     );
@@ -158,15 +158,15 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           color: const Color(0xFF677D6A), // พื้นหลังของป้ายเป็นสีเขียวเข้ม
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2), // เงาสีดำอ่อน
+              color: Colors.black.withOpacity(0.05), // เงาสีดำอ่อน
               spreadRadius: 2,
               blurRadius: 4,
-              offset: const Offset(0, 2), // เงาในแนวตั้ง
+              offset: const Offset(0, 0.05), // เงาในแนวตั้ง
             ),
           ],
         ),
         padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 12), // ระยะห่างภายในป้าย
+            horizontal: 10, vertical: 6), // ระยะห่างภายในป้าย
         width: 120, // กำหนดความกว้างของป้ายข้อความให้เท่ากัน
         child: Center(
           child: Text(
@@ -188,13 +188,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _loadImageWithFallback(String imagePath, IconData fallbackIcon) {
     return Image.asset(
       imagePath, // พาธของรูปภาพ
-      height: 140, // ความสูงของรูปภาพ
-      width: 140, // ความกว้างของรูปภาพ
+      height: 130, // ความสูงของรูปภาพ
+      width: 130, // ความกว้างของรูปภาพ
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
         return Icon(
           fallbackIcon, // แสดงไอคอนแทนถ้าโหลดรูปภาพไม่สำเร็จ
-          size: 150, // ขนาดไอคอน
+          size: 130, // ขนาดไอคอน
           color: Colors.grey, // สีของไอคอน
         );
       },

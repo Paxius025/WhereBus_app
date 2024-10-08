@@ -288,10 +288,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _loadImageWithFallback(String role) {
     return Image.asset(
       role == 'admin'
-          ? 'assets/admin.png'
+          ? 'admin.png'
           : role == 'driver'
-              ? 'assets/driver_avatar.png'
-              : 'assets/user_avatar.png',
+              ? 'driver_avatar.png'
+              : 'user_avatar.png',
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         return Icon(
@@ -300,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               : role == 'driver'
                   ? Icons.contacts
                   : Icons.account_circle,
-          size: 100,
+          size: 140,
           color: Colors.grey,
         );
       },
