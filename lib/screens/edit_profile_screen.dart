@@ -129,10 +129,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         image: DecorationImage(
                           image: AssetImage(
                             widget.role == 'admin'
-                                ? 'admin.png' // รูปภาพของ admin
+                                ? 'assets/admin.png' // รูปภาพของ admin
                                 : widget.role == 'driver'
-                                    ? 'driver_avatar.png' // รูปภาพของ driver
-                                    : 'user_avatar.png', // รูปภาพของ user ทั่วไป
+                                    ? 'assets/driver_avatar.png' // รูปภาพของ driver
+                                    : 'assets/user_avatar.png', // รูปภาพของ user ทั่วไป
                           ),
                           fit: BoxFit.cover,
                         ),

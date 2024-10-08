@@ -107,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 // เพิ่ม Image widget ตรงนี้
                 Image.asset(
-                  'register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
+                  'assets/register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
                   height: 200, // กำหนดขนาดความสูงของรูปภาพ
                   width: 200, // กำหนดขนาดความกว้างของรูปภาพ
                 ),
