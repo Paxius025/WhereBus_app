@@ -53,91 +53,89 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       backgroundColor: const Color.fromARGB(
           255, 255, 255, 255), // สีพื้นหลังของหน้าเป็นสีขาว
       body: Center(
-        child: SingleChildScrollView(
-          // ใช้ SingleChildScrollView เพื่อให้หน้าจอสามารถเลื่อนลงได้ในกรณีที่หน้าจอขนาดเล็ก
-          child: Transform.scale(
-            scale: 0.85, // ลดขนาดหน้าจอลง 15%
-            child: FractionallySizedBox(
-              widthFactor: screenWidth < 600
-                  ? 0.9
-                  : 0.6, // จัดการให้การแสดงผล responsive (หน้าจอเล็กใช้ 90% ของความกว้าง, ใหญ่ใช้ 60%)
-              child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // จัดให้อยู่ตรงกลางตามแนวตั้ง
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // จัดให้อยู่ตรงกลางตามแนวนอน
-                children: [
-                  const SizedBox(height: 0), // ไม่มีระยะห่างด้านบน
-                  // เมนู User Management
-                  _buildAdminMenuItem(
-                    icon: _loadImageWithFallback(
-                      'assets/users.png', // ใช้รูปจาก assets
-                      Icons.groups, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนกลุ่มแทน
-                    ),
-                    label: 'User Management', // ป้ายชื่อเมนู 'User Management'
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => UserManagementScreen(
-                            username: widget.username,
-                            email: widget.email,
-                            userId: widget.userId,
-                            role: widget.role,
-                          ),
-                        ),
-                      );
-                    },
+        // ใช้ SingleChildScrollView เพื่อให้หน้าจอสามารถเลื่อนลงได้ในกรณีที่หน้าจอขนาดเล็ก
+        child: Transform.scale(
+          scale: 0.85, // ลดขนาดหน้าจอลง 15%
+          child: FractionallySizedBox(
+            widthFactor: screenWidth < 600
+                ? 0.9
+                : 0.6, // จัดการให้การแสดงผล responsive (หน้าจอเล็กใช้ 90% ของความกว้าง, ใหญ่ใช้ 60%)
+            child: Column(
+              mainAxisAlignment:
+                  MainAxisAlignment.center, // จัดให้อยู่ตรงกลางตามแนวตั้ง
+              crossAxisAlignment:
+                  CrossAxisAlignment.center, // จัดให้อยู่ตรงกลางตามแนวนอน
+              children: [
+                const SizedBox(height: 0), // ไม่มีระยะห่างด้านบน
+                // เมนู User Management
+                _buildAdminMenuItem(
+                  icon: _loadImageWithFallback(
+                    'assets/users.png', // ใช้รูปจาก assets
+                    Icons.groups, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนกลุ่มแทน
                   ),
-                  const SizedBox(height: 10), // ระยะห่าง 10px
-                  // เมนู Driver Management
-                  _buildAdminMenuItem(
-                    icon: _loadImageWithFallback(
-                      'assets/driver_avatar.png', // ใช้รูปจาก assets
-                      Icons
-                          .assignment_ind, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนบุคคลแทน
-                    ),
-                    label:
-                        'Driver Management', // ป้ายชื่อเมนู 'Driver Management'
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DriverManagementScreen(
-                            username: widget.username,
-                            email: widget.email,
-                            userId: widget.userId,
-                            role: widget.role,
-                          ),
+                  label: 'User Management', // ป้ายชื่อเมนู 'User Management'
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserManagementScreen(
+                          username: widget.username,
+                          email: widget.email,
+                          userId: widget.userId,
+                          role: widget.role,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10), // ระยะห่าง 10px
+                // เมนู Driver Management
+                _buildAdminMenuItem(
+                  icon: _loadImageWithFallback(
+                    'assets/driver_avatar.png', // ใช้รูปจาก assets
+                    Icons
+                        .assignment_ind, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนบุคคลแทน
                   ),
-                  const SizedBox(height: 10), // ระยะห่าง 10px
-                  // เมนู Bus Status
-                  _buildAdminMenuItem(
-                    icon: _loadImageWithFallback(
-                      'assets/bus_avatar.png', // ใช้รูปจาก assets
-                      Icons
-                          .directions_bus, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนรถบัสแทน
-                    ),
-                    label: 'Bus Status', // ป้ายชื่อเมนู 'Bus Status'
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BusStatusScreen(
-                            username: widget.username,
-                            email: widget.email,
-                            userId: widget.userId,
-                            role: widget.role,
-                          ),
+                  label:
+                      'Driver Management', // ป้ายชื่อเมนู 'Driver Management'
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DriverManagementScreen(
+                          username: widget.username,
+                          email: widget.email,
+                          userId: widget.userId,
+                          role: widget.role,
                         ),
-                      );
-                    },
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 10), // ระยะห่าง 10px
+                // เมนู Bus Status
+                _buildAdminMenuItem(
+                  icon: _loadImageWithFallback(
+                    'assets/bus_avatar.png', // ใช้รูปจาก assets
+                    Icons
+                        .directions_bus, // หากโหลดรูปไม่สำเร็จให้แสดงไอคอนรถบัสแทน
                   ),
-                ],
-              ),
+                  label: 'Bus Status', // ป้ายชื่อเมนู 'Bus Status'
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BusStatusScreen(
+                          username: widget.username,
+                          email: widget.email,
+                          userId: widget.userId,
+                          role: widget.role,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
           ),
         ),
