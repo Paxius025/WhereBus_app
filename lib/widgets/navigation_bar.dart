@@ -80,6 +80,7 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
       currentIndex: _selectedIndex,
       selectedItemColor: const Color(0xFF40534C), // สีเมื่อถูกเลือก
       unselectedItemColor: const Color(0xFF40534C), // สีเมื่อไม่ถูกเลือก
+      onTap: _onItemTapped,
     );
   }
 }
