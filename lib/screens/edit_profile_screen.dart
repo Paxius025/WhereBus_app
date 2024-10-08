@@ -250,10 +250,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                           ),
                         const SizedBox(height: 15),
-                        const Text(
-                          'WhereBus Version 1.0.4\nPantong | Jedsada | Tharathep | Apirak',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        Text.rich(
+                          TextSpan(
+                            text:
+                                'WhereBus Version 1.0.5\n', // ข้อความบรรทัดแรก
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white), // ขนาดตัวอักษร 14
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    'Pantong | Jedsada | Tharathep | Apirak', // ข้อความบรรทัดที่สอง
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white), // ขนาดตัวอักษร 12
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center, // จัดข้อความตรงกลาง
                         ),
                         const SizedBox(height: 10),
                         ElevatedButton(
@@ -288,10 +302,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _loadImageWithFallback(String role) {
     return Image.asset(
       role == 'admin'
-          ? 'admin.png'
+          ? 'assets/admin.png'
           : role == 'driver'
-              ? 'driver_avatar.png'
-              : 'user_avatar.png',
+              ? 'assets/driver_avatar.png'
+              : 'assets/user_avatar.png',
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
         return Icon(

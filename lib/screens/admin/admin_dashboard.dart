@@ -57,7 +57,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           children: [
             // แสดงรูปไอคอน (ไม่รองรับการกด)
             _buildAdminMenuIcon(
-              'users_no_border.png',
+              'assets/users_no_border.png',
               Icons.groups,
             ),
             const SizedBox(height: 12), // ระยะห่างระหว่างไอคอนกับป้าย
@@ -80,7 +80,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 12), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
-              'driver_avatar.png',
+              'assets/driver_avatar.png',
               Icons.assignment_ind,
             ),
             const SizedBox(height: 5), // ระยะห่างระหว่างไอคอนกับป้าย
@@ -103,7 +103,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             const SizedBox(height: 15), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
-              'bus_avatar.png',
+              'assets/bus_avatar.png',
               Icons.directions_bus,
             ),
             const SizedBox(height: 5), // ระยะห่างระหว่างไอคอนกับป้าย
