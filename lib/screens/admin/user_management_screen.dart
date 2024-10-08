@@ -26,7 +26,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
   int _currentPage = 0;
-  final int _itemsPerPage = 6;
+  final int _itemsPerPage = 8;
 
   @override
   void initState() {
@@ -73,6 +73,73 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
         _errorMessage = 'Error deleting user: $e';
       });
     }
+  }
+
+  Future<void> _showDeleteConfirmationDialog(int userId) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible:
+          false, // Prevent closing by tapping outside the dialog
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+                4.0), // Almost square corners for the dialog
+          ),
+          backgroundColor: const Color(0xFFFFFFFF), // Background color FFFFFF
+          title: const Text(
+            'Delete User',
+            style: TextStyle(color: Colors.black), // Title color
+          ),
+          content: const Text(
+            'Are you sure you want to delete this user?',
+            style: TextStyle(color: Colors.black), // Content text color
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor:
+                    const Color(0xFFFFFFFF), // Background color FFFFFF
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      4.0), // Almost square corners for the button
+                ),
+              ),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Color(0xFF7F7777), // Text color 7F7777F
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(); // Close the dialog without deleting
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor:
+                    const Color(0xFFE96464), // Background color E96464
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      4.0), // Almost square corners for the button
+                ),
+              ),
+              child: const Text(
+                'Delete',
+                style: TextStyle(
+                  color: Color(0xFFFFFFFF), // Text color FFFFFF
+                ),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop(); // Close the dialog
+                await _deleteUser(userId); // Proceed with deletion
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -183,7 +250,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           color: Colors.red,
                         ),
                         onPressed: () async {
-                          await _deleteUser(user['id']);
+                          await _showDeleteConfirmationDialog(user['id']);
                         },
                       ),
                     ),
