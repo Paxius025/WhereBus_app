@@ -113,67 +113,69 @@ class _LocationMapState extends State<LocationMap> {
 
   // ฟังก์ชันสำหรับการดึงตำแหน่งรถบัสล่าสุด
   Future<void> _fetchLatestBusLocation() async {
-  try {
-    final response = await apiService.fetchLatestBusLocation();
+    try {
+      final response = await apiService.fetchLatestBusLocation();
 
-    if (response['status'] == 'success') {
-      Map location = response['location'];
-      double lat = location['latitude'];
-      double lon = location['longitude'];
-      int busId = location['bus_id'];
-      String busStatus = location['status']; // อ่านสถานะของรถบัส
+      if (response['status'] == 'success') {
+        Map location = response['location'];
+        double lat = location['latitude'];
+        double lon = location['longitude'];
+        int busId = location['bus_id'];
+        String busStatus = location['status']; // อ่านสถานะของรถบัส
 
-      print('Bus fetch successfull [Bus ID :$busId :latitude : $lat, longitude  : $lon]');
+        print(
+            'Bus fetch successfull [Bus ID :$busId :latitude : $lat, longitude  : $lon]');
 
-      setState(() {
-        widget.updateLocation(lat, lon);
+        setState(() {
+          widget.updateLocation(lat, lon);
 
-        // ปรับให้ marker ของรถไม่ซ้อนกับผู้ใช้ (shift ตำแหน่งเล็กน้อย)
-        _busMarker = Marker(
-          width: 80.0,
-          height: 80.0,
-          point: LatLng(lat + 0.0001, lon + 0.0001), // Shift เล็กน้อย
-          builder: (ctx) => Column(
-            children: [
-              Icon(
-                Icons.directions_bus,
-                color: busStatus == 'Online' ? Colors.green : Colors.red, // สีขึ้นกับสถานะ Online หรือ Offline
-                size: 40.0,
-              ),
-              Text(
-                'Bus ID: $busId',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 12.0,
+          // ปรับให้ marker ของรถไม่ซ้อนกับผู้ใช้ (shift ตำแหน่งเล็กน้อย)
+          _busMarker = Marker(
+            width: 80.0,
+            height: 80.0,
+            point: LatLng(lat + 0.0001, lon + 0.0001), // Shift เล็กน้อย
+            builder: (ctx) => Column(
+              children: [
+                Icon(
+                  Icons.directions_bus,
+                  color: busStatus == 'Online'
+                      ? Colors.green
+                      : Colors.red, // สีขึ้นกับสถานะ Online หรือ Offline
+                  size: 40.0,
                 ),
-              ),
-              Text(
-                busStatus, // แสดงสถานะ Online/Offline
-                style: TextStyle(
-                  color: busStatus == 'Online' ? Colors.green : Colors.red,
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  'Bus ID: $busId',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 12.0,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      });
+                Text(
+                  busStatus, // แสดงสถานะ Online/Offline
+                  style: TextStyle(
+                    color: busStatus == 'Online' ? Colors.green : Colors.red,
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
 
-      _removeBusMarkerTimer?.cancel(); // ยกเลิกการลบ Marker ถ้าตำแหน่งได้รับ
+        _removeBusMarkerTimer?.cancel(); // ยกเลิกการลบ Marker ถ้าตำแหน่งได้รับ
+      }
+    } catch (e) {
+      print('Error fetching bus location: $e');
     }
-  } catch (e) {
-    print('Error fetching bus location: $e');
-  }
 
-  _removeBusMarkerTimer = Timer(Duration(seconds: 58), () {
-    setState(() {
-      _busMarker = null;
+    _removeBusMarkerTimer = Timer(Duration(seconds: 58), () {
+      setState(() {
+        _busMarker = null;
+      });
+      print('No bus location received within 60 seconds. Marker removed.');
     });
-    print('No bus location received within 60 seconds. Marker removed.');
-  });
-}
-
+  }
 
   // ฟังก์ชันสำหรับการส่งตำแหน่งผู้ใช้ (เฉพาะตอนกดปุ่มเท่านั้น)
   Future<void> _sendUserLocation() async {
@@ -318,18 +320,34 @@ class _LocationMapState extends State<LocationMap> {
         ),
         if (widget.role != 'driver')
           Positioned(
-            bottom: 50,
-            left: 20,
-            child: ElevatedButton.icon(
-              onPressed: _isSendingLocation
-                  ? null
-                  : _sendUserLocation, // ปิดปุ่มขณะส่ง
-              icon: Icon(Icons.send),
-              label: Text('Send location'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    _isSendingLocation ? Colors.grey : Colors.green,
-                foregroundColor: Colors.white,
+            bottom: 50, // ตำแหน่งปุ่มอยู่ห่างจากขอบล่าง 50px
+            left: 0, // ปุ่มจะอยู่ตรงกลาง
+            right: 0, // ทำให้ปุ่มอยู่ตรงกลางระหว่างซ้ายและขวา
+            child: Center(
+              child: ElevatedButton.icon(
+                onPressed: _isSendingLocation
+                    ? null
+                    : _sendUserLocation, // ปิดปุ่มขณะส่ง
+                label: const Icon(Icons.send,
+                    color: Color(0xFFFFFFFF)), // ไอคอนอยู่หลังข้อความ
+                icon: const Text(
+                  'Send location', // ข้อความอยู่หน้าข้อความ
+                  style: TextStyle(
+                      color: Color(0xFFFFFFFF)), // สีของตัวหนังสือ #FFFFFF
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      const Color(0xFF40534C), // สีพื้นหลัง #40534C
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical:
+                          8), // เพิ่มความสูงอีก 5px (จากเดิม 12px เป็น 17px)
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(10), // ทำให้ปุ่มมีขอบโค้งมน
+                  ),
+                ),
               ),
             ),
           ),
