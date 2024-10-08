@@ -143,8 +143,8 @@ class _LocationMapState extends State<LocationMap> {
 
           // Adjust the marker for the bus
           _busMarker = Marker(
-            width: 80.0,
-            height: 80.0,
+            width: 60.0,
+            height: 60.0,
             point: LatLng(lat + 0.0001, lon + 0.0001), // Slight shift
             builder: (ctx) => Column(
               children: [
@@ -153,21 +153,13 @@ class _LocationMapState extends State<LocationMap> {
                   color: busStatus == 'Online'
                       ? Colors.green
                       : Colors.red, // Marker color based on status
-                  size: 40.0,
+                  size: 30.0,
                 ),
                 Text(
                   'Bus ID: $busId',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 12.0,
-                  ),
-                ),
-                Text(
-                  busStatus,
-                  style: TextStyle(
-                    color: busStatus == 'Online' ? Colors.green : Colors.red,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -187,6 +179,105 @@ class _LocationMapState extends State<LocationMap> {
       });
       print('No bus location received within 60 seconds. Marker removed.');
     });
+  }
+
+  // Static markers for bus ID 2, 3, 4, 5
+  List<Marker> _getStaticBusMarkers() {
+    return [
+      Marker(
+        width: 60.0,
+        height: 60.0,
+        point: LatLng(17.289014, 104.111125), // Bus ID 2 (Offline)
+        builder: (ctx) => Column(
+          children: [
+            Icon(
+              Icons.directions_bus,
+              color: Colors.red,
+              size: 30.0,
+            ),
+            Text(
+              'Bus ID: 2',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Marker(
+        width: 60.0,
+        height: 60.0,
+        point: LatLng(17.287491, 104.112630), // Bus 3 (Online)
+        builder: (ctx) => Column(
+          children: [
+            Icon(
+              Icons.directions_bus,
+              color: Colors.green,
+              size: 30.0,
+            ),
+            Text(
+              'Bus ID: 3',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Marker(
+        width: 60.0,
+        height: 60.0,
+        point: LatLng(17.288904, 104.107397), // Bus ID 4 (Online)
+        builder: (ctx) => Column(
+          children: [
+            Icon(
+              Icons.directions_bus,
+              color: Colors.green,
+              size: 30.0,
+            ),
+            Text(
+              'Bus ID: 4',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  // Handle location permission
+  Future<bool> _handleLocationPermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // ตรวจสอบว่า location services ถูกเปิดใช้งานหรือไม่
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return false;
+    }
+
+    // ตรวจสอบและขออนุญาตใช้งานตำแหน่งที่ตั้ง
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print('Location permission denied by user.');
+        return false;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print('Location permission denied forever.');
+      return false;
+    }
+
+    return true;
   }
 
   // Send user location
@@ -276,34 +367,6 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  // Handle location permission
-  Future<bool> _handleLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      print('Location services are disabled.');
-      return false;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        print('Location permission denied by user.');
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      print('Location permission denied forever.');
-      return false;
-    }
-
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -322,6 +385,7 @@ class _LocationMapState extends State<LocationMap> {
             MarkerLayer(
               markers: [
                 if (_busMarker != null) _busMarker!,
+                ..._getStaticBusMarkers(), // Add static markers
                 ..._userMarkers,
               ],
             ),
