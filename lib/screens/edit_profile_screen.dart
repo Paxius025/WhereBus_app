@@ -108,7 +108,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
       appBar: AppBar(
         backgroundColor: Color(0xFF1A3636),
-        automaticallyImplyLeading: false,
         title: Text('EDIT PROFILE'),
         foregroundColor: Colors.white,
         centerTitle: true,

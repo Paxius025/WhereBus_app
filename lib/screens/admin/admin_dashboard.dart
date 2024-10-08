@@ -29,6 +29,17 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor:
+            const Color.fromARGB(255, 255, 255, 255), // สีพื้นหลังของ AppBar
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back,
+              color: Color.fromARGB(255, 0, 0, 0)), // ปุ่มย้อนกลับ
+          onPressed: () {
+            Navigator.pop(context); // เมื่อกดปุ่มจะกลับไปหน้าก่อนหน้า
+          },
+        ),
+      ),
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: SingleChildScrollView(
