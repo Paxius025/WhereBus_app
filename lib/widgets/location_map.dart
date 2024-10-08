@@ -30,14 +30,16 @@ class _LocationMapState extends State<LocationMap> {
   Timer? _markerTimer;
   Timer? _refreshTimer;
   Timer? _removeBusMarkerTimer;
-  bool _isSendingLocation = false; // ป้องกันการส่งข้อมูลซ้ำ
-  LatLng? _lastSentUserLocation; // เก็บตำแหน่งผู้ใช้ที่ส่งล่าสุด
+  bool _isSendingLocation = false;
+  LatLng? _lastSentUserLocation;
+  LatLng? _lastBusLocation;
+  int _sameLocationCount = 0; // Counter to track same bus location
 
   @override
   void initState() {
     super.initState();
 
-    // ดึงข้อมูลตำแหน่งรถบัสทุกๆ 10 วินาที
+    // Fetch bus location every 10 seconds
     _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
       _fetchLatestBusLocation();
     });
@@ -55,11 +57,10 @@ class _LocationMapState extends State<LocationMap> {
     super.dispose();
   }
 
-  // ฟังก์ชันสำหรับการดึงตำแหน่งผู้ใช้ทั้งหมด
+  // Fetch user locations
   Future<void> _fetchUserLocations() async {
     try {
       final response = await apiService.fetchUserLocations('driver');
-
       if (response['status'] == 'success') {
         List locations = response['locations'];
 
@@ -70,11 +71,11 @@ class _LocationMapState extends State<LocationMap> {
                 double lon = double.parse(location['longitude']);
                 String username = location['username'];
 
-                // ถ้ามีตำแหน่งผู้ใช้ล่าสุดที่เพิ่งส่ง ให้ข้ามการลบตำแหน่งนี้ออกไป
+                // Avoid adding the user marker if it's already the last sent location
                 if (_lastSentUserLocation != null &&
                     _lastSentUserLocation!.latitude == lat &&
                     _lastSentUserLocation!.longitude == lon) {
-                  return null; // ไม่ต้องเพิ่มตำแหน่งนี้ซ้ำ
+                  return null;
                 }
 
                 return Marker(
@@ -90,18 +91,18 @@ class _LocationMapState extends State<LocationMap> {
                       ),
                       Text(
                         username.toUpperCase(),
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 12.0,
                             fontWeight: FontWeight.bold,
-                            backgroundColor: const Color(0xFFEFEFEF)),
+                            backgroundColor: Color(0xFFEFEFEF)),
                       ),
                     ],
                   ),
                 );
               })
               .whereType<Marker>()
-              .toList(); // ลบรายการที่ null ออก
+              .toList();
         });
       } else {
         print('Failed to fetch user locations: ${response['message']}');
@@ -111,47 +112,58 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  // ฟังก์ชันสำหรับการดึงตำแหน่งรถบัสล่าสุด
+  // Fetch latest bus location
   Future<void> _fetchLatestBusLocation() async {
     try {
       final response = await apiService.fetchLatestBusLocation();
-
       if (response['status'] == 'success') {
         Map location = response['location'];
         double lat = location['latitude'];
         double lon = location['longitude'];
         int busId = location['bus_id'];
-        String busStatus = location['status']; // อ่านสถานะของรถบัส
+        String busStatus = location['status'];
 
-        print(
-            'Bus fetch successfull [Bus ID :$busId :latitude : $lat, longitude  : $lon]');
+        // Check if the location is the same as the previous one
+        if (_lastBusLocation != null &&
+            _lastBusLocation!.latitude == lat &&
+            _lastBusLocation!.longitude == lon) {
+          _sameLocationCount++;
+        } else {
+          _sameLocationCount = 0; // Reset count if location has changed
+        }
+
+        // If the location is the same 10 times in a row, set status to 'Offline'
+        if (_sameLocationCount >= 10) {
+          busStatus = 'Offline';
+        }
 
         setState(() {
           widget.updateLocation(lat, lon);
+          _lastBusLocation = LatLng(lat, lon);
 
-          // ปรับให้ marker ของรถไม่ซ้อนกับผู้ใช้ (shift ตำแหน่งเล็กน้อย)
+          // Adjust the marker for the bus
           _busMarker = Marker(
             width: 80.0,
             height: 80.0,
-            point: LatLng(lat + 0.0001, lon + 0.0001), // Shift เล็กน้อย
+            point: LatLng(lat + 0.0001, lon + 0.0001), // Slight shift
             builder: (ctx) => Column(
               children: [
                 Icon(
                   Icons.directions_bus,
                   color: busStatus == 'Online'
                       ? Colors.green
-                      : Colors.red, // สีขึ้นกับสถานะ Online หรือ Offline
+                      : Colors.red, // Marker color based on status
                   size: 40.0,
                 ),
                 Text(
                   'Bus ID: $busId',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 12.0,
                   ),
                 ),
                 Text(
-                  busStatus, // แสดงสถานะ Online/Offline
+                  busStatus,
                   style: TextStyle(
                     color: busStatus == 'Online' ? Colors.green : Colors.red,
                     fontSize: 12.0,
@@ -163,7 +175,7 @@ class _LocationMapState extends State<LocationMap> {
           );
         });
 
-        _removeBusMarkerTimer?.cancel(); // ยกเลิกการลบ Marker ถ้าตำแหน่งได้รับ
+        _removeBusMarkerTimer?.cancel(); // Cancel bus marker removal if updated
       }
     } catch (e) {
       print('Error fetching bus location: $e');
@@ -177,15 +189,15 @@ class _LocationMapState extends State<LocationMap> {
     });
   }
 
-  // ฟังก์ชันสำหรับการส่งตำแหน่งผู้ใช้ (เฉพาะตอนกดปุ่มเท่านั้น)
+  // Send user location
   Future<void> _sendUserLocation() async {
-    if (_isSendingLocation) return; // ป้องกันการส่งซ้ำ
+    if (_isSendingLocation) return;
 
     bool hasPermission = await _handleLocationPermission();
     if (!hasPermission) return;
 
     setState(() {
-      _isSendingLocation = true; // ตั้งสถานะกำลังส่งข้อมูล
+      _isSendingLocation = true;
     });
 
     try {
@@ -195,7 +207,6 @@ class _LocationMapState extends State<LocationMap> {
       double userLatitude = position.latitude;
       double userLongitude = position.longitude;
 
-      // ถ้าเป็นตำแหน่งเดียวกันกับที่ส่งล่าสุด จะไม่ส่งซ้ำ
       if (_lastSentUserLocation != null &&
           _lastSentUserLocation!.latitude == userLatitude &&
           _lastSentUserLocation!.longitude == userLongitude) {
@@ -207,8 +218,7 @@ class _LocationMapState extends State<LocationMap> {
           widget.userId, userLatitude, userLongitude);
 
       if (response['status'] == 'success') {
-        _lastSentUserLocation =
-            LatLng(userLatitude, userLongitude); // เก็บตำแหน่งล่าสุดที่ส่ง
+        _lastSentUserLocation = LatLng(userLatitude, userLongitude);
 
         setState(() {
           _userMarkers.add(
@@ -226,7 +236,7 @@ class _LocationMapState extends State<LocationMap> {
                   Positioned(
                     top: 0,
                     child: Container(
-                      child: Text(
+                      child: const Text(
                         'You',
                         style: TextStyle(
                           color: Colors.black,
@@ -251,7 +261,7 @@ class _LocationMapState extends State<LocationMap> {
             _userMarkers.removeWhere((marker) =>
                 marker.point.latitude == userLatitude &&
                 marker.point.longitude == userLongitude);
-            _lastSentUserLocation = null; // รีเซ็ตตำแหน่งที่ส่ง
+            _lastSentUserLocation = null;
           });
         });
       } else {
@@ -261,12 +271,12 @@ class _LocationMapState extends State<LocationMap> {
       print('Error sending user location: $e');
     } finally {
       setState(() {
-        _isSendingLocation = false; // รีเซ็ตสถานะหลังจากส่งเสร็จ
+        _isSendingLocation = false;
       });
     }
   }
 
-  // ฟังก์ชันสำหรับการขอสิทธิ์การเข้าถึงตำแหน่ง
+  // Handle location permission
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -319,32 +329,24 @@ class _LocationMapState extends State<LocationMap> {
         ),
         if (widget.role != 'driver')
           Positioned(
-            bottom: 50, // ตำแหน่งปุ่มอยู่ห่างจากขอบล่าง 50px
-            left: 0, // ปุ่มจะอยู่ตรงกลาง
-            right: 0, // ทำให้ปุ่มอยู่ตรงกลางระหว่างซ้ายและขวา
+            bottom: 50,
+            left: 0,
+            right: 0,
             child: Center(
               child: ElevatedButton.icon(
-                onPressed: _isSendingLocation
-                    ? null
-                    : _sendUserLocation, // ปิดปุ่มขณะส่ง
-                label: const Icon(Icons.send,
-                    color: Color(0xFFFFFFFF)), // ไอคอนอยู่หลังข้อความ
+                onPressed: _isSendingLocation ? null : _sendUserLocation,
+                label: const Icon(Icons.send, color: Color(0xFFFFFFFF)),
                 icon: const Text(
-                  'Send location', // ข้อความอยู่หน้าข้อความ
-                  style: TextStyle(
-                      color: Color(0xFFFFFFFF)), // สีของตัวหนังสือ #FFFFFF
+                  'Send location',
+                  style: TextStyle(color: Color(0xFFFFFFFF)),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      const Color(0xFF40534C), // สีพื้นหลัง #40534C
+                  backgroundColor: const Color(0xFF40534C),
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical:
-                          8), // เพิ่มความสูงอีก 5px (จากเดิม 12px เป็น 17px)
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(10), // ทำให้ปุ่มมีขอบโค้งมน
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
