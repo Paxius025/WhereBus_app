@@ -226,7 +226,6 @@ class _LocationMapState extends State<LocationMap> {
                   Positioned(
                     top: 0,
                     child: Container(
-                      color: Colors.white,
                       child: Text(
                         'You',
                         style: TextStyle(
