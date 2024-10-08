@@ -50,76 +50,79 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       body: Center(
         child: SingleChildScrollView(
-          child: FractionallySizedBox(
-            widthFactor: screenWidth < 600 ? 0.9 : 0.6, // Responsive width
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 20), // เว้นช่องว่างด้านบน
-                _buildAdminMenuItem(
-                  icon: _loadImageWithFallback(
-                    'assets/users.png', // path ของรูป
-                    Icons.groups, // icon แทนถ้ารูปไม่โหลด
-                  ),
-                  label: 'User Management',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserManagementScreen(
-                          username: widget.username,
-                          email: widget.email,
-                          userId: widget.userId,
-                          role: widget.role,
+          child: Transform.scale(
+            scale: 0.85, // ลดขนาดหน้าจอ 15%
+            child: FractionallySizedBox(
+              widthFactor: screenWidth < 600 ? 0.9 : 0.6, // Responsive width
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20), // เว้นช่องว่างด้านบน
+                  _buildAdminMenuItem(
+                    icon: _loadImageWithFallback(
+                      'assets/users.png', // path ของรูป
+                      Icons.groups, // icon แทนถ้ารูปไม่โหลด
+                    ),
+                    label: 'User Management',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserManagementScreen(
+                            username: widget.username,
+                            email: widget.email,
+                            userId: widget.userId,
+                            role: widget.role,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-                _buildAdminMenuItem(
-                  icon: _loadImageWithFallback(
-                    'assets/driver_avatar.png', // path ของรูป
-                    Icons.assignment_ind, // icon แทนถ้ารูปไม่โหลด
+                      );
+                    },
                   ),
-                  label: 'Driver Management',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DriverManagementScreen(
-                          username: widget.username,
-                          email: widget.email,
-                          userId: widget.userId,
-                          role: widget.role,
+                  const SizedBox(height: 20),
+                  _buildAdminMenuItem(
+                    icon: _loadImageWithFallback(
+                      'assets/driver_avatar.png', // path ของรูป
+                      Icons.assignment_ind, // icon แทนถ้ารูปไม่โหลด
+                    ),
+                    label: 'Driver Management',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DriverManagementScreen(
+                            username: widget.username,
+                            email: widget.email,
+                            userId: widget.userId,
+                            role: widget.role,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-                _buildAdminMenuItem(
-                  icon: _loadImageWithFallback(
-                    'assets/bus_avatar.png', // path ของรูป
-                    Icons.directions_bus, // icon แทนถ้ารูปไม่โหลด
+                      );
+                    },
                   ),
-                  label: 'Bus Status',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BusStatusScreen(
-                          username: widget.username,
-                          email: widget.email,
-                          userId: widget.userId,
-                          role: widget.role,
+                  const SizedBox(height: 20),
+                  _buildAdminMenuItem(
+                    icon: _loadImageWithFallback(
+                      'assets/bus_avatar.png', // path ของรูป
+                      Icons.directions_bus, // icon แทนถ้ารูปไม่โหลด
+                    ),
+                    label: 'Bus Status',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BusStatusScreen(
+                            username: widget.username,
+                            email: widget.email,
+                            userId: widget.userId,
+                            role: widget.role,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
