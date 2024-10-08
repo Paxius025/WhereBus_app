@@ -94,14 +94,6 @@ class _MainScreenState extends State<MainScreen> {
             child: Row(
               children: [
                 // แสดง Role ก่อน
-                Text(
-                  '${widget.role} : '.toUpperCase(),
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300,
-                    color: Colors.black, // สีของบทบาท
-                  ),
-                ),
                 SizedBox(width: 8), // ระยะห่างระหว่างบทบาทและชื่อผู้ใช้
                 // แสดง Username
                 Text(

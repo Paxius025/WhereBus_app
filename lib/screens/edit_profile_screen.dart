@@ -15,7 +15,7 @@ class EditProfileScreen extends StatefulWidget {
     required this.email,
     required this.userId,
     required this.role,
-  }); // รับ role มาใน constructor
+  });
 
   @override
   _EditProfileScreenState createState() => _EditProfileScreenState();
@@ -105,15 +105,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
+      backgroundColor:
+          const Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
       appBar: AppBar(
-        backgroundColor: Color(0xFF1A3636),
-        title: Text('EDIT PROFILE'),
+        backgroundColor: const Color(0xFF1A3636),
+        title: const Text('EDIT PROFILE'),
         foregroundColor: Colors.white,
         centerTitle: true,
       ),
       body: _isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -126,16 +127,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.grey[300],
-                        image: DecorationImage(
-                          image: AssetImage(
-                            widget.role == 'admin'
-                                ? 'assets/admin.png' // รูปภาพของ admin
-                                : widget.role == 'driver'
-                                    ? 'assets/driver_avatar.png' // รูปภาพของ driver
-                                    : 'assets/user_avatar.png', // รูปภาพของ user ทั่วไป
-                          ),
-                          fit: BoxFit.cover,
-                        ),
+                      ),
+                      child: ClipOval(
+                        child: _loadImageWithFallback(
+                            widget.role), // โหลดรูปพร้อม fallback
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -146,9 +141,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         children: [
                           TextField(
                             controller: _usernameController,
-                            style: TextStyle(color: Color(0xFF7F7777)),
+                            style: const TextStyle(color: Color(0xFF7F7777)),
                             decoration: InputDecoration(
-                              labelStyle: TextStyle(color: Color(0xFF7F7777)),
+                              labelStyle:
+                                  const TextStyle(color: Color(0xFF7F7777)),
                               filled: true,
                               fillColor: Colors.grey[200],
                               border: OutlineInputBorder(
@@ -159,10 +155,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           const SizedBox(height: 20),
                           TextField(
                             controller: _passwordController,
-                            style: TextStyle(color: Color(0xFF7F7777)),
+                            style: const TextStyle(
+                              color: Color(0xFF7F7777),
+                              fontSize:
+                                  11, // ลดขนาดตัวหนังสือลง 5px (จากค่า default 16px เหลือ 11px)
+                            ),
                             decoration: InputDecoration(
                               labelText: 'PASSWORD',
-                              labelStyle: TextStyle(color: Color(0xFF7F7777)),
+                              labelStyle: const TextStyle(
+                                color: Color(0xFF7F7777),
+                                fontSize:
+                                    11, // ลดขนาดตัวหนังสือลง 5px (จากค่า default 16px เหลือ 11px)
+                              ),
                               filled: true,
                               fillColor: Colors.grey[200],
                               border: OutlineInputBorder(
@@ -174,50 +178,63 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
-                          width: 110, // กำหนดความกว้างของปุ่ม SAVE
+                          width: 97, // กำหนดความกว้างของปุ่ม SAVE
                           child: ElevatedButton(
                             onPressed: _updateProfile,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xFF40534C),
+                              backgroundColor: const Color(0xFF40534C),
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
-                            child: const Text('SAVE'),
+                            child: const Text(
+                              'SAVE',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ), // ลดขนาดตัวหนังสือลง 2px
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 10),
                         SizedBox(
-                          width: 110, // กำหนดความกว้างของปุ่ม CANCEL
+                          width: 95, // กำหนดความกว้างของปุ่ม CANCEL
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
-                              foregroundColor: Color(0xFF7F7777),
+                              foregroundColor: const Color(0xFF7F7777),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(3),
                               ),
                             ),
-                            child: const Text('CANCEL'),
+                            child: const Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              // ลดขนาดตัวหนังสือลง 2px
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     if (_errorMessage.isNotEmpty)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           _errorMessage,
-                          style: TextStyle(color: Colors.red),
+                          style: const TextStyle(color: Colors.red),
                         ),
                       ),
                     if (_successMessage.isNotEmpty)
@@ -225,10 +242,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           _successMessage,
-                          style: TextStyle(color: Colors.green),
+                          style: const TextStyle(color: Colors.green),
                         ),
                       ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 15),
                     const Text(
                       'WhereBus Version 1.0.1\nPantong | Jedsada | Tharathep | Apirak',
                       textAlign: TextAlign.center,
@@ -238,14 +255,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     ElevatedButton(
                       onPressed: _logout,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFFE96464),
+                        backgroundColor: const Color(0xFFE96464),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(2),
                         ),
-                        minimumSize: Size(45, 35),
+                        minimumSize: const Size(45, 35),
                       ),
-                      child: Text('LOGOUT'),
+                      child: const Text('LOGOUT'),
                     ),
                   ],
                 ),
@@ -257,6 +274,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         userId: widget.userId,
         role: widget.role,
       ),
+    );
+  }
+
+  // ฟังก์ชันสำหรับโหลดรูปพร้อม fallback เป็นไอคอน
+  Widget _loadImageWithFallback(String role) {
+    return Image.asset(
+      role == 'admin'
+          ? 'assets/admin.png'
+          : role == 'driver'
+              ? 'assets/driver.png'
+              : 'assets/user_avatar.png',
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Icon(
+          role == 'admin'
+              ? Icons.engineering
+              : role == 'driver'
+                  ? Icons.contacts
+                  : Icons.account_circle,
+          size: 100,
+          color: Colors.grey,
+        );
+      },
     );
   }
 }
