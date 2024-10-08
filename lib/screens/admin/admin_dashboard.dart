@@ -51,13 +51,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Transform.scale(
-            scale: 0.75, // ลดขนาดหน้าจอ 25%
+            scale: 0.85, // ลดขนาดหน้าจอ 15%
             child: FractionallySizedBox(
               widthFactor: screenWidth < 600 ? 0.9 : 0.6, // Responsive width
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 0), // เว้นช่องว่างด้านบน
                   _buildAdminMenuItem(
                     icon: _loadImageWithFallback(
                       'assets/users.png', // path ของรูป
@@ -78,7 +79,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   _buildAdminMenuItem(
                     icon: _loadImageWithFallback(
                       'assets/driver_avatar.png', // path ของรูป
@@ -99,7 +100,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   _buildAdminMenuItem(
                     icon: _loadImageWithFallback(
                       'assets/bus_avatar.png', // path ของรูป
