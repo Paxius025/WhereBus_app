@@ -123,7 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   // ใช้ Spacer เพื่อจัดการระยะห่างให้สมดุลในแนวตั้ง
                   Spacer(flex: 2), // ด้านบน
                   Transform.scale(
-                    scale: 0.90, // ลดขนาดหน้าจอทั้งหมดลง 10%
+                    scale: 0.85, // ลดขนาดหน้าจอทั้งหมดลง 10%
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

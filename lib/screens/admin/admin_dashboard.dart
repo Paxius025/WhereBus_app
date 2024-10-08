@@ -60,7 +60,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               'assets/users.png',
               Icons.groups,
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 3), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Manage User',
               onTap: () {
@@ -77,13 +77,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 3), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
               'assets/driver_avatar.png',
               Icons.assignment_ind,
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 3), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Manage Driver',
               onTap: () {
@@ -100,13 +100,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 3), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
               'assets/bus_avatar.png',
               Icons.directions_bus,
             ),
-            const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 3), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Bus Status',
               onTap: () {
@@ -140,7 +140,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return CircleAvatar(
       backgroundColor:
           const Color.fromARGB(255, 255, 255, 255), // พื้นหลังเป็นสีขาว
-      radius: 60, // ขนาดวงกลมของไอคอน
+      radius: 45, // ขนาดวงกลมของไอคอน
       child: _loadImageWithFallback(
           imagePath, fallbackIcon), // โหลดไอคอนหรือรูปภาพ
     );
@@ -166,7 +166,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ],
         ),
         padding: const EdgeInsets.symmetric(
-            horizontal: 25, vertical: 12), // ระยะห่างภายในป้าย
+            horizontal: 20, vertical: 12), // ระยะห่างภายในป้าย
         width: 120, // กำหนดความกว้างของป้ายข้อความให้เท่ากัน
         child: Center(
           child: Text(
@@ -188,8 +188,8 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _loadImageWithFallback(String imagePath, IconData fallbackIcon) {
     return Image.asset(
       imagePath, // พาธของรูปภาพ
-      height: 120, // ความสูงของรูปภาพ
-      width: 120, // ความกว้างของรูปภาพ
+      height: 100, // ความสูงของรูปภาพ
+      width: 100, // ความกว้างของรูปภาพ
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
         return Icon(
