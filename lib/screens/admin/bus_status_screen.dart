@@ -38,7 +38,9 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
       final response = await apiService.fetchLatestBusLocation();
       if (response['status'] == 'success') {
         setState(() {
-          buses = [response['location'] ?? {}]; // จัดการกรณี response['location'] เป็น null
+          buses = [
+            response['location'] ?? {}
+          ]; // จัดการกรณี response['location'] เป็น null
           _isLoading = false;
         });
       } else {
@@ -60,10 +62,11 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        //automaticallyImplyLeading: false,
+        backgroundColor: const Color(0xFFFFFFFF), // Set background color
         title: const Text('Bus Status'),
         centerTitle: true,
       ),
+      backgroundColor: const Color(0xFFFFFFFF), // Set background color
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: _isLoading
@@ -74,10 +77,16 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                     itemCount: buses.length,
                     itemBuilder: (context, index) {
                       final bus = buses[index];
-                      String busId = bus['bus_id']?.toString() ?? 'N/A'; // กำหนดค่าเริ่มต้นหาก bus_id เป็น null
-                      String timestamp = bus['timestamp'] ?? ''; // กำหนดค่าเริ่มต้นหาก timestamp เป็น null
+                      String busId = bus['bus_id']?.toString() ?? 'N/A';
+                      String timestamp = bus['timestamp'] ?? '';
+
+                      String status = _getBusStatus(timestamp);
+                      Color statusColor = status == 'Online'
+                          ? Colors.green
+                          : Colors.red; // Status color
 
                       return Card(
+                        color: Colors.white,
                         margin: const EdgeInsets.symmetric(vertical: 10),
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
@@ -85,8 +94,10 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                             children: [
                               Icon(
                                 Icons.directions_bus,
-                                color: Colors.orange,
-                                size: screenWidth * 0.1, // Responsive size for bus icon
+                                color:
+                                    statusColor, // Bus icon color based on status
+                                size: screenWidth *
+                                    0.1, // Responsive size for bus icon
                               ),
                               const SizedBox(width: 20),
                               Expanded(
@@ -97,7 +108,8 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                                       'Bus ID: $busId',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: screenWidth * 0.05, // Responsive font size
+                                        fontSize: screenWidth *
+                                            0.05, // Responsive font size
                                       ),
                                     ),
                                     SizedBox(height: 8),
@@ -111,11 +123,10 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                                           ),
                                         ),
                                         Text(
-                                          _getBusStatus(timestamp),
+                                          status,
                                           style: TextStyle(
-                                            color: _getBusStatus(timestamp) == 'Online'
-                                                ? Colors.green
-                                                : Colors.red,
+                                            color:
+                                                statusColor, // Status text color
                                             fontSize: screenWidth * 0.045,
                                           ),
                                         ),
@@ -142,7 +153,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
 
   String _getBusStatus(String timestamp) {
     if (timestamp.isEmpty) {
-      return 'Offline'; // กรณี timestamp ไม่มีข้อมูล ให้ถือว่าเป็น Offline
+      return 'Offline';
     }
     try {
       DateTime lastUpdate = DateTime.parse(timestamp);
@@ -153,7 +164,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
         return 'Offline';
       }
     } catch (e) {
-      return 'Offline'; // ถ้า parsing ไม่สำเร็จ ให้ถือว่าเป็น Offline
+      return 'Offline';
     }
   }
 }

@@ -133,7 +133,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
       children: [
         DataTable(
           headingRowColor: MaterialStateProperty.all(
-              const Color(0xFF677D6A)), // พื้นหลังสีเขียวของหัวตาราง
+              const Color(0xFF40534C)), // พื้นหลังสีเขียวของหัวตาราง
           columns: const [
             DataColumn(
               label: Text(
@@ -153,7 +153,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             ),
             DataColumn(
               label: Text(
-                'DEL',
+                'DELETE',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white), // ตัวหนังสือสีขาว

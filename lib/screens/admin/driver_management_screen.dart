@@ -1,4 +1,3 @@
-// lib/screens/admin/driver_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
@@ -92,8 +91,8 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
-        //automaticallyImplyLeading: false,
         title: const Text('Driver Management'),
         centerTitle: true,
       ),
@@ -116,12 +115,6 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
                         ),
                       ),
                       _buildPaginationControls(),
-                      ElevatedButton(
-                        onPressed: () {
-                          _showAddDriverDialog();
-                        },
-                        child: const Text('Add Driver'),
-                      ),
                     ],
                   ),
       ),
@@ -130,7 +123,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         email: widget.email,
         userId: widget.userId,
         role: widget.role,
-      ), // เพิ่ม Navigation Bar ที่ด้านล่าง
+      ),
     );
   }
 
@@ -140,41 +133,56 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         ? drivers.length
         : (_currentPage + 1) * _itemsPerPage;
 
-    List<Map<String, dynamic>> currentItems = drivers.sublist(startIndex, endIndex);
+    List<Map<String, dynamic>> currentItems =
+        drivers.sublist(startIndex, endIndex);
 
-    // Adjusting column widths to fit in smaller screens (min screen width: 320px)
-    double idWidth = screenWidth * 0.10; // 10% of screen width for ID
-    double usernameWidth = screenWidth * 0.50; // 50% of screen width for USERNAME
-    double actionWidth = screenWidth * 0.30; // 30% of screen width for ACTION
+    double idWidth = screenWidth * 0.10;
+    double usernameWidth =
+        screenWidth * 0.50 * 0.70; // ลดขนาดลง 30% โดยใช้ 70% ของความกว้างเดิม
+    double actionWidth = screenWidth * 0.30;
 
     return DataTable(
-      headingRowColor: MaterialStateProperty.all(Colors.grey[300]),
+      headingRowColor: MaterialStateProperty.all(
+          const Color(0xFF40534C)), // พื้นหลังสีเขียวสำหรับหัวตารางทั้งหมด
       columnSpacing: 10,
       columns: [
         DataColumn(
           label: SizedBox(
-            width: idWidth < 30 ? 30 : idWidth, // Minimum width for ID column.
+            width: idWidth < 30 ? 30 : idWidth, // กำหนดขนาดขั้นต่ำของคอลัมน์
             child: const Text(
               'ID',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.white), // ตัวหนังสือสีขาว
             ),
           ),
         ),
         DataColumn(
           label: SizedBox(
-            width: usernameWidth < 100 ? 100 : usernameWidth, // Minimum width for USERNAME column.
+            width: usernameWidth < 20
+                ? 20
+                : usernameWidth, // ขนาดคอลัมน์ Username ลดลง 30%
             child: const Text(
               'USERNAME',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.white), // ตัวหนังสือสีขาว
             ),
           ),
         ),
         DataColumn(
           label: SizedBox(
-            width: actionWidth < 80 ? 80 : actionWidth, // Minimum width for ACTION column.
+            width: actionWidth < 20
+                ? 20
+                : actionWidth, // ขนาดขั้นต่ำของคอลัมน์ ACTION
             child: const Text(
               'ACTION',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: Colors.white), // ตัวหนังสือสีขาว
             ),
           ),
         ),
@@ -183,28 +191,40 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
           .map(
             (driver) => DataRow(
               cells: [
-                DataCell(Text(driver['id'].toString(), style: const TextStyle(fontSize: 12))),
-                DataCell(Text(driver['username'], style: const TextStyle(fontSize: 12))),
+                DataCell(Text(driver['id'].toString(),
+                    style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF7F7777)))), // ตัวหนังสือสีเทา
+                DataCell(
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical:
+                            4.0), // กำหนด padding เพิ่มเติมในช่อง username
+                    child: Text(
+                      driver['username'],
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF7F7777)), // ตัวหนังสือสีขาว
+                    ),
+                  ),
+                ),
                 DataCell(
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Center the action icons
+                    mainAxisAlignment:
+                        MainAxisAlignment.center, // จัดให้ปุ่มอยู่ตรงกลาง
                     children: [
                       IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Colors.blue,
-                          size: 20,
-                        ),
+                        icon: const Icon(Icons.edit,
+                            color: Color(0xFF1A3636),
+                            size: 20), // เปลี่ยนสีไอคอนเป็น 0xFF1A3636
                         onPressed: () {
                           _showRenameDialog(driver['id'], driver['username']);
                         },
                       ),
                       IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                          size: 20,
-                        ),
+                        icon: const Icon(Icons.delete,
+                            color: Colors.red, size: 20),
                         onPressed: () {
                           _showDeleteConfirmation(driver['id']);
                         },
@@ -226,15 +246,23 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Rename Driver'),
+        backgroundColor: const Color(0xFF1A3636), // พื้นหลังสีเข้มของ Popup
+        title: const Text('Rename Driver',
+            style: TextStyle(color: Colors.white)), // ตัวหนังสือสีขาว
         content: TextField(
           controller: usernameController,
-          decoration: InputDecoration(labelText: 'New Username'),
+          style: const TextStyle(color: Colors.white),
+          decoration: const InputDecoration(
+            labelText: 'New Username',
+            labelStyle: TextStyle(color: Colors.white),
+            filled: true,
+            fillColor: Color(0xFF40534C), // พื้นหลังของ TextField
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () async {
@@ -244,7 +272,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
               _fetchDrivers();
               _showSuccessPopup();
             },
-            child: Text('Save'),
+            child: const Text('Save', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -258,17 +286,32 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Add Driver'),
+        backgroundColor: const Color(0xFF1A3636), // พื้นหลังสีเข้มของ Popup
+        title: const Text('Add Driver',
+            style: TextStyle(color: Colors.white)), // ตัวหนังสือสีขาว
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: usernameController,
-              decoration: InputDecoration(labelText: 'Username'),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'Username',
+                labelStyle: TextStyle(color: Colors.white),
+                filled: true,
+                fillColor: Color(0xFF40534C), // พื้นหลังของ TextField
+              ),
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              style: const TextStyle(color: Colors.white),
+              decoration: const InputDecoration(
+                labelText: 'Password',
+                labelStyle: TextStyle(color: Colors.white),
+                filled: true,
+                fillColor: Color(0xFF40534C), // พื้นหลังของ TextField
+              ),
               obscureText: true,
             ),
           ],
@@ -276,7 +319,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () async {
@@ -285,7 +328,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
               Navigator.of(context).pop();
               _showSuccessPopup(message: 'Driver added successfully');
             },
-            child: Text('Add'),
+            child: const Text('Add', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -296,12 +339,15 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Driver'),
-        content: Text('Are you sure you want to delete this driver?'),
+        backgroundColor: const Color(0xFF1A3636), // พื้นหลังสีเข้มของ Popup
+        title: const Text('Delete Driver',
+            style: TextStyle(color: Colors.white)), // ตัวหนังสือสีขาว
+        content: const Text('Are you sure you want to delete this driver?',
+            style: TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
           ),
           TextButton(
             onPressed: () async {
@@ -309,7 +355,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
               Navigator.of(context).pop();
               _fetchDrivers();
             },
-            child: Text('Delete'),
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -320,12 +366,13 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Success'),
-        content: Text(message),
+        backgroundColor: const Color(0xFF1A3636), // พื้นหลังสีเข้มของ Popup
+        title: const Text('Success', style: TextStyle(color: Colors.white)),
+        content: Text(message, style: const TextStyle(color: Colors.white)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK'),
+            child: const Text('OK', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -336,11 +383,31 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     int totalPages = (drivers.length / _itemsPerPage).ceil();
     return Column(
       children: [
+        ElevatedButton(
+          onPressed: () {
+            _showAddDriverDialog();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF1A3636), // สีปุ่ม Add Driver
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5), // ขอบปุ่มเหลี่ยม
+            ),
+            padding: const EdgeInsets.symmetric(
+                horizontal: 24, vertical: 12), // ขนาดของปุ่ม
+          ),
+          child: const Text(
+            'Add Driver',
+            style: TextStyle(
+              color: Colors.white, // สีตัวหนังสือสีขาว
+              fontWeight: FontWeight.w600, // ทำให้ตัวหนังสือหนาขึ้นเล็กน้อย
+            ),
+          ),
+        ), // ปุ่ม Add Driver ย้ายมาที่นี่
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: _currentPage > 0
                   ? () {
                       setState(() {
@@ -351,7 +418,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
             ),
             Text('Page ${_currentPage + 1} of $totalPages'),
             IconButton(
-              icon: Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.arrow_forward),
               onPressed: _currentPage < totalPages - 1
                   ? () {
                       setState(() {
@@ -362,7 +429,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 2),
         Text(
           'Amount of ${drivers.length} drivers',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

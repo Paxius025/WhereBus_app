@@ -1,4 +1,3 @@
-// lib/screens/admin/admin_dashboard.dart
 import 'package:flutter/material.dart';
 import 'user_management_screen.dart';
 import 'driver_management_screen.dart';
@@ -30,13 +29,21 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            const Color.fromARGB(255, 255, 255, 255), // สีพื้นหลังของ AppBar
+        backgroundColor: Colors.white, // สีพื้นหลังของ AppBar สีขาว
+        title: const Text(
+          'Admin Dashboard',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+            color: Colors.black, // ตัวหนังสือสีดำ
+          ),
+        ),
+        centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back,
-              color: Color.fromARGB(255, 0, 0, 0)), // ปุ่มย้อนกลับ
+              color: Colors.black), // ปุ่มย้อนกลับสีดำ
           onPressed: () {
-            Navigator.pop(context); // เมื่อกดปุ่มจะกลับไปหน้าก่อนหน้า
+            Navigator.pop(context); // กลับไปหน้าก่อนหน้า
           },
         ),
       ),
@@ -49,23 +56,14 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Admin Dashboard',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 20), // เว้นช่องว่างด้านบน
                 _buildAdminMenuItem(
-                  icon: Image.asset(
-                    'users.png', // ใส่ path รูปภาพของคุณ
-                    height: 120, // ขนาดความสูงของรูป
-                    width: 120, // ขนาดความกว้างของรูป
+                  icon: _loadImageWithFallback(
+                    'users.png', // path ของรูป
+                    Icons.groups, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'User Management',
                   onTap: () {
-                    // Navigate to User Management
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -81,14 +79,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
-                  icon: Image.asset(
-                    'driver_avatar.png', // ใส่ path รูปภาพของคุณ
-                    height: 120, // ขนาดความสูงของรูป
-                    width: 120, // ขนาดความกว้างของรูป
+                  icon: _loadImageWithFallback(
+                    'driver_avatar.png', // path ของรูป
+                    Icons.assignment_ind, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'Driver Management',
                   onTap: () {
-                    // Navigate to Driver Management
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -104,14 +100,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 ),
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
-                  icon: Image.asset(
-                    'bus_avatar.png', // ใส่ path รูปภาพของคุณ
-                    height: 130, // ขนาดความสูงของรูป
-                    width: 130, // ขนาดความกว้างของรูป
+                  icon: _loadImageWithFallback(
+                    'bus_avatar.png', // path ของรูป
+                    Icons.directions_bus, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'Bus Status',
                   onTap: () {
-                    // Navigate to Bus Status Management
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -155,15 +149,42 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             child: icon,
           ),
           const SizedBox(height: 10),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+          Container(
+            color: const Color(0xFF677D6A), // สีพื้นหลัง #677D6A สำหรับเมนู
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+            width: 180, // กำหนดขนาดความกว้างของ label ให้เท่ากัน
+            child: Center(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14, // ลดขนาดตัวหนังสือเพื่อให้อยู่ในบรรทัดเดียว
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white, // ตัวหนังสือสีขาว
+                ),
+                softWrap: false, // ไม่ให้ตัดคำข้ามบรรทัด
+                overflow: TextOverflow.ellipsis, // ตัดข้อความถ้ายาวเกิน
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // ฟังก์ชันสำหรับโหลดรูปภาพพร้อม fallback ถ้ารูปไม่สามารถโหลดได้
+  Widget _loadImageWithFallback(String imagePath, IconData fallbackIcon) {
+    return Image.asset(
+      imagePath,
+      height: 120, // ขนาดความสูงของรูป
+      width: 120, // ขนาดความกว้างของรูป
+      errorBuilder:
+          (BuildContext context, Object error, StackTrace? stackTrace) {
+        return Icon(
+          fallbackIcon,
+          size: 100, // ขนาดของไอคอนที่แสดงแทน
+          color: Colors.grey, // สีของไอคอน
+        );
+      },
     );
   }
 }
