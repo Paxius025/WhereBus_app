@@ -56,7 +56,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 _buildAdminMenuItem(
                   icon: Image.asset(
                     'users.png', // ใส่ path รูปภาพของคุณ
