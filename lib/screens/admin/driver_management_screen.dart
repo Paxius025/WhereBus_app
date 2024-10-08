@@ -93,6 +93,7 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         title: const Text('Driver Management'),
         centerTitle: true,
       ),
