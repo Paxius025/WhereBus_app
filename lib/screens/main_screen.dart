@@ -67,13 +67,13 @@ class _MainScreenState extends State<MainScreen> {
     // เปรียบเทียบ role เพื่อกำหนดไอคอน
     switch (widget.role) {
       case 'admin':
-        icon = Icon(Icons.handyman, color: Colors.red);
+        icon = Icon(Icons.handyman, color:Colors.grey);
         break;
       case 'user':
-        icon = Icon(Icons.person, color: Colors.blue);
+        icon = Icon(Icons.person, color: Colors.grey);
         break;
       case 'driver':
-        icon = Icon(Icons.directions_bus, color: Colors.green);
+        icon = Icon(Icons.directions_bus, color: Colors.grey);
         break;
       default:
         icon = Icon(Icons.help, color: Colors.grey);

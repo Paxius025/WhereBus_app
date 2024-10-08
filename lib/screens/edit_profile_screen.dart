@@ -130,9 +130,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Container(
                           width: 180,
                           height: 180,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[300],
+                          decoration: const BoxDecoration(
+                            shape: BoxShape
+                                .circle, // ลบ color ออกเพื่อลบพื้นหลังสีเทา
                           ),
                           child: ClipOval(
                             child: _loadImageWithFallback(
