@@ -38,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _emailController.text = widget.email;
   }
 
+  // ฟังก์ชันสำหรับอัปเดตโปรไฟล์
   void _updateProfile() async {
     setState(() {
       _isLoading = true;
@@ -59,11 +60,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
 
         // หน่วงเวลา 0.5 วินาทีก่อนแสดง pop-up การบันทึกสำเร็จ
-        await Future.delayed(Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 500));
 
         // แสดงข้อความสำเร็จใน pop-up
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Profile updated successfully')),
+          const SnackBar(content: Text('Profile updated successfully')),
         );
 
         // นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป และคง role เดิม
@@ -118,153 +119,153 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           : SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 180,
-                      height: 180,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey[300],
+                child: Transform.scale(
+                  scale: 0.85, // ลดขนาดหน้าจอทั้งหมดลง 15%
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 180,
+                        height: 180,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[300],
+                        ),
+                        child: ClipOval(
+                          child: _loadImageWithFallback(
+                              widget.role), // โหลดรูปพร้อม fallback
+                        ),
                       ),
-                      child: ClipOval(
-                        child: _loadImageWithFallback(
-                            widget.role), // โหลดรูปพร้อม fallback
+                      const SizedBox(height: 40),
+                      FractionallySizedBox(
+                        widthFactor:
+                            0.7, // บีบให้ช่องข้อความกว้างเพียง 70% ของหน้าจอ
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: _usernameController,
+                              style: const TextStyle(color: Color(0xFF7F7777)),
+                              decoration: InputDecoration(
+                                labelStyle:
+                                    const TextStyle(color: Color(0xFF7F7777)),
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            TextField(
+                              controller: _passwordController,
+                              style: const TextStyle(
+                                color: Color(0xFF7F7777),
+                                fontSize: 11, // ลดขนาดตัวหนังสือเหลือ 11px
+                              ),
+                              decoration: InputDecoration(
+                                labelText: 'PASSWORD',
+                                labelStyle: const TextStyle(
+                                  color: Color(0xFF7F7777),
+                                  fontSize: 11, // ลดขนาดตัวหนังสือลง 5px
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[200],
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              obscureText: true, // ซ่อนรหัสผ่าน
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 40),
-                    FractionallySizedBox(
-                      widthFactor:
-                          0.7, // บีบให้ช่องข้อความกว้างเพียง 70% ของหน้าจอ
-                      child: Column(
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextField(
-                            controller: _usernameController,
-                            style: const TextStyle(color: Color(0xFF7F7777)),
-                            decoration: InputDecoration(
-                              labelStyle:
-                                  const TextStyle(color: Color(0xFF7F7777)),
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(3),
+                          SizedBox(
+                            width: 97, // กำหนดความกว้างของปุ่ม SAVE
+                            child: ElevatedButton(
+                              onPressed: _updateProfile,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF40534C),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                              ),
+                              child: const Text(
+                                'SAVE',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 20),
-                          TextField(
-                            controller: _passwordController,
-                            style: const TextStyle(
-                              color: Color(0xFF7F7777),
-                              fontSize:
-                                  11, // ลดขนาดตัวหนังสือลง 5px (จากค่า default 16px เหลือ 11px)
-                            ),
-                            decoration: InputDecoration(
-                              labelText: 'PASSWORD',
-                              labelStyle: const TextStyle(
-                                color: Color(0xFF7F7777),
-                                fontSize:
-                                    11, // ลดขนาดตัวหนังสือลง 5px (จากค่า default 16px เหลือ 11px)
+                          const SizedBox(width: 10),
+                          SizedBox(
+                            width: 95, // กำหนดความกว้างของปุ่ม CANCEL
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: const Color(0xFF7F7777),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
                               ),
-                              filled: true,
-                              fillColor: Colors.grey[200],
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(3),
+                              child: const Text(
+                                'CANCEL',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                ),
                               ),
                             ),
-                            obscureText: true,
                           ),
                         ],
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 97, // กำหนดความกว้างของปุ่ม SAVE
-                          child: ElevatedButton(
-                            onPressed: _updateProfile,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF40534C),
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                            child: const Text(
-                              'SAVE',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ), // ลดขนาดตัวหนังสือลง 2px
-                            ),
+                      const SizedBox(height: 10),
+                      if (_errorMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            _errorMessage,
+                            style: const TextStyle(color: Colors.red),
                           ),
                         ),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: 95, // กำหนดความกว้างของปุ่ม CANCEL
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: const Color(0xFF7F7777),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(3),
-                              ),
-                            ),
-                            child: const Text(
-                              'CANCEL',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                              ),
-                              // ลดขนาดตัวหนังสือลง 2px
-                            ),
+                      if (_successMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            _successMessage,
+                            style: const TextStyle(color: Colors.green),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    if (_errorMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          _errorMessage,
-                          style: const TextStyle(color: Colors.red),
-                        ),
+                      const SizedBox(height: 15),
+                      const Text(
+                        'WhereBus Version 1.0.1\nPantong | Jedsada | Tharathep | Apirak',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 12, color: Colors.white),
                       ),
-                    if (_successMessage.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          _successMessage,
-                          style: const TextStyle(color: Colors.green),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _logout,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFE96464),
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          minimumSize: const Size(45, 35),
                         ),
+                        child: const Text('LOGOUT'),
                       ),
-                    const SizedBox(height: 15),
-                    const Text(
-                      'WhereBus Version 1.0.1\nPantong | Jedsada | Tharathep | Apirak',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 12, color: Colors.white),
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: _logout,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFE96464),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                        minimumSize: const Size(45, 35),
-                      ),
-                      child: const Text('LOGOUT'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
