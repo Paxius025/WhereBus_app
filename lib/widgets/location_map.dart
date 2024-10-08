@@ -376,7 +376,8 @@ class _LocationMapState extends State<LocationMap> {
             center: LatLng(17.280525, 104.123622),
             zoom: 14.5,
             maxZoom: 18.0,
-          ),
+            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate
+            ),
           children: [
             TileLayer(
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
