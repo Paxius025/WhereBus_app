@@ -110,8 +110,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   'assets/register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
                   height: 200, // กำหนดขนาดความสูงของรูปภาพ
                   width: 200, // กำหนดขนาดความกว้างของรูปภาพ
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    // แสดงไอคอนเมื่อรูปภาพไม่โหลด
+                    return Icon(
+                      Icons.account_circle, // เปลี่ยนไอคอนที่จะแสดง
+                      size: 200, // ขนาดของไอคอนที่จะแสดงแทนรูป
+                      color: Colors.grey, // สีของไอคอนที่จะแสดงแทนรูป
+                    );
+                  },
                 ),
-
                 const SizedBox(height: 20),
                 FractionallySizedBox(
                   widthFactor: 0.85,
