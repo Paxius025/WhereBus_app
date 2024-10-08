@@ -26,7 +26,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   bool _isLoading = true;
   String _errorMessage = '';
   int _currentPage = 0;
-  final int _itemsPerPage = 8;
+  final int _itemsPerPage = 6;
 
   @override
   void initState() {

@@ -58,7 +58,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 20), // เว้นช่องว่างด้านบน
+                  const SizedBox(height: 5), // เว้นช่องว่างด้านบน
                   _buildAdminMenuItem(
                     icon: _loadImageWithFallback(
                       'assets/users.png', // path ของรูป
