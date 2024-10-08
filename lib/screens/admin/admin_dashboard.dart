@@ -188,13 +188,13 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget _loadImageWithFallback(String imagePath, IconData fallbackIcon) {
     return Image.asset(
       imagePath, // พาธของรูปภาพ
-      height: 100, // ความสูงของรูปภาพ
-      width: 100, // ความกว้างของรูปภาพ
+      height: 120, // ความสูงของรูปภาพ
+      width: 120, // ความกว้างของรูปภาพ
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
         return Icon(
           fallbackIcon, // แสดงไอคอนแทนถ้าโหลดรูปภาพไม่สำเร็จ
-          size: 100, // ขนาดไอคอน
+          size: 120, // ขนาดไอคอน
           color: Colors.grey, // สีของไอคอน
         );
       },
