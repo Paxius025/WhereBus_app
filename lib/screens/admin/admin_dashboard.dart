@@ -59,7 +59,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const SizedBox(height: 20), // เว้นช่องว่างด้านบน
                 _buildAdminMenuItem(
                   icon: _loadImageWithFallback(
-                    'users.png', // path ของรูป
+                    'assets/users.png', // path ของรูป
                     Icons.groups, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'User Management',
@@ -80,7 +80,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
                   icon: _loadImageWithFallback(
-                    'driver_avatar.png', // path ของรูป
+                    'assets/driver_avatar.png', // path ของรูป
                     Icons.assignment_ind, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'Driver Management',
@@ -101,7 +101,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 const SizedBox(height: 20),
                 _buildAdminMenuItem(
                   icon: _loadImageWithFallback(
-                    'bus_avatar.png', // path ของรูป
+                    'assets/bus_avatar.png', // path ของรูป
                     Icons.directions_bus, // icon แทนถ้ารูปไม่โหลด
                   ),
                   label: 'Bus Status',
