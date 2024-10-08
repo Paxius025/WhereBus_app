@@ -290,7 +290,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       role == 'admin'
           ? 'assets/admin.png'
           : role == 'driver'
-              ? 'assets/driver.png'
+              ? 'assets/driver_avatar.png'
               : 'assets/user_avatar.png',
       fit: BoxFit.cover,
       errorBuilder: (context, error, stackTrace) {
