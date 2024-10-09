@@ -154,27 +154,22 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                 color: Color.fromARGB(255, 0, 0, 0))), // ตัวหนังสือสีดำ
         centerTitle: true,
       ),
-      body: Center(
-        child: FractionallySizedBox(
-          widthFactor: 0.9, // กำหนดให้ความกว้างของคอนเทนต์เป็น 90% ของหน้าจอ
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _errorMessage.isNotEmpty
-                    ? Center(child: Text(_errorMessage))
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 20),
-                          Expanded(
-                            child: _buildUserTable(), // ตารางแสดงข้อมูล
-                          ),
-                          _buildPaginationControls(), // ควบคุมการเปลี่ยนหน้า
-                        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0), // ลบขอบออก
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : _errorMessage.isNotEmpty
+                ? Center(child: Text(_errorMessage))
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 10), // ย่อขนาดให้เล็กลงเล็กน้อย
+                      Expanded(
+                        child: _buildUserTable(), // ตารางแสดงข้อมูล
                       ),
-          ),
-        ),
+                      _buildPaginationControls(), // ควบคุมการเปลี่ยนหน้า
+                    ],
+                  ),
       ),
     );
   }
@@ -238,10 +233,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                     )),
                     DataCell(
                       IconButton(
-                        icon: const Icon(
-                          Icons.delete,
-                          color: Colors.red,
-                        ),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () async {
                           await _showDeleteConfirmationDialog(user['id']);
                         },
@@ -260,7 +252,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     int totalPages = (users.length / _itemsPerPage).ceil();
     return Column(
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 10), // ปรับระยะห่างให้เลื่อนขึ้น 20px
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -287,7 +279,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             ),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 10), // ยกข้อความแสดงจำนวนขึ้น 20px
         Text(
           'Amount of ${users.length} users',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

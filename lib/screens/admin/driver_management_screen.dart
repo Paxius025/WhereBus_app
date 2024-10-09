@@ -1,5 +1,7 @@
+//driver_management_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+
 class DriverManagementScreen extends StatefulWidget {
   final String username;
   final String email;
@@ -129,53 +131,52 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     List<Map<String, dynamic>> currentItems =
         drivers.sublist(startIndex, endIndex);
 
-    double idWidth = screenWidth * 0.10;
-    double usernameWidth =
-        screenWidth * 0.50 * 0.70; // ลดขนาดลง 30% โดยใช้ 70% ของความกว้างเดิม
-    double actionWidth = screenWidth * 0.30;
-
-    return DataTable(
+    return // การแสดงหัวคอลัมน์ ID, USERNAME, ACTION ให้อยู่ตรงกลาง
+        // การแสดงหัวคอลัมน์ ID, USERNAME, ACTION และเนื้อหาให้อยู่ตรงกลางในพื้นที่ของตนเอง
+        DataTable(
       headingRowColor: MaterialStateProperty.all(
           const Color(0xFF40534C)), // พื้นหลังสีเขียวสำหรับหัวตารางทั้งหมด
       columnSpacing: 10,
       columns: [
         DataColumn(
-          label: SizedBox(
-            width: idWidth < 30 ? 30 : idWidth, // กำหนดขนาดขั้นต่ำของคอลัมน์
-            child: const Text(
-              'ID',
-              style: TextStyle(
+          label: Expanded(
+            child: Center(
+              child: Text(
+                'ID',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.white), // ตัวหนังสือสีขาว
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
         DataColumn(
-          label: SizedBox(
-            width: usernameWidth < 20
-                ? 20
-                : usernameWidth, // ขนาดคอลัมน์ Username ลดลง 30%
-            child: const Text(
-              'USERNAME',
-              style: TextStyle(
+          label: Expanded(
+            child: Center(
+              child: Text(
+                'USERNAME',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.white), // ตัวหนังสือสีขาว
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
         DataColumn(
-          label: SizedBox(
-            width: actionWidth < 20
-                ? 20
-                : actionWidth, // ขนาดขั้นต่ำของคอลัมน์ ACTION
-            child: const Text(
-              'ACTION',
-              style: TextStyle(
+          label: Expanded(
+            child: Center(
+              child: Text(
+                'ACTION',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.white), // ตัวหนังสือสีขาว
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ),
@@ -184,45 +185,48 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
           .map(
             (driver) => DataRow(
               cells: [
-                DataCell(Text(driver['id'].toString(),
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF7F7777)))), // ตัวหนังสือสีเทา
                 DataCell(
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical:
-                            4.0), // กำหนด padding เพิ่มเติมในช่อง username
+                  Center(
                     child: Text(
-                      driver['username'],
-                      style: const TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFF7F7777)), // ตัวหนังสือสีขาว
+                      driver['id'].toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF7F7777),
+                      ),
                     ),
                   ),
                 ),
                 DataCell(
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.center, // จัดให้ปุ่มอยู่ตรงกลาง
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit,
-                            color: Color(0xFF1A3636),
-                            size: 20), // เปลี่ยนสีไอคอนเป็น 0xFF1A3636
-                        onPressed: () {
-                          _showRenameDialog(driver['id'], driver['username']);
-                        },
+                  Center(
+                    child: Text(
+                      driver['username'],
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF7F7777),
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.delete,
-                            color: Colors.red, size: 20),
-                        onPressed: () {
-                          _showDeleteConfirmation(driver['id']);
-                        },
-                      ),
-                    ],
+                    ),
+                  ),
+                ),
+                DataCell(
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit,
+                              color: Color(0xFF1A3636), size: 20),
+                          onPressed: () {
+                            _showRenameDialog(driver['id'], driver['username']);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red, size: 20),
+                          onPressed: () {
+                            _showDeleteConfirmation(driver['id']);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
