@@ -38,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   // ฟังก์ชันสำหรับอัปเดตโปรไฟล์
+  // ฟังก์ชันสำหรับอัปเดตโปรไฟล์
   void _updateProfile() async {
     setState(() {
       _isLoading = true;
@@ -58,25 +59,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _successMessage = 'Profile updated successfully';
         });
 
-        // หน่วงเวลา 0.5 วินาทีก่อนแสดง pop-up การบันทึกสำเร็จ
-        await Future.delayed(const Duration(milliseconds: 500));
-
-        // แสดงข้อความสำเร็จใน pop-up
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully')),
-        );
-
-        // นำผู้ใช้กลับไปที่ MainScreen พร้อมส่งข้อมูลล่าสุดกลับไป และคง role เดิม
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MainScreen(
-              role: widget.role,
-              username: _usernameController.text,
-              userId: widget.userId,
-            ),
-          ),
-        );
+        // แสดง popup การอัปเดตสำเร็จ
+        _showSuccessDialog();
       } else {
         setState(() {
           _errorMessage = response['message'] ?? 'Update failed';
@@ -100,6 +84,61 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       MaterialPageRoute(builder: (context) => LoginScreen()),
       (Route<dynamic> route) => false,
     );
+  }
+
+  // ฟังก์ชันแสดง Popup สำเร็จ
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการปิด popup เมื่อกดพื้นที่ว่าง
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, // พื้นหลังโปร่งใส
+          child: Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.white, // พื้นหลังสีขาว
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 50, // ขนาดเครื่องหมายถูก
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Success',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // หน่วงเวลา 1.0 วินาทีแล้วนำผู้ใช้กลับไปที่หน้า MainScreen
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      Navigator.pop(context); // ปิด popup
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            role: widget.role,
+            username: _usernameController.text,
+            userId: widget.userId,
+          ),
+        ),
+      );
+    });
   }
 
   @override
@@ -140,7 +179,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 widget.role), // โหลดรูปพร้อม fallback
                           ),
                         ),
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 35),
                         FractionallySizedBox(
                           widthFactor:
                               0.75, // บีบให้ช่องข้อความกว้างขึ้นเล็กน้อย
