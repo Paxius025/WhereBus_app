@@ -45,6 +45,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _successMessage = '';
     });
 
+    // ตรวจสอบความยาวของชื่อผู้ใช้
+    if (_usernameController.text.length < 5) {
+      // แสดง popup ข้อความว่าชื่อผู้สั้นเกินไป
+      _showUsernameTooShortDialog();
+      setState(() {
+        _isLoading = false; // ปิดการโหลด
+      });
+      return;
+    }
+
     // ตรวจสอบว่ามีการกรอกข้อมูลใหม่หรือไม่
     if (_usernameController.text == widget.username &&
         _emailController.text == widget.email &&
@@ -88,6 +98,53 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  // ฟังก์ชันสำหรับแสดง popup เมื่อชื่อผู้ใช้สั้นเกินไป
+  void _showUsernameTooShortDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการปิด popup เมื่อกดพื้นที่ว่าง
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, // พื้นหลังโปร่งใส
+          child: Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.white, // พื้นหลังสีขาว
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.info_outline, // ไอคอนข้อมูล
+                  color: Colors.orange, // เปลี่ยนสีไอคอนเป็นสีส้ม
+                  size: 50, // ขนาดเครื่องหมายข้อมูล
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'Username too short', // ข้อความเมื่อชื่อผู้ใช้สั้นเกินไป
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // หน่วงเวลา 1.5 วินาทีก่อนปิด popup
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        Navigator.pop(context); // ปิด popup
+      }
+    });
+  }
+
   // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
   void _showSuccessDialog() {
     showDialog(
@@ -115,7 +172,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const Text(
                   'Profile updated successfully', // ข้อความเมื่ออัปเดตสำเร็จ
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
@@ -143,7 +200,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-// ฟังก์ชันสำหรับแสดง popup ว่าไม่มีการอัปเดตข้อมูล
+  // ฟังก์ชันสำหรับแสดง popup ว่าไม่มีการอัปเดตข้อมูล
   void _showNoUpdateDialog() {
     showDialog(
       context: context,
@@ -170,7 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const Text(
                   'No changes to update', // ข้อความแทน Nothing update now
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
