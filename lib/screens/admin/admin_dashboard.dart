@@ -49,12 +49,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           255, 255, 255, 255), // สีพื้นหลังของหน้าเป็นสีขาว
       body: Center(
         child: Column(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // จัดให้อยู่ตรงกลางหน้าจอ
+          mainAxisAlignment: MainAxisAlignment
+              .start, // เปลี่ยนจาก center เป็น start เพื่อให้เนื้อหาชิดด้านบน
           crossAxisAlignment:
               CrossAxisAlignment.center, // จัดให้อยู่ตรงกลางในแนวนอน
           children: [
-            // แสดงรูปไอคอน (ไม่รองรับการกด)
+            // ลบ SizedBox เพื่อลดความห่าง
             _buildAdminMenuIcon(
               'assets/users_no_border.png',
               Icons.groups,
