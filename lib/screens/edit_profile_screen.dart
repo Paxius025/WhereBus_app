@@ -377,7 +377,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Text.rich(
                           TextSpan(
                             text:
-                                'WhereBus Version 1.0.7\n', // update file path  in hosting
+                                'WhereBus v1.0.7\n', // update file path  in hosting
                             style: TextStyle(
                                 fontSize: 17,
                                 color: Colors.white), // ขนาดตัวอักษร 15
