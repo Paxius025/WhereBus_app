@@ -185,11 +185,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             children: [
                               TextField(
                                 controller: _usernameController,
-                                style:
-                                    const TextStyle(color: Color(0xFF7F7777)),
+                                style: const TextStyle(
+                                  color: Color(0xFF7F7777),
+                                  fontSize: 12,
+                                ),
                                 decoration: InputDecoration(
-                                  labelStyle:
-                                      const TextStyle(color: Color(0xFF7F7777)),
+                                  hintText:
+                                      'Username', // ใช้ hintText แทน labelText
+                                  hintStyle: const TextStyle(
+                                    color: Color(0xFF7F7777),
+                                    fontSize: 12,
+                                  ),
                                   filled: true,
                                   fillColor: Colors.grey[200],
                                   border: OutlineInputBorder(
@@ -202,13 +208,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 controller: _passwordController,
                                 style: const TextStyle(
                                   color: Color(0xFF7F7777),
-                                  fontSize: 12, // เพิ่มขนาดตัวหนังสือขึ้น 5%
+                                  fontSize: 12,
                                 ),
                                 decoration: InputDecoration(
-                                  labelText: 'PASSWORD',
-                                  labelStyle: const TextStyle(
+                                  hintText:
+                                      'Password', // ใช้ hintText แทน labelText
+                                  hintStyle: const TextStyle(
                                     color: Color(0xFF7F7777),
-                                    fontSize: 12, // เพิ่มขนาดตัวหนังสือลง 5%
+                                    fontSize: 12,
                                   ),
                                   filled: true,
                                   fillColor: Colors.grey[200],
@@ -216,7 +223,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     borderRadius: BorderRadius.circular(3),
                                   ),
                                 ),
-                                obscureText: true, // ซ่อนรหัสผ่าน
+                                obscureText: true, // ซ่อนข้อความเมื่อพิมพ์
                               ),
                             ],
                           ),

@@ -132,8 +132,8 @@ class _LocationMapState extends State<LocationMap> {
           _sameLocationCount = 0; // Reset count if location has changed
         }
 
-        // If the location is the same 10 times in a row, set status to 'Offline'
-        if (_sameLocationCount >= 10) {
+        // If the location is the same 60 times in a row, set status to 'Offline'
+        if (_sameLocationCount >= 60) {
           busStatus = 'Offline';
         }
 

@@ -1,6 +1,6 @@
-// lib/screens/admin/bus_status_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:latlong2/latlong.dart'; // Import LatLng for consistency with location_map.dart
 
 class BusStatusScreen extends StatefulWidget {
   final String username;
@@ -25,6 +25,8 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
   List<Map<String, dynamic>> buses = [];
   bool _isLoading = true;
   String _errorMessage = '';
+  LatLng? _lastBusLocation; // Add last bus location for status consistency
+  int _sameLocationCount = 0; // Counter to track same bus location
 
   @override
   void initState() {
@@ -39,7 +41,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
         setState(() {
           buses = [
             response['location'] ?? {}
-          ]; // จัดการกรณี response['location'] เป็น null
+          ]; // Handle case where response['location'] is null
           _isLoading = false;
         });
       } else {
@@ -54,6 +56,29 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
         _isLoading = false;
       });
     }
+  }
+
+  // Reuse the same logic from location_map.dart to determine bus status color
+  String _getBusStatus(Map location) {
+    double lat = location['latitude'];
+    double lon = location['longitude'];
+
+    // Check if the location is the same as the previous one
+    if (_lastBusLocation != null &&
+        _lastBusLocation!.latitude == lat &&
+        _lastBusLocation!.longitude == lon) {
+      _sameLocationCount++;
+    } else {
+      _sameLocationCount = 0; // Reset count if location has changed
+    }
+
+    // If the location is the same 60 times in a row, set status to 'Offline'
+    if (_sameLocationCount >= 60) {
+      return 'Offline';
+    }
+
+    _lastBusLocation = LatLng(lat, lon);
+    return 'Online';
   }
 
   @override
@@ -77,12 +102,9 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                     itemBuilder: (context, index) {
                       final bus = buses[index];
                       String busId = bus['bus_id']?.toString() ?? 'N/A';
-                      String timestamp = bus['timestamp'] ?? '';
-
-                      String status = _getBusStatus(timestamp);
-                      Color statusColor = status == 'Online'
-                          ? Colors.green
-                          : Colors.red; // Status color
+                      String status = _getBusStatus(bus);
+                      Color statusColor =
+                          status == 'Online' ? Colors.green : Colors.red;
 
                       return Card(
                         color: Colors.white,
@@ -111,7 +133,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                                             0.05, // Responsive font size
                                       ),
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Row(
                                       children: [
                                         Text(
@@ -140,24 +162,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                       );
                     },
                   ),
-      ),// เพิ่ม NavigationBarWidget
+      ),
     );
-  }
-
-  String _getBusStatus(String timestamp) {
-    if (timestamp.isEmpty) {
-      return 'Offline';
-    }
-    try {
-      DateTime lastUpdate = DateTime.parse(timestamp);
-      Duration difference = DateTime.now().difference(lastUpdate);
-      if (difference.inMinutes <= 2) {
-        return 'Online';
-      } else {
-        return 'Offline';
-      }
-    } catch (e) {
-      return 'Offline';
-    }
   }
 }

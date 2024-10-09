@@ -67,7 +67,7 @@ class _MainScreenState extends State<MainScreen> {
     // เปรียบเทียบ role เพื่อกำหนดไอคอน
     switch (widget.role) {
       case 'admin':
-        icon = Icon(Icons.handyman, color:Colors.grey);
+        icon = Icon(Icons.handyman, color: Colors.grey);
         break;
       case 'user':
         icon = Icon(Icons.person, color: Colors.grey);
@@ -82,6 +82,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        automaticallyImplyLeading: false,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
