@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'http://192.168.1.6/api/';
+  final String baseUrl = 'http://babydevgang.com/api/';
 
   // ฟังก์ชันสำหรับล็อกอิน
   Future<Map<String, dynamic>> login(String username, String password) async {
@@ -174,7 +174,8 @@ class ApiService {
   }
 
   // ฟังก์ชันสำหรับเพิ่มข้อมูลคนขับใหม่
-  Future<Map<String, dynamic>> addDriver(String username, String password) async {
+  Future<Map<String, dynamic>> addDriver(
+      String username, String password) async {
     final url = Uri.parse('${baseUrl}drivers/add_driver.php');
     final response = await http.post(
       url,
@@ -193,7 +194,8 @@ class ApiService {
   }
 
   // ฟังก์ชันสำหรับอัปเดตข้อมูลคนขับ
-  Future<Map<String, dynamic>> updateDriver(int driverId, String username, String password) async {
+  Future<Map<String, dynamic>> updateDriver(
+      int driverId, String username, String password) async {
     final url = Uri.parse('${baseUrl}drivers/update_driver.php');
     final response = await http.post(
       url,
