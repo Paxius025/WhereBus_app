@@ -83,18 +83,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Enjoy Your Ride!',
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -103,8 +91,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 30),
-
+                const SizedBox(height: 0),
+                const Text(
+                  'Enjoy Your Ride!',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 15),
                 // เพิ่ม Image widget ตรงนี้
                 Image.asset(
                   'assets/register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
@@ -120,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 5),
                 FractionallySizedBox(
                   widthFactor: 0.90,
                   child: Column(
@@ -137,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       TextField(
                         controller: _usernameController,
                         decoration: InputDecoration(
@@ -150,7 +145,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       TextField(
                         controller: _passwordController,
                         decoration: InputDecoration(
@@ -164,7 +159,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         obscureText: true,
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 10),
                       _isLoading
                           ? const CircularProgressIndicator()
                           : ElevatedButton(
@@ -197,7 +192,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             style: const TextStyle(color: Colors.green),
                           ),
                         ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
