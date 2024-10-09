@@ -336,15 +336,19 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A3636), // พื้นหลังสีเข้มของ Popup
+        backgroundColor: Color(0xFF40534C), // พื้นหลังสีเข้มของ Popup
         title: const Text('Delete Driver',
-            style: TextStyle(color: Colors.white)), // ตัวหนังสือสีขาว
+            style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255))), // ตัวหนังสือสีขาว
         content: const Text('Are you sure you want to delete this driver?',
-            style: TextStyle(color: Colors.white)),
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel', style: TextStyle(color: Colors.white)),
+            child: const Text('Cancel',
+                style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontWeight: FontWeight.w600)),
           ),
           TextButton(
             onPressed: () async {
@@ -352,7 +356,8 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
               Navigator.of(context).pop();
               _fetchDrivers();
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+            child: const Text('Delete',
+                style: TextStyle(color: Color(0xFFE96464))),
           ),
         ],
       ),
