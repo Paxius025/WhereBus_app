@@ -59,7 +59,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               'assets/users_no_border.png',
               Icons.groups,
             ),
-            const SizedBox(height: 12), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 15), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Manage User',
               onTap: () {
@@ -76,7 +76,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 12), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 15), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
               'assets/driver_avatar.png',
@@ -133,7 +133,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return CircleAvatar(
       backgroundColor:
           const Color.fromARGB(255, 255, 255, 255), // พื้นหลังเป็นสีขาว
-      radius: 60, // ขนาดวงกลมของไอคอน
+      radius: 80, // ขนาดวงกลมของไอคอน
       child: _loadImageWithFallback(
           imagePath, fallbackIcon), // โหลดไอคอนหรือรูปภาพ
     );
@@ -160,12 +160,12 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
         ),
         padding: const EdgeInsets.symmetric(
             horizontal: 10, vertical: 6), // ระยะห่างภายในป้าย
-        width: 120, // กำหนดความกว้างของป้ายข้อความให้เท่ากัน
+        width: 140, // กำหนดความกว้างของป้ายข้อความให้เท่ากัน
         child: Center(
           child: Text(
             label, // แสดงชื่อเมนู
             style: const TextStyle(
-              fontSize: 10, // ขนาดตัวหนังสือ
+              fontSize: 14, // ขนาดตัวหนังสือ
               fontWeight: FontWeight.bold, // น้ำหนักตัวหนังสือหนา
               color: Colors.white, // ตัวหนังสือสีขาว
             ),
