@@ -32,8 +32,6 @@ class _LocationMapState extends State<LocationMap> {
   Timer? _removeBusMarkerTimer;
   bool _isSendingLocation = false;
   LatLng? _lastSentUserLocation;
-  LatLng? _lastBusLocation;
-  int _sameLocationCount = 0; // Counter to track same bus location
 
   @override
   void initState() {
@@ -121,38 +119,23 @@ class _LocationMapState extends State<LocationMap> {
         double lat = location['latitude'];
         double lon = location['longitude'];
         int busId = location['bus_id'];
-        String busStatus = location['status'];
-
-        // Check if the location is the same as the previous one
-        if (_lastBusLocation != null &&
-            _lastBusLocation!.latitude == lat &&
-            _lastBusLocation!.longitude == lon) {
-          _sameLocationCount++;
-        } else {
-          _sameLocationCount = 0; // Reset count if location has changed
-        }
-
-        // If the location is the same 60 times in a row, set status to 'Offline'
-        if (_sameLocationCount >= 60) {
-          busStatus = 'Offline';
-        }
+        String busStatus = location['status']; // Use status from API
 
         setState(() {
           widget.updateLocation(lat, lon);
-          _lastBusLocation = LatLng(lat, lon);
-
+  
           // Adjust the marker for the bus
           _busMarker = Marker(
             width: 60.0,
             height: 60.0,
-            point: LatLng(lat + 0.0001, lon + 0.0001), // Slight shift
+            point: LatLng(lat, lon), // Slight shift
             builder: (ctx) => Column(
               children: [
                 Icon(
                   Icons.directions_bus,
                   color: busStatus == 'Online'
                       ? Colors.green
-                      : Colors.red, // Marker color based on status
+                      : Colors.red, // Use status from API for marker color
                   size: 30.0,
                 ),
                 Text(
@@ -373,11 +356,10 @@ class _LocationMapState extends State<LocationMap> {
       children: [
         FlutterMap(
           options: MapOptions(
-            center: LatLng(17.280525, 104.123622),
-            zoom: 14.5,
-            maxZoom: 18.0,
-            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate
-            ),
+              center: LatLng(17.280525, 104.123622),
+              zoom: 14.5,
+              maxZoom: 18.0,
+              interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate),
           children: [
             TileLayer(
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",

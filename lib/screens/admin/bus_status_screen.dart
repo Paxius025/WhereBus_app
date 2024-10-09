@@ -71,7 +71,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
     } else {
       _sameLocationCount = 0; // Reset count if location has changed
     }
-
+    print('Same location count: $_sameLocationCount');
     // If the location is the same 60 times in a row, set status to 'Offline'
     if (_sameLocationCount >= 60) {
       return 'Offline';
@@ -102,10 +102,10 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                     itemBuilder: (context, index) {
                       final bus = buses[index];
                       String busId = bus['bus_id']?.toString() ?? 'N/A';
-                      String status = _getBusStatus(bus);
+                      String status =
+                          bus['status'] ?? 'Offline'; // ใช้ข้อมูลสถานะจาก API
                       Color statusColor =
                           status == 'Online' ? Colors.green : Colors.red;
-
                       return Card(
                         color: Colors.white,
                         margin: const EdgeInsets.symmetric(vertical: 10),
