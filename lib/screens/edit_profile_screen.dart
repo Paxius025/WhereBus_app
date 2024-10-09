@@ -45,6 +45,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       _successMessage = '';
     });
 
+    // ตรวจสอบว่ามีการกรอกข้อมูลใหม่หรือไม่
+    if (_usernameController.text == widget.username &&
+        _emailController.text == widget.email &&
+        _passwordController.text.isEmpty) {
+      // แสดง popup ข้อความว่าไม่มีการอัปเดต
+      _showNoUpdateDialog();
+      setState(() {
+        _isLoading = false; // ปิดการโหลด
+      });
+      return;
+    }
+
     try {
       final response = await apiService.updateProfile(
         widget.userId,
@@ -76,6 +88,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
+  // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -95,12 +108,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               children: [
                 Icon(
                   Icons.check_circle,
-                  color: Colors.green,
+                  color: Colors.green, // เปลี่ยนสีไอคอนเป็นสีเขียว
                   size: 50, // ขนาดเครื่องหมายถูก
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Updated successfully',
+                  'Profile updated successfully', // ข้อความเมื่ออัปเดตสำเร็จ
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -114,8 +127,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
     );
 
-    // หน่วงเวลา 1 วินาทีก่อนกลับไปยังหน้า MainScreen
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      Navigator.pop(context); // ปิด popup
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(
+            role: widget.role,
+            username: _usernameController.text,
+            userId: widget.userId,
+          ),
+        ),
+      );
+    });
+  }
+
+// ฟังก์ชันสำหรับแสดง popup ว่าไม่มีการอัปเดตข้อมูล
+  void _showNoUpdateDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการปิด popup เมื่อกดพื้นที่ว่าง
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent, // พื้นหลังโปร่งใส
+          child: Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.white, // พื้นหลังสีขาว
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.info_outline, // เปลี่ยนไอคอนเป็นไอคอนข้อมูล
+                  color: Colors.orange, // เปลี่ยนสีไอคอนเป็นสีส้ม
+                  size: 50, // ขนาดเครื่องหมายข้อมูล
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  'No changes to update', // ข้อความแทน Nothing update now
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // หน่วงเวลา 1.5 วินาทีก่อนปิด popup
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      if (mounted) {
+        Navigator.pop(context); // ปิด popup
+      } // ปิด popup
+    });
+
+    // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
+    Future.delayed(const Duration(milliseconds: 1500), () {
       Navigator.pop(context); // ปิด popup
       Navigator.pushReplacement(
         context,
