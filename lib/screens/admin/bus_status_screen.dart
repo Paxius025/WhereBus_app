@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
-import 'package:latlong2/latlong.dart'; // Import LatLng for consistency with location_map.dart
 
 class BusStatusScreen extends StatefulWidget {
   final String username;
