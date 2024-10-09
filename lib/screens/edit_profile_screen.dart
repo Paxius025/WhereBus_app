@@ -295,7 +295,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         Text.rich(
                           TextSpan(
                             text:
-                                'WhereBus Version 1.0.6\n', // ข้อความบรรทัดแรก
+                                'WhereBus Version 1.0.7\n', // add api from babydevgang
                             style: TextStyle(
                                 fontSize: 17,
                                 color: Colors.white), // ขนาดตัวอักษร 15
