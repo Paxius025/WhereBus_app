@@ -38,10 +38,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   // ฟังก์ชันสำหรับอัปเดตโปรไฟล์
-  // ฟังก์ชันสำหรับอัปเดตโปรไฟล์
   void _updateProfile() async {
     setState(() {
-      _isLoading = true;
+      _isLoading = true; // เริ่มการโหลด
       _errorMessage = '';
       _successMessage = '';
     });
@@ -56,7 +55,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
       if (response['status'] == 'success') {
         setState(() {
-          _successMessage = 'Profile updated successfully';
+          // _successMessage = 'Profile updated successfully';
         });
 
         // แสดง popup การอัปเดตสำเร็จ
@@ -72,21 +71,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
     } finally {
       setState(() {
-        _isLoading = false;
+        _isLoading = false; // ปิดการโหลดเมื่อทำงานเสร็จ
       });
     }
   }
 
-  // ฟังก์ชันสำหรับ Logout
-  void _logout() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-      (Route<dynamic> route) => false,
-    );
-  }
-
-  // ฟังก์ชันแสดง Popup สำเร็จ
   void _showSuccessDialog() {
     showDialog(
       context: context,
@@ -111,7 +100,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Success',
+                  'Updated successfully',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -125,7 +114,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
     );
 
-    // หน่วงเวลา 1.0 วินาทีแล้วนำผู้ใช้กลับไปที่หน้า MainScreen
+    // หน่วงเวลา 1 วินาทีก่อนกลับไปยังหน้า MainScreen
     Future.delayed(const Duration(milliseconds: 1000), () {
       Navigator.pop(context); // ปิด popup
       Navigator.pushReplacement(
@@ -139,6 +128,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       );
     });
+  }
+
+  // ฟังก์ชันสำหรับ Logout
+  void _logout() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
