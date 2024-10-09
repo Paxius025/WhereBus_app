@@ -123,7 +123,7 @@ class _LocationMapState extends State<LocationMap> {
 
         setState(() {
           widget.updateLocation(lat, lon);
-  
+
           // Adjust the marker for the bus
           _busMarker = Marker(
             width: 60.0,
@@ -139,7 +139,7 @@ class _LocationMapState extends State<LocationMap> {
                   size: 30.0,
                 ),
                 Text(
-                  'Bus ID: $busId',
+                  'Bus $busId',
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 12.0,
@@ -179,7 +179,7 @@ class _LocationMapState extends State<LocationMap> {
               size: 30.0,
             ),
             Text(
-              'Bus ID: 2',
+              'Bus 2',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 12.0,
@@ -200,7 +200,7 @@ class _LocationMapState extends State<LocationMap> {
               size: 30.0,
             ),
             Text(
-              'Bus ID: 3',
+              'Bus 3',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 12.0,
@@ -221,7 +221,7 @@ class _LocationMapState extends State<LocationMap> {
               size: 30.0,
             ),
             Text(
-              'Bus ID: 4',
+              'Bus 4',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 12.0,
