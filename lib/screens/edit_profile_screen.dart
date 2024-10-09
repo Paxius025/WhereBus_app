@@ -120,16 +120,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  // ใช้ Spacer เพื่อจัดการระยะห่างให้สมดุลในแนวตั้ง
-                  Spacer(flex: 2), // ด้านบน
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height *
+                          0.10), // เพิ่มให้ห่างจาก AppBar 10%
                   Transform.scale(
-                    scale: 0.85, // ลดขนาดหน้าจอทั้งหมดลง 10%
+                    scale: 0.9, // ขยายขนาดหน้าจอทั้งหมดขึ้น 5%
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
-                          width: 180,
-                          height: 180,
+                          width: 200, // เพิ่มขนาดรูปโปรไฟล์ 10%
+                          height: 200,
                           decoration: const BoxDecoration(
                             shape: BoxShape
                                 .circle, // ลบ color ออกเพื่อลบพื้นหลังสีเทา
@@ -142,7 +143,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(height: 40),
                         FractionallySizedBox(
                           widthFactor:
-                              0.7, // บีบให้ช่องข้อความกว้างเพียง 70% ของหน้าจอ
+                              0.75, // บีบให้ช่องข้อความกว้างขึ้นเล็กน้อย
                           child: Column(
                             children: [
                               TextField(
@@ -164,13 +165,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 controller: _passwordController,
                                 style: const TextStyle(
                                   color: Color(0xFF7F7777),
-                                  fontSize: 11, // ลดขนาดตัวหนังสือเหลือ 11px
+                                  fontSize: 12, // เพิ่มขนาดตัวหนังสือขึ้น 5%
                                 ),
                                 decoration: InputDecoration(
                                   labelText: 'PASSWORD',
                                   labelStyle: const TextStyle(
                                     color: Color(0xFF7F7777),
-                                    fontSize: 11, // ลดขนาดตัวหนังสือลง 5px
+                                    fontSize: 12, // เพิ่มขนาดตัวหนังสือลง 5%
                                   ),
                                   filled: true,
                                   fillColor: Colors.grey[200],
@@ -183,12 +184,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(
-                              width: 97, // กำหนดความกว้างของปุ่ม SAVE
+                              width: 100, // กำหนดความกว้างของปุ่ม SAVE
                               child: ElevatedButton(
                                 onPressed: _updateProfile,
                                 style: ElevatedButton.styleFrom(
@@ -201,15 +202,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: const Text(
                                   'SAVE',
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize:
+                                        12, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                                    fontWeight:
+                                        FontWeight.bold, // ทำตัวหนังสือให้หนา
                                   ),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 10),
+                            const SizedBox(width: 15),
                             SizedBox(
-                              width: 95, // กำหนดความกว้างของปุ่ม CANCEL
+                              width: 100, // กำหนดความกว้างของปุ่ม CANCEL
                               child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -224,15 +227,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 child: const Text(
                                   'CANCEL',
                                   style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300,
+                                    fontSize:
+                                        12, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                                    fontWeight:
+                                        FontWeight.bold, // ทำตัวหนังสือให้หนา
                                   ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         if (_errorMessage.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -249,21 +254,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               style: const TextStyle(color: Colors.green),
                             ),
                           ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
                         Text.rich(
                           TextSpan(
                             text:
-                                'WhereBus Version 1.0.5\n', // ข้อความบรรทัดแรก
+                                'WhereBus Version 1.0.6\n', // ข้อความบรรทัดแรก
                             style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white), // ขนาดตัวอักษร 14
+                                fontSize: 17,
+                                color: Colors.white), // ขนาดตัวอักษร 15
                             children: <TextSpan>[
                               TextSpan(
                                 text:
                                     'Pantong | Jedsada | Tharathep | Apirak', // ข้อความบรรทัดที่สอง
                                 style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white), // ขนาดตัวอักษร 12
+                                    fontSize: 10,
+                                    color: Colors.white), // ขนาดตัวอักษร 13
                               ),
                             ],
                           ),
@@ -278,9 +283,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(2),
                             ),
-                            minimumSize: const Size(45, 35),
+                            minimumSize:
+                                const Size(55, 40), // ขยายขนาดปุ่มขึ้น 5%
                           ),
-                          child: const Text('LOGOUT'),
+                          child: const Text(
+                            'LOGOUT',
+                            style: TextStyle(
+                              fontWeight:
+                                  FontWeight.bold, // ตัวหนาสำหรับ LOGOUT
+                              fontSize: 14, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -308,7 +321,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               : role == 'driver'
                   ? Icons.contacts
                   : Icons.account_circle,
-          size: 140,
+          size: 160, // เพิ่มขนาดของไอคอนขึ้น 10%
           color: Colors.grey,
         );
       },
