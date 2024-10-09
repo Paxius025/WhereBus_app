@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'user_management_screen.dart';
 import 'driver_management_screen.dart';
 import 'bus_status_screen.dart';
+import 'package:wherebus_app/screens/main_screen.dart';
 
 class AdminDashboardScreen extends StatefulWidget {
   final String username;
@@ -26,6 +27,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white, // สีพื้นหลังของ AppBar เป็นสีขาว
         title: const Text(
           'Admin Dashboard', // ชื่อหน้าแสดงเป็น 'Admin Dashboard'
@@ -36,14 +38,29 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           ),
         ),
         centerTitle: true, // จัดข้อความตรงกลาง
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back,
-              color: Colors.black), // ปุ่มย้อนกลับและไอคอนสีดำ
-          onPressed: () {
-            Navigator.pop(
-                context); // เมื่อกดปุ่มย้อนกลับจะกลับไปยังหน้าก่อนหน้า
-          },
-        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(
+                right:
+                    15), // เพิ่ม padding ให้ปุ่ม X ห่างจากขอบจอ 15% ของความกว้างหน้าจอ
+            child: IconButton(
+              icon: const Icon(Icons.close,
+                  color: Color(0xFF7F7777)), // ปุ่ม X สีขาว
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MainScreen(
+                      username: widget.username,
+                      userId: widget.userId,
+                      role: widget.role,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       backgroundColor: const Color.fromARGB(
           255, 255, 255, 255), // สีพื้นหลังของหน้าเป็นสีขาว
