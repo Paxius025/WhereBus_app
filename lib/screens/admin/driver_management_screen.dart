@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
-import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
-
 class DriverManagementScreen extends StatefulWidget {
   final String username;
   final String email;
@@ -118,12 +116,6 @@ class _DriverManagementScreenState extends State<DriverManagementScreen> {
                       _buildPaginationControls(),
                     ],
                   ),
-      ),
-      bottomNavigationBar: NavigationBarWidget(
-        username: widget.username,
-        email: widget.email,
-        userId: widget.userId,
-        role: widget.role,
       ),
     );
   }

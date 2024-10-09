@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:wherebus_app/screens/main_screen.dart'; // Import MainScreen เพื่อกลับไปหลังอัปเดต
 import 'package:wherebus_app/screens/login_screen.dart'; // Import LoginScreen เพื่อใช้สำหรับ logout
-import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar
 
 class EditProfileScreen extends StatefulWidget {
   final String username;
@@ -289,12 +288,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: NavigationBarWidget(
-        username: widget.username,
-        email: widget.email,
-        userId: widget.userId,
-        role: widget.role,
-      ),
+      
     );
   }
 

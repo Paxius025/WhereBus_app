@@ -1,7 +1,6 @@
 // lib/screens/admin/bus_status_screen.dart
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
-import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import NavigationBarWidget
 
 class BusStatusScreen extends StatefulWidget {
   final String username;
@@ -141,13 +140,7 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
                       );
                     },
                   ),
-      ),
-      bottomNavigationBar: NavigationBarWidget(
-        username: widget.username,
-        email: widget.email,
-        userId: widget.userId,
-        role: widget.role,
-      ), // เพิ่ม NavigationBarWidget
+      ),// เพิ่ม NavigationBarWidget
     );
   }
 

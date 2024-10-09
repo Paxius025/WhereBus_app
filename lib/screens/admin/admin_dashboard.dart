@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'user_management_screen.dart';
 import 'driver_management_screen.dart';
 import 'bus_status_screen.dart';
-import 'package:wherebus_app/widgets/navigation_bar.dart'; // Import Navigation Bar สำหรับ Navigation ด้านล่าง
 
 class AdminDashboardScreen extends StatefulWidget {
   final String username;
@@ -125,12 +124,6 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: NavigationBarWidget(
-        username: widget.username,
-        email: widget.email,
-        userId: widget.userId,
-        role: widget.role, // ส่งค่า role ให้ Navigation Bar
       ),
     );
   }
