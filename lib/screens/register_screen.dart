@@ -122,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
                 FractionallySizedBox(
-                  widthFactor: 0.85,
+                  widthFactor: 0.90,
                   child: Column(
                     children: [
                       TextField(

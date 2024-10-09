@@ -108,6 +108,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor:
           const Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF1A3636),
         title: const Text('EDIT PROFILE'),
         foregroundColor: Colors.white,
@@ -288,7 +289,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ],
               ),
             ),
-      
     );
   }
 
