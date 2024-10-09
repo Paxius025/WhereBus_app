@@ -22,26 +22,26 @@ class BusStatusScreen extends StatefulWidget {
 
 class _BusStatusScreenState extends State<BusStatusScreen> {
   final ApiService apiService = ApiService();
-  List<Map<String, dynamic>> buses = [];
+  List<Map<String, dynamic>> buses = []; // Initialize an empty list for buses
   bool _isLoading = true;
   String _errorMessage = '';
-  LatLng? _lastBusLocation; // Add last bus location for status consistency
-  int _sameLocationCount = 0; // Counter to track same bus location
 
   @override
   void initState() {
     super.initState();
-    _fetchBusLocations();
+    _fetchBusLocations(); // Fetch bus locations from API
   }
 
   Future<void> _fetchBusLocations() async {
     try {
       final response = await apiService.fetchLatestBusLocation();
       if (response['status'] == 'success') {
+        // Add the bus data from API response to the existing buses list
         setState(() {
-          buses = [
-            response['location'] ?? {}
-          ]; // Handle case where response['location'] is null
+          buses.add({
+            'bus_id': response['location']['bus_id'],
+            'status': response['location']['status']
+          });
           _isLoading = false;
         });
       } else {
@@ -58,32 +58,17 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
     }
   }
 
-  // Reuse the same logic from location_map.dart to determine bus status color
-  String _getBusStatus(Map location) {
-    double lat = location['latitude'];
-    double lon = location['longitude'];
-
-    // Check if the location is the same as the previous one
-    if (_lastBusLocation != null &&
-        _lastBusLocation!.latitude == lat &&
-        _lastBusLocation!.longitude == lon) {
-      _sameLocationCount++;
-    } else {
-      _sameLocationCount = 0; // Reset count if location has changed
-    }
-    print('Same location count: $_sameLocationCount');
-    // If the location is the same 60 times in a row, set status to 'Offline'
-    if (_sameLocationCount >= 60) {
-      return 'Offline';
-    }
-
-    _lastBusLocation = LatLng(lat, lon);
-    return 'Online';
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
+    // Add mock data at the end of the list
+    List<Map<String, dynamic>> mockBuses = [
+      {'bus_id': 2, 'status': 'Offline'}, // Mock data
+      {'bus_id': 3, 'status': 'Online'}, // Mock data
+      {'bus_id': 4, 'status': 'Online'}, // Mock data
+    ];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFFFFFFFF), // Set background color
@@ -98,14 +83,23 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
             : _errorMessage.isNotEmpty
                 ? Center(child: Text(_errorMessage))
                 : ListView.builder(
-                    itemCount: buses.length,
+                    itemCount: buses.length +
+                        mockBuses.length, // Count both API and mock buses
                     itemBuilder: (context, index) {
-                      final bus = buses[index];
+                      Map<String, dynamic> bus;
+                      if (index < buses.length) {
+                        bus = buses[index]; // Get bus from API
+                      } else {
+                        bus = mockBuses[
+                            index - buses.length]; // Get bus from mock data
+                      }
+
                       String busId = bus['bus_id']?.toString() ?? 'N/A';
-                      String status =
-                          bus['status'] ?? 'Offline'; // ใช้ข้อมูลสถานะจาก API
+                      String status = bus['status'] ??
+                          'Offline'; // Use status from API or Mock data
                       Color statusColor =
                           status == 'Online' ? Colors.green : Colors.red;
+
                       return Card(
                         color: Colors.white,
                         margin: const EdgeInsets.symmetric(vertical: 10),
