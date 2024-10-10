@@ -47,40 +47,22 @@ class _LoginScreenState extends State<LoginScreen> {
             },
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
-              // กำหนดค่า Tween และ Curve เพื่อความ smooth
-              const begin = Offset(1.0, 0.0); // เริ่มจากด้านขวาของหน้าจอ
-              const end = Offset.zero;
-              const curve =
-                  Curves.easeInOut; // ปรับเป็น easeInOut เพื่อความนุ่มนวล
-
-              var slideTween =
-                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-              // Fade Transition ควบคู่ไปกับ Slide Transition
-              var fadeTween = Tween<double>(begin: 0.0, end: 1.0)
-                  .chain(CurveTween(curve: curve));
-
+              // Fade Transition ค่อยๆ แสดงหน้าแมพ
               return FadeTransition(
-                opacity: animation.drive(fadeTween),
-                child: SlideTransition(
-                  position: animation.drive(slideTween),
-                  child: child,
-                ),
+                opacity: animation,
+                child: child,
               );
             },
           ),
         );
       } else {
-        // เปลี่ยนข้อความ "Invalid credential" เป็นข้อความที่คุณต้องการแสดง
         String errorMessage = response['message'] == 'Invalid credentials'
             ? 'Incorrect username or password'
             : response['message'] ?? 'Login failed, please try again';
 
-        // แสดงป๊อปอัปเมื่อ login ไม่ผ่าน
         _showErrorDialog(errorMessage);
       }
     } catch (e) {
-      // แสดงป๊อปอัปเมื่อเกิดข้อผิดพลาด
       _showErrorDialog('เกิดข้อผิดพลาด: $e');
     } finally {
       setState(() {
@@ -92,46 +74,41 @@ class _LoginScreenState extends State<LoginScreen> {
   void _showErrorDialog(String message) {
     showDialog(
       context: context,
-      barrierDismissible: false, // ป้องกันการปิดป๊อปอัปด้วยการคลิกนอก
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5), // มุมโค้ง
+            borderRadius: BorderRadius.circular(5),
           ),
-          content: Container(
-            width: double.maxFinite,
-            child: Column(
-              mainAxisSize:
-                  MainAxisSize.min, // ให้ความสูงของป๊อปอัปปรับตามเนื้อหา
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: const Icon(
-                    Icons.cancel,
-                    color: Color.fromARGB(255, 255, 0, 0), // ไอคอน X เป็นสีขาว
-                    size: 70, // ขนาดของไอคอน
-                  ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: const Icon(
+                  Icons.cancel,
+                  color: Color.fromARGB(255, 255, 0, 0),
+                  size: 70,
                 ),
-                const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนและข้อความ
-                Text(
-                  message,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 12,
-                  ), // ข้อความสีแดง
-                  textAlign: TextAlign.center, // จัดข้อความให้อยู่กลาง
+              ),
+              const SizedBox(height: 10),
+              Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
                 ),
-              ],
-            ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         );
       },
     );
 
-    // ปิดป๊อปอัปอัตโนมัติหลังจาก 1 วินาที
-    Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pop(); // ปิดป๊อปอัป
+    Future.delayed(const Duration(seconds: 2), () {
+      Navigator.of(context).pop();
     });
   }
 
@@ -152,22 +129,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: StrokeText(
                     text: 'WhereBus',
                     textStyle: GoogleFonts.lilitaOne(
-                      // ใช้ฟอนต์จาก Google Fonts ที่คุณเลือก
                       textStyle: const TextStyle(
                         fontSize: 55,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        letterSpacing: 2, // เพิ่มความห่างระหว่างตัวอักษร
+                        letterSpacing: 2,
                       ),
                     ),
-                    strokeColor: Colors.black, // ขอบสีดำ
-                    strokeWidth: 5, // ความกว้างของขอบ
+                    strokeColor: Colors.black,
+                    strokeWidth: 5,
                   ),
                 ),
                 const SizedBox(height: 60),
                 // ครึ่งล่างเป็นส่วนของการกรอกข้อมูล
                 FractionallySizedBox(
-                  widthFactor: 0.85, // ให้ช่องกรอกอยู่ตรงกลาง 85% ของหน้าจอ
+                  widthFactor: 0.85,
                   child: Column(
                     children: [
                       TextField(
@@ -234,18 +210,39 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            "Don't have an account? ,",
-                            style: const TextStyle(
+                          const Text(
+                            "Don't have an account?,",
+                            style: TextStyle(
                               color: Color(0xFF7F7777),
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
+                              // แอนิเมชันเลื่อนขวาเมื่อกด Register
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
+                                PageRouteBuilder(
+                                  pageBuilder:
+                                      (context, animation, secondaryAnimation) {
+                                    return const RegisterScreen();
+                                  },
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    const begin =
+                                        Offset(-1.0, 0.0); // เริ่มจากซ้ายไปขวา
+                                    const end = Offset.zero;
+                                    const curve = Curves.easeInOut;
+
+                                    var slideTween = Tween(
+                                      begin: begin,
+                                      end: end,
+                                    ).chain(CurveTween(curve: curve));
+
+                                    return SlideTransition(
+                                      position: animation.drive(slideTween),
+                                      child: child,
+                                    );
+                                  },
                                 ),
                               );
                             },

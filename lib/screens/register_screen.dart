@@ -14,45 +14,85 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String _selectedRole = 'user'; // กำหนดค่าเริ่มต้นเป็น user
-  // Regular expression to check for at least one special character and one uppercase letter
   final RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,20}$');
   final ApiService apiService = ApiService();
 
   bool _isLoading = false;
   String _successMessage = '';
 
-  void _showErrorDialog(String message) {
+  // Popup แสดงข้อความและ Icon สีเขียว
+  void _showSuccessPopup(String message) {
     showDialog(
       context: context,
-      barrierDismissible: false, // ป้องกันการปิดป๊อปอัปด้วยการคลิกนอก
+      barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5), // มุมโค้ง
+            borderRadius: BorderRadius.circular(5),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.check_circle,
+                color: Colors.green, // ไอคอนถูกสีเขียว
+                size: 70,
+              ),
+              const SizedBox(height: 10),
+              Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.green,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    // ปิด Popup หลังจาก 1.5 วินาทีแล้วไปที่หน้า Login
+    Future.delayed(const Duration(seconds: 1, milliseconds: 500), () {
+      Navigator.of(context).pop();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
           ),
           content: Container(
             width: double.maxFinite,
             child: Column(
-              mainAxisSize:
-                  MainAxisSize.min, // ให้ความสูงของป๊อปอัปปรับตามเนื้อหา
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: const Icon(
-                    Icons.cancel,
-                    color: Color.fromARGB(255, 255, 0, 0), // ไอคอน X เป็นสีขาว
-                    size: 70, // ขนาดของไอคอน
-                  ),
+                const Icon(
+                  Icons.cancel,
+                  color: Colors.red, // ไอคอน X สีแดง
+                  size: 70,
                 ),
-                const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนและข้อความ
+                const SizedBox(height: 10),
                 Text(
                   message,
                   style: const TextStyle(
                     color: Colors.red,
                     fontSize: 13,
-                  ), // ข้อความสีแดง
-                  textAlign: TextAlign.center, // จัดข้อความให้อยู่กลาง
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -61,9 +101,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
     );
 
-    // ปิดป๊อปอัปอัตโนมัติหลังจาก 1.5 วินาที
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pop(); // ปิดป๊อปอัป
+      Navigator.of(context).pop();
     });
   }
 
@@ -73,12 +112,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _successMessage = '';
     });
 
-    // ตรวจสอบ username และ password ว่าอยู่ระหว่าง 8-15 ตัวอักษรหรือไม่
-    if ((_usernameController.text.length < 8 ||
+    // ตรวจสอบ username และ password ว่าอยู่ระหว่าง 7-15 ตัวอักษรหรือไม่
+    if ((_usernameController.text.length < 7 ||
             _usernameController.text.length > 15) ||
-        (_passwordController.text.length < 8 ||
+        (_passwordController.text.length < 7 ||
             _passwordController.text.length > 15)) {
-      _showErrorDialog('Username and Password \nmust be 8-15 characters long.');
+      _showErrorDialog('Username and Password \nmust be 7-15 characters long.');
       setState(() {
         _isLoading = false;
       });
@@ -100,19 +139,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _usernameController.text,
         _emailController.text,
         _passwordController.text,
-        _selectedRole, // ส่ง role ที่เลือกจาก dropdown
+        _selectedRole,
       );
 
       if (response['status'] == 'success') {
-        setState(() {
-          _successMessage = 'Registration successful! Please login.';
-        });
-        Future.delayed(const Duration(seconds: 2), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()),
-          );
-        });
+        _showSuccessPopup('Registration successful!');
       } else {
         _showErrorDialog(response['message'] ?? 'Registration failed');
       }
@@ -148,16 +179,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 15),
                 // เพิ่ม Image widget ตรงนี้
                 Image.asset(
-                  'assets/register_icon.png', // แก้ไข path ของรูปตามตำแหน่งที่คุณเก็บรูป
-                  height: 200, // กำหนดขนาดความสูงของรูปภาพ
-                  width: 200, // กำหนดขนาดความกว้างของรูปภาพ
+                  'assets/register_icon.png',
+                  height: 200,
+                  width: 200,
                   errorBuilder: (BuildContext context, Object exception,
                       StackTrace? stackTrace) {
-                    // แสดงไอคอนเมื่อรูปภาพไม่โหลด
                     return Icon(
-                      Icons.account_circle, // เปลี่ยนไอคอนที่จะแสดง
-                      size: 200, // ขนาดของไอคอนที่จะแสดงแทนรูป
-                      color: Colors.grey, // สีของไอคอนที่จะแสดงแทนรูป
+                      Icons.account_circle,
+                      size: 200,
+                      color: Colors.grey,
                     );
                   },
                 ),

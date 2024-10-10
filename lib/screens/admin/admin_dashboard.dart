@@ -76,7 +76,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               'assets/users_no_border.png',
               Icons.groups,
             ),
-            const SizedBox(height: 15), // ระยะห่างระหว่างไอคอนกับป้าย
+            const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนกับป้าย
             _buildAdminMenuLabel(
               label: 'Manage User',
               onTap: () {
@@ -93,7 +93,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 15), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
               'assets/driver_avatar.png',
@@ -116,7 +116,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                 );
               },
             ),
-            const SizedBox(height: 15), // ระยะห่างระหว่างเมนู
+            const SizedBox(height: 10), // ระยะห่างระหว่างเมนู
 
             _buildAdminMenuIcon(
               'assets/bus_avatar.png',
