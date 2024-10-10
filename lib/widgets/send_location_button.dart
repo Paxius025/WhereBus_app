@@ -18,7 +18,7 @@ class SendLocationButton extends StatefulWidget {
 
 class _SendLocationButtonState extends State<SendLocationButton> {
   Timer? _countdownTimer; // Timer สำหรับนับถอยหลัง
-  int _countdown = 120; // ตั้งค่าตัวนับถอยหลังเริ่มต้นเป็น 121 วินาที
+  int _countdown = 120; // ตั้งค่าตัวนับถอยหลังเริ่มต้นเป็น 120 วินาที
   bool _isCountdownActive = false; // ตัวแปรเพื่อตรวจสอบสถานะการนับถอยหลัง
 
   void _startCountdown() {
@@ -41,7 +41,6 @@ class _SendLocationButtonState extends State<SendLocationButton> {
       // หากอนุญาตเรียบร้อย เริ่มนับถอยหลัง
       setState(() {
         _isCountdownActive = true; // เริ่มนับถอยหลัง
-        _countdown = 120; // รีเซ็ตการนับถอยหลัง
         widget.onSendLocation(); // เรียกฟังก์ชันส่งตำแหน่ง
       });
 
@@ -93,37 +92,37 @@ class _SendLocationButtonState extends State<SendLocationButton> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        AnimatedContainer(
-          duration:
-              const Duration(milliseconds: 1500), // ความเร็วในการเปลี่ยนแปลง
-          curve: Curves.easeInOut, // รูปแบบการเปลี่ยนแปลง
-          width: 200, // ปรับขนาดความกว้างของกล่อง
-          padding:
-              const EdgeInsets.symmetric(vertical: 8), // ใช้ padding แนวตั้ง
-          child: ElevatedButton.icon(
-            onPressed: widget.isSendingLocation || _isCountdownActive
-                ? null
-                : _startCountdown, // ปิดการใช้งานปุ่มในระหว่างที่ส่งหรือขณะนับถอยหลัง
-            label: Text(
-              widget.isSendingLocation
-                  ? 'Sending...' // ข้อความระหว่างส่ง
-                  : _isCountdownActive
-                      ? '$_countdown seconds...' // แสดงนับถอยหลัง
-                      : 'Send location', // ข้อความเริ่มต้น
-              style: const TextStyle(
-                color: Colors.white, // สีข้อความ
-                fontSize: 16, // ขนาดข้อความ
+        SizedBox(
+          width: 175, // ปรับขนาดความกว้างของกล่อง
+          child: AnimatedContainer(
+            duration:
+                const Duration(milliseconds: 300), // ระยะเวลาในการเปลี่ยนแปลงสี
+            curve: Curves.easeInOut, // รูปแบบการเปลี่ยนแปลง
+            child: ElevatedButton.icon(
+              onPressed: widget.isSendingLocation || _isCountdownActive
+                  ? null
+                  : _startCountdown, // ปิดการใช้งานปุ่มในระหว่างที่ส่งหรือขณะนับถอยหลัง
+              label: Text(
+                widget.isSendingLocation
+                    ? 'Sending...' // ข้อความระหว่างส่ง
+                    : _isCountdownActive
+                        ? '$_countdown seconds...' // แสดงนับถอยหลัง
+                        : 'Send location', // ข้อความเริ่มต้น
+                style: const TextStyle(
+                  color: Colors.white, // สีข้อความ
+                  fontSize: 14, // ขนาดข้อความ
+                ),
               ),
-            ),
-            icon: const Icon(Icons.send, color: Colors.white), // สีไอคอน
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.isSendingLocation
-                  ? Colors.grey // สีพื้นหลังเมื่อกำลังส่ง
-                  : const Color(0xFF40534C), // สีพื้นหลังเมื่อปกติ
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 24), // ใช้ padding แนวนอน
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+              icon: const Icon(Icons.send, color: Colors.white), // สีไอคอน
+              style: ElevatedButton.styleFrom(
+                backgroundColor: widget.isSendingLocation
+                    ? Colors.grey // สีพื้นหลังเมื่อกำลังส่ง
+                    : const Color(0xFF40534C), // สีพื้นหลังเมื่อปกติ
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 24), // ใช้ padding แนวนอน
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ),
