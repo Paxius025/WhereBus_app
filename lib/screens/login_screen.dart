@@ -45,19 +45,68 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else {
-        setState(() {
-          _errorMessage = response['message'] ?? 'Login failed';
-        });
+        // เปลี่ยนข้อความ "Invalid credential" เป็นข้อความที่คุณต้องการแสดง
+        String errorMessage = response['message'] == 'Invalid credentials'
+            ? 'Incorrect username or password'
+            : response['message'] ?? 'Login failed, please try again';
+
+        // แสดงป๊อปอัปเมื่อ login ไม่ผ่าน
+        _showErrorDialog(errorMessage);
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: $e';
-      });
+      // แสดงป๊อปอัปเมื่อเกิดข้อผิดพลาด
+      _showErrorDialog('เกิดข้อผิดพลาด: $e');
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการปิดป๊อปอัปด้วยการคลิกนอก
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5), // มุมโค้ง
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize:
+                  MainAxisSize.min, // ให้ความสูงของป๊อปอัปปรับตามเนื้อหา
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(
+                    Icons.cancel,
+                    color: Color.fromARGB(255, 255, 0, 0), // ไอคอน X เป็นสีขาว
+                    size: 70, // ขนาดของไอคอน
+                  ),
+                ),
+                const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนและข้อความ
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ), // ข้อความสีแดง
+                  textAlign: TextAlign.center, // จัดข้อความให้อยู่กลาง
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // ปิดป๊อปอัปอัตโนมัติหลังจาก 1 วินาที
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // ปิดป๊อปอัป
+    });
   }
 
   @override
