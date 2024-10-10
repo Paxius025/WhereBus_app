@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart'; // เพิ่มการนำเข้า Geolocator
 import 'dart:async';
 
 class SendLocationButton extends StatefulWidget {
@@ -21,25 +22,64 @@ class _SendLocationButtonState extends State<SendLocationButton> {
   bool _isCountdownActive = false; // ตัวแปรเพื่อตรวจสอบสถานะการนับถอยหลัง
 
   void _startCountdown() {
-    setState(() {
-      _isCountdownActive = true; // เริ่มนับถอยหลัง
-      _countdown = 120; // รีเซ็ตการนับถอยหลัง
-      widget.onSendLocation(); // เรียกฟังก์ชันส่งตำแหน่ง
-    });
+    // ตรวจสอบอนุญาตตำแหน่ง
+    _checkLocationPermission();
+  }
 
-    _countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_countdown > 0) {
-        setState(() {
-          _countdown--; // ลดค่าการนับถอยหลังลง
-        });
-      } else {
-        timer.cancel(); // ยกเลิกการนับถอยหลังเมื่อถึง 0
-        setState(() {
-          _isCountdownActive = false; // สิ้นสุดการนับถอยหลัง
-          _countdown = 120; // รีเซ็ตการนับถอยหลังให้กลับไปที่ 120
-        });
-      }
-    });
+  Future<void> _checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      // ขออนุญาตจากผู้ใช้
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied) {
+      // แสดงป๊อปอัปหากผู้ใช้ยังไม่อนุญาต
+      _showPermissionDialog();
+    } else {
+      // หากอนุญาตเรียบร้อย เริ่มนับถอยหลัง
+      setState(() {
+        _isCountdownActive = true; // เริ่มนับถอยหลัง
+        _countdown = 120; // รีเซ็ตการนับถอยหลัง
+        widget.onSendLocation(); // เรียกฟังก์ชันส่งตำแหน่ง
+      });
+
+      _countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+        if (_countdown > 0) {
+          setState(() {
+            _countdown--; // ลดค่าการนับถอยหลังลง
+          });
+        } else {
+          timer.cancel(); // ยกเลิกการนับถอยหลังเมื่อถึง 0
+          setState(() {
+            _isCountdownActive = false; // สิ้นสุดการนับถอยหลัง
+            _countdown = 120; // รีเซ็ตการนับถอยหลังให้กลับไปที่ 120
+          });
+        }
+      });
+    }
+  }
+
+  void _showPermissionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Location Permission Required'),
+          content:
+              const Text('Please allow location access to send your location.'),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(); // ปิดป๊อปอัป
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -55,7 +95,7 @@ class _SendLocationButtonState extends State<SendLocationButton> {
       children: [
         AnimatedContainer(
           duration:
-              const Duration(milliseconds: 9000), // ความเร็วในการเปลี่ยนแปลง
+              const Duration(milliseconds: 1500), // ความเร็วในการเปลี่ยนแปลง
           curve: Curves.easeInOut, // รูปแบบการเปลี่ยนแปลง
           width: 200, // ปรับขนาดความกว้างของกล่อง
           padding:

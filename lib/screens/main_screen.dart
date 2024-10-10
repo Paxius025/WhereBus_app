@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wherebus_app/widgets/location_map.dart';
 import 'package:wherebus_app/widgets/navigation_bar.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:geolocator/geolocator.dart'; // นำเข้า Geolocator
 
 class MainScreen extends StatefulWidget {
   final String role;
@@ -48,6 +49,24 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  // ฟังก์ชันสำหรับขออนุญาตตำแหน่ง
+  Future<void> _requestLocationPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // แจ้งผู้ใช้ว่าต้องไปตั้งค่าอนุญาตตำแหน่ง
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    } else {
+      // อนุญาตให้เข้าถึงตำแหน่ง
+      print('Location permission granted.');
+    }
+  }
+
   // ฟังก์ชัน refreshLocation สำหรับรีเฟรชตำแหน่ง
   void refreshLocation() {
     print('Refreshing locations...');
@@ -58,6 +77,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _fetchUserProfile();
+    _requestLocationPermission(); // เรียกฟังก์ชันเพื่อขออนุญาตตำแหน่ง
   }
 
   @override
@@ -94,9 +114,7 @@ class _MainScreenState extends State<MainScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                // แสดง Role ก่อน
                 SizedBox(width: 8), // ระยะห่างระหว่างบทบาทและชื่อผู้ใช้
-                // แสดง Username
                 Text(
                   '${widget.username}',
                   style: TextStyle(
@@ -106,7 +124,6 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 SizedBox(width: 8), // ระยะห่างระหว่างชื่อผู้ใช้และไอคอน
-                // แสดง Icon
                 icon,
               ],
             ),
@@ -125,7 +142,6 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
-      // ส่งข้อมูลไปยัง NavigationBarWidget
       bottomNavigationBar: NavigationBarWidget(
         username: _currentUsername,
         email: _currentEmail,
