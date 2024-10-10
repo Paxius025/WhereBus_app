@@ -36,12 +36,37 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) => MainScreen(
-              role: role,
-              userId: response['user_id'],
-              username: _usernameController.text,
-            ),
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return MainScreen(
+                role: role,
+                userId: response['user_id'],
+                username: _usernameController.text,
+              );
+            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              // กำหนดค่า Tween และ Curve เพื่อความ smooth
+              const begin = Offset(1.0, 0.0); // เริ่มจากด้านขวาของหน้าจอ
+              const end = Offset.zero;
+              const curve =
+                  Curves.easeInOut; // ปรับเป็น easeInOut เพื่อความนุ่มนวล
+
+              var slideTween =
+                  Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+              // Fade Transition ควบคู่ไปกับ Slide Transition
+              var fadeTween = Tween<double>(begin: 0.0, end: 1.0)
+                  .chain(CurveTween(curve: curve));
+
+              return FadeTransition(
+                opacity: animation.drive(fadeTween),
+                child: SlideTransition(
+                  position: animation.drive(slideTween),
+                  child: child,
+                ),
+              );
+            },
           ),
         );
       } else {

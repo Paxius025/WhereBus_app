@@ -31,29 +31,47 @@ class _NavigationBarWidgetState extends State<NavigationBarWidget> {
     });
 
     if (index == 1 && widget.role == 'admin') {
-      // ถ้าผู้ใช้เป็น Admin จะไปที่ Admin Dashboard
+      // ถ้าผู้ใช้เป็น Admin จะไปที่ Admin Dashboard พร้อม Fade Animation ที่เร็วขึ้น
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => AdminDashboardScreen(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              AdminDashboardScreen(
             username: widget.username,
             userId: widget.userId,
-            email: widget.email, // เพิ่ม email
-            role: widget.role, // เพิ่ม role
+            email: widget.email,
+            role: widget.role,
           ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(
+              milliseconds: 100), // กำหนดความเร็วให้จางหายเร็วขึ้น
         ),
       );
     } else if (index == (widget.role == 'admin' ? 2 : 1)) {
-      // ไปที่ EditProfileScreen สำหรับทุก role
+      // ไปที่ EditProfileScreen สำหรับทุก role พร้อม Fade Animation ที่เร็วขึ้น
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (context) => EditProfileScreen(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              EditProfileScreen(
             username: widget.username,
             email: widget.email,
             userId: widget.userId,
             role: widget.role,
           ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          transitionDuration: const Duration(
+              milliseconds: 100), // กำหนดความเร็วให้จางหายเร็วขึ้น
         ),
       );
     }

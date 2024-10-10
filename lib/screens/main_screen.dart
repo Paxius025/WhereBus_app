@@ -5,6 +5,7 @@ import 'package:wherebus_app/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart'; // เพิ่มบรรทัดนี้
 import 'package:flutter_map/flutter_map.dart';
+import 'package:wherebus_app/screens/edit_profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final String role;
@@ -58,6 +59,28 @@ class _MainScreenState extends State<MainScreen>
         ),
       ));
     });
+  }
+
+  void _navigateToEditProfile() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditProfileScreen(
+          username: _currentUsername, // ใช้ _currentUsername ที่ได้รับจาก API
+          email: _currentEmail, // ใช้ _currentEmail ที่ได้รับจาก API
+          userId: widget.userId, // ใช้ userId จาก widget
+          role: widget.role, // ใช้ role จาก widget
+        ),
+      ),
+    );
+
+    // อัปเดตข้อมูลที่ได้จากหน้าการแก้ไขโปรไฟล์
+    if (result != null) {
+      setState(() {
+        _currentUsername = result['username'];
+        _currentEmail = result['email'];
+      });
+    }
   }
 
   // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ปัจจุบัน
