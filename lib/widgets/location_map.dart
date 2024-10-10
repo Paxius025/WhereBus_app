@@ -28,7 +28,8 @@ class LocationMap extends StatefulWidget {
   _LocationMapState createState() => _LocationMapState();
 }
 
-class _LocationMapState extends State<LocationMap> with AutomaticKeepAliveClientMixin {
+class _LocationMapState extends State<LocationMap>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -452,6 +453,7 @@ class _LocationMapState extends State<LocationMap> with AutomaticKeepAliveClient
               markers: [
                 if (_busMarker != null) _busMarker!,
                 ..._userMarkers,
+                ..._getStaticBusMarkers(), // เพิ่ม static markers ที่นี่
               ],
             ),
           ],
