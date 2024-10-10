@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
+import 'package:wherebus_app/widgets/send_location_button.dart'; // เพิ่มการนำเข้า
 
 class LocationMap extends StatefulWidget {
   final String role;
@@ -380,22 +381,9 @@ class _LocationMapState extends State<LocationMap> {
             left: 0,
             right: 0,
             child: Center(
-              child: ElevatedButton.icon(
-                onPressed: _isSendingLocation ? null : _sendUserLocation,
-                label: const Icon(Icons.send, color: Color(0xFFFFFFFF)),
-                icon: const Text(
-                  'Send location',
-                  style: TextStyle(color: Color(0xFFFFFFFF)),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF40534C),
-                  foregroundColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+              child: SendLocationButton(
+                isSendingLocation: _isSendingLocation,
+                onSendLocation: _sendUserLocation, // ส่งต่อฟังก์ชันที่ต้องเรียก
               ),
             ),
           ),
