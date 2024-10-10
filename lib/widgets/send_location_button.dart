@@ -55,25 +55,24 @@ class _SendLocationButtonState extends State<SendLocationButton> {
       children: [
         AnimatedContainer(
           duration:
-              const Duration(milliseconds: 1500), // ความเร็วในการเปลี่ยนแปลง
+              const Duration(milliseconds: 9000), // ความเร็วในการเปลี่ยนแปลง
           curve: Curves.easeInOut, // รูปแบบการเปลี่ยนแปลง
+          width: 200, // ปรับขนาดความกว้างของกล่อง
+          padding:
+              const EdgeInsets.symmetric(vertical: 8), // ใช้ padding แนวตั้ง
           child: ElevatedButton.icon(
             onPressed: widget.isSendingLocation || _isCountdownActive
                 ? null
                 : _startCountdown, // ปิดการใช้งานปุ่มในระหว่างที่ส่งหรือขณะนับถอยหลัง
-            label: AnimatedSwitcher(
-              duration:
-                  const Duration(milliseconds: 500), // ความเร็วในการเปลี่ยนแปลง
-              child: Text(
-                widget.isSendingLocation
-                    ? 'Sending...' // ข้อความระหว่างส่ง
-                    : _isCountdownActive
-                        ? '$_countdown seconds...' // แสดงนับถอยหลัง
-                        : 'Send location', // ข้อความเริ่มต้น
-                style: const TextStyle(
-                    color: Colors.white, fontSize: 16), // สีข้อความ
-                key: ValueKey<int>(
-                    _countdown), // ใช้ key เพื่อให้ AnimatedSwitcher รู้ว่าเป็น widget ใหม่
+            label: Text(
+              widget.isSendingLocation
+                  ? 'Sending...' // ข้อความระหว่างส่ง
+                  : _isCountdownActive
+                      ? '$_countdown seconds...' // แสดงนับถอยหลัง
+                      : 'Send location', // ข้อความเริ่มต้น
+              style: const TextStyle(
+                color: Colors.white, // สีข้อความ
+                fontSize: 16, // ขนาดข้อความ
               ),
             ),
             icon: const Icon(Icons.send, color: Colors.white), // สีไอคอน
@@ -81,8 +80,8 @@ class _SendLocationButtonState extends State<SendLocationButton> {
               backgroundColor: widget.isSendingLocation
                   ? Colors.grey // สีพื้นหลังเมื่อกำลังส่ง
                   : const Color(0xFF40534C), // สีพื้นหลังเมื่อปกติ
-              foregroundColor: Colors.white, // สี foreground
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 24), // ใช้ padding แนวนอน
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
