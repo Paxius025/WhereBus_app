@@ -147,67 +147,49 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
   // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
-void _showSuccessDialog() {
-  showDialog(
-    context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: Colors.green,
-                size: 50,
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'Profile updated successfully',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: 150,
+            height: 150,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 50,
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+                const Text(
+                  'Profile updated successfully',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
 
-  // ส่งค่ากลับไปยังหน้า MainScreen โดยไม่รีเฟรชใหม่
-  Future.delayed(const Duration(milliseconds: 1500), () {
-    Navigator.pop(context); // ปิด popup
-    Navigator.pop(context, {
-      'username': _usernameController.text,
-      'email': _emailController.text,
-    });
-  });
-
-
-    // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
+    // ปิด Popup อัตโนมัติหลังจาก 1.5 วินาที
     Future.delayed(const Duration(milliseconds: 1500), () {
-      Navigator.pop(context); // ปิด popup
-      Navigator.pop(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            role: widget.role,
-            username: _usernameController.text,
-            userId: widget.userId,
-          ),
-        ),
-      );
+      if (mounted) {
+        Navigator.pop(context); // ปิด popup
+      }
     });
   }
 
@@ -255,20 +237,6 @@ void _showSuccessDialog() {
       if (mounted) {
         Navigator.pop(context); // ปิด popup
       } // ปิด popup
-    });
-
-    // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MainScreen(
-            role: widget.role,
-            username: _usernameController.text,
-            userId: widget.userId,
-          ),
-        ),
-      );
     });
   }
 
