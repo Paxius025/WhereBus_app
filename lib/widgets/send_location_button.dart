@@ -59,16 +59,21 @@ class _SendLocationButtonState extends State<SendLocationButton> {
               : _startCountdown, // ปิดการใช้งานปุ่มในระหว่างที่ส่งหรือขณะนับถอยหลัง
           label: AnimatedSwitcher(
             duration:
-                const Duration(milliseconds: 300), // ความเร็วในการเปลี่ยนแปลง
-            child: Text(
-              widget.isSendingLocation
-                  ? 'Sending...' // ข้อความระหว่างส่ง
-                  : _isCountdownActive
-                      ? 'Please wait while we send your location...' // ข้อความระหว่างนับถอยหลัง
-                      : 'Send location', // ข้อความเริ่มต้น
-              style: const TextStyle(color: Colors.black), // สีข้อความ
-              key: ValueKey<int>(
-                  _countdown), // ใช้ key เพื่อให้ AnimatedSwitcher รู้ว่าเป็น widget ใหม่
+                const Duration(milliseconds: 700), // ความเร็วในการเปลี่ยนแปลง
+            child: Container(
+              width: 200, // กำหนดความกว้างคงที่เพื่อรักษาตำแหน่ง
+              alignment: Alignment.center, // จัดตำแหน่งให้อยู่ตรงกลาง
+              child: Text(
+                widget.isSendingLocation
+                    ? 'Sending...' // ข้อความระหว่างส่ง
+                    : _isCountdownActive
+                        ? '$_countdown seconds...' // แสดงนับถอยหลัง
+                        : 'Send location', // ข้อความเริ่มต้น
+                style: const TextStyle(
+                    color: Colors.black, fontSize: 16), // สีข้อความและขนาด
+                key: ValueKey<int>(
+                    _countdown), // ใช้ key เพื่อให้ AnimatedSwitcher รู้ว่าเป็น widget ใหม่
+              ),
             ),
           ),
           icon: const Icon(Icons.send, color: Colors.black), // สีไอคอน
