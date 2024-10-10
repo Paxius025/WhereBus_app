@@ -187,7 +187,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
     Future.delayed(const Duration(milliseconds: 1500), () {
       Navigator.pop(context); // ปิด popup
-      Navigator.pushReplacement(
+      Navigator.pop(
         context,
         MaterialPageRoute(
           builder: (context) => MainScreen(
@@ -249,7 +249,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     // หน่วงเวลา 1.5 วินาทีก่อนกลับไปยังหน้า MainScreen
     Future.delayed(const Duration(milliseconds: 1500), () {
       Navigator.pop(context); // ปิด popup
-      Navigator.pushReplacement(
+      Navigator.pop(
         context,
         MaterialPageRoute(
           builder: (context) => MainScreen(

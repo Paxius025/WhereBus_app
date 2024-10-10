@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:wherebus_app/widgets/location_map.dart';
 import 'package:wherebus_app/widgets/navigation_bar.dart';
 import 'package:wherebus_app/services/api_service.dart';
-import 'package:geolocator/geolocator.dart'; // นำเข้า Geolocator
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart'; // เพิ่มบรรทัดนี้
+import 'package:flutter_map/flutter_map.dart';
 
 class MainScreen extends StatefulWidget {
   final String role;
@@ -16,15 +18,45 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   String _currentUsername = '';
   String _currentEmail = '';
+  LatLng? _initialBusLocation; // เก็บตำแหน่งเริ่มต้นของรถบัส
+  List<Marker> _userMarkers = []; // เก็บตำแหน่งของผู้ใช้
 
   final ApiService apiService = ApiService();
 
   // ฟังก์ชันสำหรับอัปเดตตำแหน่งจาก location_map.dart
   void updateLocation(double lat, double lon) {
     setState(() {
+      // อัปเดตตำแหน่งของผู้ใช้
+      _userMarkers.add(Marker(
+        width: 80.0,
+        height: 80.0,
+        point: LatLng(lat, lon),
+        builder: (ctx) => Column(
+          children: [
+            Icon(
+              Icons.person_pin_circle,
+              color: Colors.blue,
+              size: 40.0,
+            ),
+            Text(
+              widget.username.toUpperCase(),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
+                backgroundColor: Color(0xFFEFEFEF),
+              ),
+            ),
+          ],
+        ),
+      ));
     });
   }
 
@@ -36,6 +68,10 @@ class _MainScreenState extends State<MainScreen> {
         setState(() {
           _currentUsername = response['username'];
           _currentEmail = response['email'];
+          // กำหนดตำแหน่งเริ่มต้นของรถบัสที่นี่
+          double busLatitude = response['bus_latitude'] ?? 0.0;
+          double busLongitude = response['bus_longitude'] ?? 0.0;
+          _initialBusLocation = LatLng(busLatitude, busLongitude);
         });
       } else {
         print('Failed to fetch user profile');
@@ -63,12 +99,6 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  // ฟังก์ชัน refreshLocation สำหรับรีเฟรชตำแหน่ง
-  void refreshLocation() {
-    print('Refreshing locations...');
-    // คุณสามารถเพิ่มโค้ดที่ใช้ในการรีเฟรชข้อมูลได้ที่นี่
-  }
-
   @override
   void initState() {
     super.initState();
@@ -78,28 +108,29 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     Icon icon;
 
     // เปรียบเทียบ role เพื่อกำหนดไอคอน
     switch (widget.role) {
       case 'admin':
-        icon = Icon(Icons.handyman, color: Colors.grey);
+        icon = const Icon(Icons.handyman, color: Colors.grey);
         break;
       case 'user':
-        icon = Icon(Icons.person, color: Colors.grey);
+        icon = const Icon(Icons.person, color: Colors.grey);
         break;
       case 'driver':
-        icon = Icon(Icons.directions_bus, color: Colors.grey);
+        icon = const Icon(Icons.directions_bus, color: Colors.grey);
         break;
       default:
-        icon = Icon(Icons.help, color: Colors.grey);
+        icon = const Icon(Icons.help, color: Colors.grey);
     }
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         automaticallyImplyLeading: false,
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('WhereBus'),
@@ -110,16 +141,16 @@ class _MainScreenState extends State<MainScreen> {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                SizedBox(width: 8), // ระยะห่างระหว่างบทบาทและชื่อผู้ใช้
+                SizedBox(width: 8),
                 Text(
-                  '${widget.username}',
-                  style: TextStyle(
+                  widget.username,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // สีของชื่อผู้ใช้
+                    color: Colors.black,
                   ),
                 ),
-                SizedBox(width: 8), // ระยะห่างระหว่างชื่อผู้ใช้และไอคอน
+                SizedBox(width: 8),
                 icon,
               ],
             ),
@@ -133,7 +164,10 @@ class _MainScreenState extends State<MainScreen> {
               username: _currentUsername,
               role: widget.role,
               userId: widget.userId,
-              updateLocation: updateLocation, // รับตำแหน่งรถบัสจาก LocationMap
+              updateLocation: updateLocation,
+              initialBusLocation:
+                  _initialBusLocation, // ส่งตำแหน่งเริ่มต้นไปที่ LocationMap
+              userMarkers: _userMarkers, // ส่งตำแหน่งของผู้ใช้ไปที่ LocationMap
             ),
           ),
         ],
@@ -142,7 +176,7 @@ class _MainScreenState extends State<MainScreen> {
         username: _currentUsername,
         email: _currentEmail,
         userId: widget.userId,
-        role: widget.role, // ส่งฟังก์ชัน refreshLocation
+        role: widget.role,
       ),
     );
   }

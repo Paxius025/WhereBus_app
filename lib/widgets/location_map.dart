@@ -4,13 +4,15 @@ import 'package:latlong2/latlong.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
-import 'package:wherebus_app/widgets/send_location_button.dart'; // เพิ่มการนำเข้า
+import 'package:wherebus_app/widgets/send_location_button.dart';
 
 class LocationMap extends StatefulWidget {
   final String role;
   final String username;
   final int userId;
   final Function(double, double) updateLocation;
+  final LatLng? initialBusLocation; // เพิ่มตัวแปรนี้
+  final List<Marker> userMarkers;
 
   const LocationMap({
     super.key,
@@ -18,13 +20,18 @@ class LocationMap extends StatefulWidget {
     required this.role,
     required this.userId,
     required this.updateLocation,
+    this.initialBusLocation,
+    required this.userMarkers, // รับค่าผู้ใช้
   });
 
   @override
   _LocationMapState createState() => _LocationMapState();
 }
 
-class _LocationMapState extends State<LocationMap> {
+class _LocationMapState extends State<LocationMap> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   Marker? _busMarker;
   List<Marker> _userMarkers = [];
   final ApiService apiService = ApiService();
@@ -33,13 +40,39 @@ class _LocationMapState extends State<LocationMap> {
   Timer? _removeBusMarkerTimer;
   bool _isSendingLocation = false;
   LatLng? _lastSentUserLocation;
+  final MapController _mapController = MapController(); // ควบคุมแผนที่
 
   @override
   void initState() {
     super.initState();
 
-    // Fetch bus location every 10 seconds
-    _refreshTimer = Timer.periodic(Duration(seconds: 10), (timer) {
+    // ตั้งค่าตำแหน่งเริ่มต้นถ้ามี
+    if (widget.initialBusLocation != null) {
+      _busMarker = Marker(
+        width: 60.0,
+        height: 60.0,
+        point: widget.initialBusLocation!, // ใช้ตำแหน่งที่ได้รับ
+        builder: (ctx) => Column(
+          children: [
+            Icon(
+              Icons.directions_bus,
+              color: Colors.green, // สีของ bus marker
+              size: 30.0,
+            ),
+            Text(
+              'Bus Location',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // Fetch bus location every 5 seconds
+    _refreshTimer = Timer.periodic(Duration(seconds: 5), (timer) {
       _fetchLatestBusLocation();
     });
 
@@ -81,23 +114,34 @@ class _LocationMapState extends State<LocationMap> {
                   width: 80.0,
                   height: 80.0,
                   point: LatLng(lat, lon),
-                  builder: (ctx) => Column(
-                    children: [
-                      Icon(
-                        Icons.person_pin_circle,
-                        color: Colors.blue,
-                        size: 40.0,
-                      ),
-                      Text(
-                        username.toUpperCase(),
-                        style: const TextStyle(
+                  builder: (ctx) {
+                    // Get the current zoom level
+                    double zoom = _mapController.zoom;
+                    double iconSize =
+                        30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+                    double textSize =
+                        10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.person_pin_circle,
+                          color: Colors.blue,
+                          size: iconSize,
+                        ),
+                        Text(
+                          username.toUpperCase(),
+                          style: TextStyle(
                             color: Colors.black,
-                            fontSize: 12.0,
+                            fontSize: textSize,
                             fontWeight: FontWeight.bold,
-                            backgroundColor: Color(0xFFEFEFEF)),
-                      ),
-                    ],
-                  ),
+                            backgroundColor: const Color(0xFFEFEFEF),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 );
               })
               .whereType<Marker>()
@@ -130,24 +174,32 @@ class _LocationMapState extends State<LocationMap> {
             width: 60.0,
             height: 60.0,
             point: LatLng(lat, lon), // Slight shift
-            builder: (ctx) => Column(
-              children: [
-                Icon(
-                  Icons.directions_bus,
-                  color: busStatus == 'Online'
-                      ? Colors.green
-                      : Colors.red, // Use status from API for marker color
-                  size: 30.0,
-                ),
-                Text(
-                  'Bus $busId',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 12.0,
+            builder: (ctx) {
+              // Get the current zoom level
+              double zoom = _mapController.zoom;
+              double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+              double textSize =
+                  12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+              return Column(
+                children: [
+                  Icon(
+                    Icons.directions_bus,
+                    color: busStatus == 'Online'
+                        ? Colors.green
+                        : Colors.red, // Use status from API for marker color
+                    size: iconSize,
                   ),
-                ),
-              ],
-            ),
+                  Text(
+                    'Bus $busId',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: textSize,
+                    ),
+                  ),
+                ],
+              );
+            },
           );
         });
 
@@ -172,64 +224,85 @@ class _LocationMapState extends State<LocationMap> {
         width: 60.0,
         height: 60.0,
         point: LatLng(17.289014, 104.111125), // Bus ID 2 (Offline)
-        builder: (ctx) => Column(
-          children: [
-            Icon(
-              Icons.directions_bus,
-              color: Colors.red,
-              size: 30.0,
-            ),
-            Text(
-              'Bus 2',
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12.0,
+        builder: (ctx) {
+          // Get the current zoom level
+          double zoom = _mapController.zoom;
+          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+          return Column(
+            children: [
+              Icon(
+                Icons.directions_bus,
+                color: Colors.red,
+                size: iconSize,
               ),
-            ),
-          ],
-        ),
+              Text(
+                'Bus 2',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: textSize,
+                ),
+              ),
+            ],
+          );
+        },
       ),
       Marker(
         width: 60.0,
         height: 60.0,
         point: LatLng(17.287491, 104.112630), // Bus 3 (Online)
-        builder: (ctx) => Column(
-          children: [
-            Icon(
-              Icons.directions_bus,
-              color: Colors.green,
-              size: 30.0,
-            ),
-            Text(
-              'Bus 3',
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12.0,
+        builder: (ctx) {
+          // Get the current zoom level
+          double zoom = _mapController.zoom;
+          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+          return Column(
+            children: [
+              Icon(
+                Icons.directions_bus,
+                color: Colors.green,
+                size: iconSize,
               ),
-            ),
-          ],
-        ),
+              Text(
+                'Bus 3',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: textSize,
+                ),
+              ),
+            ],
+          );
+        },
       ),
       Marker(
         width: 60.0,
         height: 60.0,
         point: LatLng(17.288904, 104.107397), // Bus ID 4 (Online)
-        builder: (ctx) => Column(
-          children: [
-            Icon(
-              Icons.directions_bus,
-              color: Colors.green,
-              size: 30.0,
-            ),
-            Text(
-              'Bus 4',
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 12.0,
+        builder: (ctx) {
+          // Get the current zoom level
+          double zoom = _mapController.zoom;
+          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+          return Column(
+            children: [
+              Icon(
+                Icons.directions_bus,
+                color: Colors.green,
+                size: iconSize,
               ),
-            ),
-          ],
-        ),
+              Text(
+                'Bus 4',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: textSize,
+                ),
+              ),
+            ],
+          );
+        },
       ),
     ];
   }
@@ -239,14 +312,12 @@ class _LocationMapState extends State<LocationMap> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // ตรวจสอบว่า location services ถูกเปิดใช้งานหรือไม่
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       print('Location services are disabled.');
       return false;
     }
 
-    // ตรวจสอบและขออนุญาตใช้งานตำแหน่งที่ตั้ง
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -301,28 +372,37 @@ class _LocationMapState extends State<LocationMap> {
               width: 80.0,
               height: 80.0,
               point: _lastSentUserLocation!,
-              builder: (ctx) => Stack(
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    color: Colors.red,
-                    size: 40.0,
-                  ),
-                  Positioned(
-                    top: 0,
-                    child: Container(
-                      child: const Text(
+              builder: (ctx) {
+                // Get the current zoom level
+                double zoom = _mapController.zoom;
+                double iconSize =
+                    30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+                double textSize =
+                    10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: iconSize,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                          top: 5), // ระยะห่างระหว่างไอคอนและข้อความ
+                      child: Text(
                         'You',
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
+                          fontSize: textSize,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              },
             ),
           );
         });
@@ -353,9 +433,11 @@ class _LocationMapState extends State<LocationMap> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Stack(
       children: [
         FlutterMap(
+          mapController: _mapController,
           options: MapOptions(
               center: LatLng(17.280525, 104.123622),
               zoom: 14.5,
@@ -369,7 +451,6 @@ class _LocationMapState extends State<LocationMap> {
             MarkerLayer(
               markers: [
                 if (_busMarker != null) _busMarker!,
-                ..._getStaticBusMarkers(), // Add static markers
                 ..._userMarkers,
               ],
             ),
@@ -383,7 +464,7 @@ class _LocationMapState extends State<LocationMap> {
             child: Center(
               child: SendLocationButton(
                 isSendingLocation: _isSendingLocation,
-                onSendLocation: _sendUserLocation, // ส่งต่อฟังก์ชันที่ต้องเรียก
+                onSendLocation: _sendUserLocation,
               ),
             ),
           ),

@@ -47,7 +47,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               icon: const Icon(Icons.close,
                   color: Color(0xFF7F7777)), // ปุ่ม X สีขาว
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.pop(
                   context,
                   MaterialPageRoute(
                     builder: (context) => MainScreen(
