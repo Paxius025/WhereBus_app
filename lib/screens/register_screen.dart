@@ -28,16 +28,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _successMessage = '';
     });
 
-    if (_usernameController.text.length < 5 ||
-        _usernameController.text.length > 10) {
+    if (_usernameController.text.length < 7 ||
+        _usernameController.text.length > 15) {
       setState(() {
-        _errorMessage = 'Username must be between 5 and 10 characters long.';
+        _errorMessage = 'Username must be between 5 and 15 characters long.';
         _isLoading = false;
       });
       return;
     }
     if (_passwordController.text.length < 4 ||
-        _passwordController.text.length > 8) {
+        _passwordController.text.length > 20) {
       setState(() {
         _errorMessage = 'Password must be between 4 and 8 characters long.';
         _isLoading = false;
