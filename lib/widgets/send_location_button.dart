@@ -18,7 +18,7 @@ class SendLocationButton extends StatefulWidget {
 
 class _SendLocationButtonState extends State<SendLocationButton> {
   Timer? _countdownTimer; // Timer สำหรับนับถอยหลัง
-  int _countdown = 121; // ตั้งค่าตัวนับถอยหลังเริ่มต้นเป็น 121 วินาที
+  int _countdown = 120; // ตั้งค่าตัวนับถอยหลังเริ่มต้นเป็น 121 วินาที
   bool _isCountdownActive = false; // ตัวแปรเพื่อตรวจสอบสถานะการนับถอยหลัง
 
   void _startCountdown() {
@@ -41,7 +41,7 @@ class _SendLocationButtonState extends State<SendLocationButton> {
       // หากอนุญาตเรียบร้อย เริ่มนับถอยหลัง
       setState(() {
         _isCountdownActive = true; // เริ่มนับถอยหลัง
-        _countdown = 121; // รีเซ็ตการนับถอยหลัง
+        _countdown = 120; // รีเซ็ตการนับถอยหลัง
         widget.onSendLocation(); // เรียกฟังก์ชันส่งตำแหน่ง
       });
 
@@ -54,7 +54,7 @@ class _SendLocationButtonState extends State<SendLocationButton> {
           timer.cancel(); // ยกเลิกการนับถอยหลังเมื่อถึง 0
           setState(() {
             _isCountdownActive = false; // สิ้นสุดการนับถอยหลัง
-            _countdown = 121; // รีเซ็ตการนับถอยหลังให้กลับไปที่ 120
+            _countdown = 120; // รีเซ็ตการนับถอยหลังให้กลับไปที่ 120
           });
         }
       });
