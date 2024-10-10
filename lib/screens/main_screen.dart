@@ -17,8 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _latitude = '';
-  String _longitude = '';
   String _currentUsername = '';
   String _currentEmail = '';
 
@@ -27,8 +25,6 @@ class _MainScreenState extends State<MainScreen> {
   // ฟังก์ชันสำหรับอัปเดตตำแหน่งจาก location_map.dart
   void updateLocation(double lat, double lon) {
     setState(() {
-      _latitude = lat.toString();
-      _longitude = lon.toString();
     });
   }
 
