@@ -14,32 +14,82 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String _selectedRole = 'user'; // กำหนดค่าเริ่มต้นเป็น user
-
+  // Regular expression to check for at least one special character and one uppercase letter
+  final RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,20}$');
   final ApiService apiService = ApiService();
 
   bool _isLoading = false;
-  String _errorMessage = '';
   String _successMessage = '';
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false, // ป้องกันการปิดป๊อปอัปด้วยการคลิกนอก
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5), // มุมโค้ง
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize:
+                  MainAxisSize.min, // ให้ความสูงของป๊อปอัปปรับตามเนื้อหา
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  child: const Icon(
+                    Icons.cancel,
+                    color: Color.fromARGB(255, 255, 0, 0), // ไอคอน X เป็นสีขาว
+                    size: 70, // ขนาดของไอคอน
+                  ),
+                ),
+                const SizedBox(height: 10), // ระยะห่างระหว่างไอคอนและข้อความ
+                Text(
+                  message,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 13,
+                  ), // ข้อความสีแดง
+                  textAlign: TextAlign.center, // จัดข้อความให้อยู่กลาง
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // ปิดป๊อปอัปอัตโนมัติหลังจาก 1.5 วินาที
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop(); // ปิดป๊อปอัป
+    });
+  }
 
   void _register() async {
     setState(() {
       _isLoading = true;
-      _errorMessage = '';
       _successMessage = '';
     });
 
-    if (_usernameController.text.length < 7 ||
-        _usernameController.text.length > 15) {
+    // ตรวจสอบ username และ password ว่าอยู่ระหว่าง 8-15 ตัวอักษรหรือไม่
+    if ((_usernameController.text.length < 8 ||
+            _usernameController.text.length > 15) ||
+        (_passwordController.text.length < 8 ||
+            _passwordController.text.length > 15)) {
+      _showErrorDialog('Username and Password \nmust be 8-15 characters long.');
       setState(() {
-        _errorMessage = 'Username must be between 5 and 15 characters long.';
         _isLoading = false;
       });
       return;
     }
-    if (_passwordController.text.length < 4 ||
-        _passwordController.text.length > 20) {
+
+    // ตรวจสอบว่า password มีตัวอักษรพิเศษและตัวอักษรพิมพ์ใหญ่อย่างน้อย 1 ตัวหรือไม่
+    if (!passwordRegex.hasMatch(_passwordController.text)) {
+      _showErrorDialog(
+          'Password must include 1 special character \n1 uppercase letter.');
       setState(() {
-        _errorMessage = 'Password must be between 4 and 8 characters long.';
         _isLoading = false;
       });
       return;
@@ -64,14 +114,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         });
       } else {
-        setState(() {
-          _errorMessage = response['message'] ?? 'Registration failed';
-        });
+        _showErrorDialog(response['message'] ?? 'Registration failed');
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Error: $e';
-      });
+      _showErrorDialog('Error: $e');
     } finally {
       setState(() {
         _isLoading = false;
@@ -176,14 +222,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               child: const Text('Register'),
                             ),
-                      if (_errorMessage.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            _errorMessage,
-                            style: const TextStyle(color: Colors.red),
-                          ),
-                        ),
                       if (_successMessage.isNotEmpty)
                         Padding(
                           padding: const EdgeInsets.all(8.0),
