@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart'; // เพิ่มบรรทัดนี้
 import 'package:flutter_map/flutter_map.dart';
 import 'package:wherebus_app/screens/edit_profile_screen.dart';
+import 'package:stroke_text/stroke_text.dart'; // เพิ่ม StrokeText เพื่อสร้างตัวอักษรขอบดำ
+import 'package:google_fonts/google_fonts.dart';
 
 class MainScreen extends StatefulWidget {
   final String role;
@@ -153,22 +155,31 @@ class _MainScreenState extends State<MainScreen>
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         automaticallyImplyLeading: false,
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('WhereBus'),
-          ],
+        title: StrokeText(
+          text: 'WhereBus', // ข้อความ WhereBus พร้อมขอบ
+          textStyle: GoogleFonts.lilitaOne(
+            // ใช้ฟอนต์จาก Google Fonts ที่คุณเลือก
+            textStyle: const TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: 2, // เพิ่มความห่างระหว่างตัวอักษร
+            ),
+          ),
+          strokeColor: Colors.black, // ขอบสีดำ
+          strokeWidth: 3.5, // ความกว้างของขอบ
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(
+                right: 18.0, top: 5.0), // ขยับออก 25px จากขวา
             child: Row(
               children: [
                 SizedBox(width: 8),
                 Text(
                   widget.username,
                   style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
-import 'package:wherebus_app/screens/main_screen.dart'; // Import MainScreen เพื่อกลับไปหลังอัปเดต
 import 'package:wherebus_app/screens/login_screen.dart'; // Import LoginScreen เพื่อใช้สำหรับ logout
 
 class EditProfileScreen extends StatefulWidget {
@@ -265,220 +264,225 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height *
-                          0.10), // เพิ่มให้ห่างจาก AppBar 10%
-                  Transform.scale(
-                    scale: 0.9, // ขยายขนาดหน้าจอทั้งหมดขึ้น 5%
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 200, // เพิ่มขนาดรูปโปรไฟล์ 10%
-                          height: 200,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape
-                                .circle, // ลบ color ออกเพื่อลบพื้นหลังสีเทา
+              child: Transform.translate(
+                offset: const Offset(0, -10), // ขยับทุกอย่างขึ้นมา 10 px
+                child: Column(
+                  children: [
+                    SizedBox(
+                        height: MediaQuery.of(context).size.height *
+                            0.10), // เพิ่มให้ห่างจาก AppBar 10%
+                    Transform.scale(
+                      scale: 0.9, // ขยายขนาดหน้าจอทั้งหมดขึ้น 5%
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 200, // เพิ่มขนาดรูปโปรไฟล์ 10%
+                            height: 200,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape
+                                  .circle, // ลบ color ออกเพื่อลบพื้นหลังสีเทา
+                            ),
+                            child: ClipOval(
+                              child: _loadImageWithFallback(
+                                  widget.role), // โหลดรูปพร้อม fallback
+                            ),
                           ),
-                          child: ClipOval(
-                            child: _loadImageWithFallback(
-                                widget.role), // โหลดรูปพร้อม fallback
+                          const SizedBox(height: 35),
+                          FractionallySizedBox(
+                            widthFactor:
+                                0.75, // บีบให้ช่องข้อความกว้างขึ้นเล็กน้อย
+                            child: Column(
+                              children: [
+                                TextField(
+                                  controller: _usernameController,
+                                  style: const TextStyle(
+                                    color: Color(0xFF7F7777),
+                                    fontSize: 12,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'Username', // ใช้ hintText แทน labelText
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF7F7777),
+                                      fontSize: 12,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                TextField(
+                                  controller: _passwordController,
+                                  style: const TextStyle(
+                                    color: Color(0xFF7F7777),
+                                    fontSize: 12,
+                                  ),
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        'Password', // ใช้ hintText แทน labelText
+                                    hintStyle: const TextStyle(
+                                      color: Color(0xFF7F7777),
+                                      fontSize: 12,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.grey[200],
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
+                                  ),
+                                  obscureText: true, // ซ่อนข้อความเมื่อพิมพ์
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 35),
-                        FractionallySizedBox(
-                          widthFactor:
-                              0.75, // บีบให้ช่องข้อความกว้างขึ้นเล็กน้อย
-                          child: Column(
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              TextField(
-                                controller: _usernameController,
-                                style: const TextStyle(
-                                  color: Color(0xFF7F7777),
-                                  fontSize: 12,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText:
-                                      'Username', // ใช้ hintText แทน labelText
-                                  hintStyle: const TextStyle(
-                                    color: Color(0xFF7F7777),
-                                    fontSize: 12,
+                              SizedBox(
+                                width: 100, // กำหนดความกว้างของปุ่ม SAVE
+                                child: ElevatedButton(
+                                  onPressed: _updateProfile,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF40534C),
+                                    foregroundColor: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(3),
+                                  child: const Text(
+                                    'SAVE',
+                                    style: TextStyle(
+                                      fontSize:
+                                          12, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                                      fontWeight:
+                                          FontWeight.bold, // ทำตัวหนังสือให้หนา
+                                    ),
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 20),
-                              TextField(
-                                controller: _passwordController,
-                                style: const TextStyle(
-                                  color: Color(0xFF7F7777),
-                                  fontSize: 12,
-                                ),
-                                decoration: InputDecoration(
-                                  hintText:
-                                      'Password', // ใช้ hintText แทน labelText
-                                  hintStyle: const TextStyle(
-                                    color: Color(0xFF7F7777),
-                                    fontSize: 12,
+                              const SizedBox(width: 15),
+                              SizedBox(
+                                width: 100, // กำหนดความกว้างของปุ่ม CANCEL
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: const Color(0xFF7F7777),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(3),
+                                    ),
                                   ),
-                                  filled: true,
-                                  fillColor: Colors.grey[200],
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(3),
+                                  child: const Text(
+                                    'CANCEL',
+                                    style: TextStyle(
+                                      fontSize:
+                                          12, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                                      fontWeight:
+                                          FontWeight.bold, // ทำตัวหนังสือให้หนา
+                                    ),
                                   ),
                                 ),
-                                obscureText: true, // ซ่อนข้อความเมื่อพิมพ์
                               ),
                             ],
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 100, // กำหนดความกว้างของปุ่ม SAVE
-                              child: ElevatedButton(
-                                onPressed: _updateProfile,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF40534C),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'SAVE',
-                                  style: TextStyle(
-                                    fontSize:
-                                        12, // เพิ่มขนาดตัวหนังสือเป็น 14px
-                                    fontWeight:
-                                        FontWeight.bold, // ทำตัวหนังสือให้หนา
-                                  ),
-                                ),
+                          const SizedBox(height: 15),
+                          if (_errorMessage.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _errorMessage,
+                                style: const TextStyle(color: Colors.red),
                               ),
                             ),
-                            const SizedBox(width: 15),
-                            SizedBox(
-                              width: 100, // กำหนดความกว้างของปุ่ม CANCEL
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: const Color(0xFF7F7777),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'CANCEL',
-                                  style: TextStyle(
-                                    fontSize:
-                                        12, // เพิ่มขนาดตัวหนังสือเป็น 14px
-                                    fontWeight:
-                                        FontWeight.bold, // ทำตัวหนังสือให้หนา
-                                  ),
-                                ),
+                          if (_successMessage.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _successMessage,
+                                style: const TextStyle(color: Colors.green),
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 15),
-                        if (_errorMessage.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _errorMessage,
-                              style: const TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        if (_successMessage.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _successMessage,
-                              style: const TextStyle(color: Colors.green),
-                            ),
-                          ),
-                        const SizedBox(height: 20),
-                        Text.rich(
-                          TextSpan(
-                            text:
-                                'WhereBus v1.0.7\n', // update file path  in hosting
-                            style: TextStyle(
+                          const SizedBox(height: 20),
+                          Text.rich(
+                            TextSpan(
+                              text:
+                                  'WhereBus v1.0.7\n', // update file path in hosting
+                              style: const TextStyle(
                                 fontSize: 17,
-                                color: Colors.white), // ขนาดตัวอักษร 15
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    'Pantong | Jedsada | Tharathep | Apirak', // ข้อความบรรทัดที่สอง
-                                style: TextStyle(
+                                color: Colors.white,
+                              ), // ขนาดตัวอักษร 15
+                              children: <TextSpan>[
+                                const TextSpan(
+                                  text:
+                                      'Pantong | Jedsada | Tharathep | Apirak', // ข้อความบรรทัดที่สอง
+                                  style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.white), // ขนาดตัวอักษร 13
+                                    color: Colors.white,
+                                  ), // ขนาดตัวอักษร 13
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center, // จัดข้อความตรงกลาง
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: _logout,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFFE96464),
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(2),
                               ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center, // จัดข้อความตรงกลาง
-                        ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: _logout,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFE96464),
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(2),
+                              minimumSize:
+                                  const Size(55, 40), // ขยายขนาดปุ่มขึ้น 5%
                             ),
-                            minimumSize:
-                                const Size(55, 40), // ขยายขนาดปุ่มขึ้น 5%
-                          ),
-                          child: const Text(
-                            'LOGOUT',
-                            style: TextStyle(
-                              fontWeight:
-                                  FontWeight.bold, // ตัวหนาสำหรับ LOGOUT
-                              fontSize: 14, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                            child: const Text(
+                              'LOGOUT',
+                              style: TextStyle(
+                                fontWeight:
+                                    FontWeight.bold, // ตัวหนาสำหรับ LOGOUT
+                                fontSize: 14, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Spacer(flex: 3), // ด้านล่าง
-                ],
+                    Spacer(flex: 3), // ด้านล่าง
+                  ],
+                ),
               ),
             ),
     );
   }
+}
 
-  // ฟังก์ชันสำหรับโหลดรูปพร้อม fallback เป็นไอคอน
-  Widget _loadImageWithFallback(String role) {
-    return Image.asset(
-      role == 'admin'
-          ? 'assets/admin.png'
-          : role == 'driver'
-              ? 'assets/driver_avatar.png'
-              : 'assets/user_avatar.png',
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        return Icon(
-          role == 'admin'
-              ? Icons.engineering
-              : role == 'driver'
-                  ? Icons.contacts
-                  : Icons.account_circle,
-          size: 160, // เพิ่มขนาดของไอคอนขึ้น 10%
-          color: Colors.grey,
-        );
-      },
-    );
-  }
+// ฟังก์ชันสำหรับโหลดรูปพร้อม fallback เป็นไอคอน
+Widget _loadImageWithFallback(String role) {
+  return Image.asset(
+    role == 'admin'
+        ? 'assets/admin.png'
+        : role == 'driver'
+            ? 'assets/driver_avatar.png'
+            : 'assets/user_avatar.png',
+    fit: BoxFit.cover,
+    errorBuilder: (context, error, stackTrace) {
+      return Icon(
+        role == 'admin'
+            ? Icons.engineering
+            : role == 'driver'
+                ? Icons.contacts
+                : Icons.account_circle,
+        size: 160, // เพิ่มขนาดของไอคอนขึ้น 10%
+        color: Colors.grey,
+      );
+    },
+  );
 }

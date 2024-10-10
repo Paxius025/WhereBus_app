@@ -20,6 +20,7 @@ dependencies:
   stroke_text: any
   cupertino_icons: ^1.0.8
   flutter_launcher_icons: ^0.14.1
+  google_fonts: ^4.0.4
 
 # Configuration for flutter_launcher_icons
 flutter_launcher_icons:

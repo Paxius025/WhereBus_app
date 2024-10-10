@@ -3,6 +3,7 @@ import 'package:wherebus_app/services/api_service.dart';
 import 'package:wherebus_app/screens/main_screen.dart';
 import 'package:wherebus_app/screens/register_screen.dart'; // Import Register Screen
 import 'package:stroke_text/stroke_text.dart'; // Import stroke_text เพื่อใช้สร้างกรอบตัวอักษร
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -150,16 +151,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 Center(
                   child: StrokeText(
                     text: 'WhereBus',
-                    textStyle: const TextStyle(
-                      fontSize: 50,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    textStyle: GoogleFonts.lilitaOne(
+                      // ใช้ฟอนต์จาก Google Fonts ที่คุณเลือก
+                      textStyle: const TextStyle(
+                        fontSize: 55,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2, // เพิ่มความห่างระหว่างตัวอักษร
+                      ),
                     ),
-                    strokeColor: Colors.black,
-                    strokeWidth: 7,
+                    strokeColor: Colors.black, // ขอบสีดำ
+                    strokeWidth: 5, // ความกว้างของขอบ
                   ),
                 ),
-                const SizedBox(height: 70),
+                const SizedBox(height: 60),
                 // ครึ่งล่างเป็นส่วนของการกรอกข้อมูล
                 FractionallySizedBox(
                   widthFactor: 0.85, // ให้ช่องกรอกอยู่ตรงกลาง 85% ของหน้าจอ
