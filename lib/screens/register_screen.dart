@@ -114,12 +114,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _successMessage = '';
     });
 
-    // ตรวจสอบ username และ password ว่าอยู่ระหว่าง 7-15 ตัวอักษรหรือไม่
-    if ((_usernameController.text.length < 7 ||
-            _usernameController.text.length > 15) ||
-        (_passwordController.text.length < 7 ||
-            _passwordController.text.length > 15)) {
-      _showErrorDialog('Username and Password \nmust be 7-15 characters long.');
+    // ตรวจสอบ username และ password ว่าอยู่ระหว่าง 1 -15 ตัวอักษรหรือไม่
+    if (_usernameController.text.isEmpty) {
+      _showErrorDialog('Username can\'t be blank.');
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    } else if (_usernameController.text.length < 1 ||
+        _usernameController.text.length > 15) {
+      _showErrorDialog('Username must be between 1-15 characters long.');
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    } else if (_passwordController.text.length < 8 ||
+        _passwordController.text.length > 20) {
+      _showErrorDialog('Password must be between 8-20 characters long.');
       setState(() {
         _isLoading = false;
       });
