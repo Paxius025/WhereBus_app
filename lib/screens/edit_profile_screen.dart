@@ -28,6 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   bool _isLoading = false;
   String _errorMessage = '';
   String _successMessage = '';
+  bool _isPasswordVisible = false; // ตัวแปรควบคุมการแสดง/ซ่อนรหัสผ่าน
 
   @override
   void initState() {
@@ -46,7 +47,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     // ตรวจสอบความยาวของชื่อผู้ใช้
     if (_usernameController.text.length < 5) {
-      // แสดง popup ข้อความว่าชื่อผู้สั้นเกินไป
       _showUsernameTooShortDialog();
       setState(() {
         _isLoading = false; // ปิดการโหลด
@@ -58,7 +58,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     if (_usernameController.text == widget.username &&
         _emailController.text == widget.email &&
         _passwordController.text.isEmpty) {
-      // แสดง popup ข้อความว่าไม่มีการอัปเดต
       _showNoUpdateDialog();
       setState(() {
         _isLoading = false; // ปิดการโหลด
@@ -75,11 +74,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
 
       if (response['status'] == 'success') {
-        setState(() {
-          // _successMessage = 'Profile updated successfully';
-        });
-
-        // แสดง popup การอัปเดตสำเร็จ
         _showSuccessDialog();
       } else {
         setState(() {
@@ -101,28 +95,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _showUsernameTooShortDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false, // ป้องกันการปิด popup เมื่อกดพื้นที่ว่าง
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent, // พื้นหลังโปร่งใส
+          backgroundColor: Colors.transparent,
           child: Container(
             width: 150,
             height: 150,
             decoration: BoxDecoration(
-              color: Colors.white, // พื้นหลังสีขาว
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.info_outline, // ไอคอนข้อมูล
-                  color: Colors.orange, // เปลี่ยนสีไอคอนเป็นสีส้ม
-                  size: 50, // ขนาดเครื่องหมายข้อมูล
+                  Icons.info_outline,
+                  color: Colors.orange,
+                  size: 50,
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'Username too short', // ข้อความเมื่อชื่อผู้ใช้สั้นเกินไป
+                  'Username too short',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -136,15 +130,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
     );
 
-    // หน่วงเวลา 1.5 วินาทีก่อนปิด popup
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
-        Navigator.pop(context); // ปิด popup
+        Navigator.pop(context);
       }
     });
   }
 
-  // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
   // ฟังก์ชันสำหรับแสดง popup เมื่ออัปเดตสำเร็จ
   void _showSuccessDialog() {
     showDialog(
@@ -184,10 +176,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
     );
 
-    // ปิด Popup อัตโนมัติหลังจาก 1.5 วินาที
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
-        Navigator.pop(context); // ปิด popup
+        Navigator.pop(context);
       }
     });
   }
@@ -196,28 +187,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _showNoUpdateDialog() {
     showDialog(
       context: context,
-      barrierDismissible: false, // ป้องกันการปิด popup เมื่อกดพื้นที่ว่าง
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return Dialog(
-          backgroundColor: Colors.transparent, // พื้นหลังโปร่งใส
+          backgroundColor: Colors.transparent,
           child: Container(
             width: 150,
             height: 150,
             decoration: BoxDecoration(
-              color: Colors.white, // พื้นหลังสีขาว
+              color: Colors.white,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.info_outline, // เปลี่ยนไอคอนเป็นไอคอนข้อมูล
-                  color: Colors.orange, // เปลี่ยนสีไอคอนเป็นสีส้ม
-                  size: 50, // ขนาดเครื่องหมายข้อมูล
+                  Icons.info_outline,
+                  color: Colors.orange,
+                  size: 50,
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'No changes to update', // ข้อความแทน Nothing update now
+                  'No changes to update',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -231,11 +222,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
     );
 
-    // หน่วงเวลา 1.5 วินาทีก่อนปิด popup
     Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
-        Navigator.pop(context); // ปิด popup
-      } // ปิด popup
+        Navigator.pop(context);
+      }
     });
   }
 
@@ -251,8 +241,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          const Color(0xFF1A3636), // สีพื้นหลังของหน้าเป็นสี #1A3636
+      backgroundColor: const Color(0xFF1A3636),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: const Color(0xFF1A3636),
@@ -265,33 +254,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Transform.translate(
-                offset: const Offset(0, -10), // ขยับทุกอย่างขึ้นมา 10 px
+                offset: const Offset(0, -10),
                 child: Column(
                   children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height *
-                            0.10), // เพิ่มให้ห่างจาก AppBar 10%
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.10),
                     Transform.scale(
-                      scale: 0.9, // ขยายขนาดหน้าจอทั้งหมดขึ้น 5%
+                      scale: 0.9,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Container(
-                            width: 200, // เพิ่มขนาดรูปโปรไฟล์ 10%
+                            width: 200,
                             height: 200,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape
-                                  .circle, // ลบ color ออกเพื่อลบพื้นหลังสีเทา
-                            ),
                             child: ClipOval(
-                              child: _loadImageWithFallback(
-                                  widget.role), // โหลดรูปพร้อม fallback
+                              child: _loadImageWithFallback(widget.role),
                             ),
                           ),
                           const SizedBox(height: 35),
                           FractionallySizedBox(
-                            widthFactor:
-                                0.75, // บีบให้ช่องข้อความกว้างขึ้นเล็กน้อย
+                            widthFactor: 0.75,
                             child: Column(
                               children: [
                                 TextField(
@@ -301,8 +282,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     fontSize: 12,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText:
-                                        'Username', // ใช้ hintText แทน labelText
+                                    hintText: 'Username',
                                     hintStyle: const TextStyle(
                                       color: Color(0xFF7F7777),
                                       fontSize: 12,
@@ -322,8 +302,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     fontSize: 12,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText:
-                                        'Password', // ใช้ hintText แทน labelText
+                                    hintText: 'Password',
                                     hintStyle: const TextStyle(
                                       color: Color(0xFF7F7777),
                                       fontSize: 12,
@@ -333,8 +312,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(3),
                                     ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _isPasswordVisible
+                                            ? Icons.visibility
+                                            : Icons.visibility_off,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _isPasswordVisible =
+                                              !_isPasswordVisible;
+                                        });
+                                      },
+                                    ),
                                   ),
-                                  obscureText: true, // ซ่อนข้อความเมื่อพิมพ์
+                                  obscureText: !_isPasswordVisible,
                                 ),
                               ],
                             ),
@@ -344,7 +336,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(
-                                width: 100, // กำหนดความกว้างของปุ่ม SAVE
+                                width: 100,
                                 child: ElevatedButton(
                                   onPressed: _updateProfile,
                                   style: ElevatedButton.styleFrom(
@@ -357,17 +349,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   child: const Text(
                                     'SAVE',
                                     style: TextStyle(
-                                      fontSize:
-                                          12, // เพิ่มขนาดตัวหนังสือเป็น 14px
-                                      fontWeight:
-                                          FontWeight.bold, // ทำตัวหนังสือให้หนา
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 15),
                               SizedBox(
-                                width: 100, // กำหนดความกว้างของปุ่ม CANCEL
+                                width: 100,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     Navigator.pop(context);
@@ -382,10 +372,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   child: const Text(
                                     'CANCEL',
                                     style: TextStyle(
-                                      fontSize:
-                                          12, // เพิ่มขนาดตัวหนังสือเป็น 14px
-                                      fontWeight:
-                                          FontWeight.bold, // ทำตัวหนังสือให้หนา
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
@@ -412,24 +400,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           const SizedBox(height: 20),
                           Text.rich(
                             TextSpan(
-                              text:
-                                  'WhereBus v1.0.8\n', // update file path in hosting
+                              text: 'WhereBus v1.0.8\n',
                               style: const TextStyle(
                                 fontSize: 17,
                                 color: Colors.white,
-                              ), // ขนาดตัวอักษร 15
+                              ),
                               children: <TextSpan>[
                                 const TextSpan(
                                   text:
-                                      'Pantong | Jedsada | Tharathep | Apirak', // ข้อความบรรทัดที่สอง
+                                      'Pantong | Jedsada | Tharathep | Apirak',
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: Colors.white,
-                                  ), // ขนาดตัวอักษร 13
+                                  ),
                                 ),
                               ],
                             ),
-                            textAlign: TextAlign.center, // จัดข้อความตรงกลาง
+                            textAlign: TextAlign.center,
                           ),
                           const SizedBox(height: 10),
                           ElevatedButton(
@@ -440,22 +427,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(2),
                               ),
-                              minimumSize:
-                                  const Size(55, 40), // ขยายขนาดปุ่มขึ้น 5%
+                              minimumSize: const Size(55, 40),
                             ),
                             child: const Text(
                               'LOGOUT',
                               style: TextStyle(
-                                fontWeight:
-                                    FontWeight.bold, // ตัวหนาสำหรับ LOGOUT
-                                fontSize: 14, // เพิ่มขนาดตัวหนังสือเป็น 14px
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
                               ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Spacer(flex: 3), // ด้านล่าง
+                    Spacer(flex: 3),
                   ],
                 ),
               ),
@@ -480,7 +465,7 @@ Widget _loadImageWithFallback(String role) {
             : role == 'driver'
                 ? Icons.contacts
                 : Icons.account_circle,
-        size: 160, // เพิ่มขนาดของไอคอนขึ้น 10%
+        size: 160,
         color: Colors.grey,
       );
     },
