@@ -50,15 +50,15 @@ class _LocationMapState extends State<LocationMap>
     // ตั้งค่าตำแหน่งเริ่มต้นถ้ามี
     if (widget.initialBusLocation != null) {
       _busMarker = Marker(
-        width: 60.0,
-        height: 60.0,
+        width: 40.0,
+        height: 40.0,
         point: widget.initialBusLocation!, // ใช้ตำแหน่งที่ได้รับ
         builder: (ctx) => Column(
           children: [
             Icon(
               Icons.directions_bus,
               color: Colors.green, // สีของ bus marker
-              size: 30.0,
+              size: 15.0,
             ),
             Text(
               'Bus Location',
@@ -119,7 +119,7 @@ class _LocationMapState extends State<LocationMap>
                     // Get the current zoom level
                     double zoom = _mapController.zoom;
                     double iconSize =
-                        30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+                        20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
                     double textSize =
                         10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
@@ -172,15 +172,15 @@ class _LocationMapState extends State<LocationMap>
 
           // Adjust the marker for the bus
           _busMarker = Marker(
-            width: 60.0,
-            height: 60.0,
+            width: 45.0,
+            height: 45.0,
             point: LatLng(lat, lon), // Slight shift
             builder: (ctx) {
               // Get the current zoom level
               double zoom = _mapController.zoom;
-              double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+              double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
               double textSize =
-                  12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+                  10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
               return Column(
                 children: [
@@ -222,14 +222,14 @@ class _LocationMapState extends State<LocationMap>
   List<Marker> _getStaticBusMarkers() {
     return [
       Marker(
-        width: 60.0,
-        height: 60.0,
+        width: 45.0,
+        height: 45.0,
         point: LatLng(17.289014, 104.111125), // Bus ID 2 (Offline)
         builder: (ctx) {
           // Get the current zoom level
           double zoom = _mapController.zoom;
-          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
           return Column(
             children: [
@@ -250,14 +250,14 @@ class _LocationMapState extends State<LocationMap>
         },
       ),
       Marker(
-        width: 60.0,
-        height: 60.0,
+        width: 45.0,
+        height: 45.0,
         point: LatLng(17.287491, 104.112630), // Bus 3 (Online)
         builder: (ctx) {
           // Get the current zoom level
           double zoom = _mapController.zoom;
-          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
           return Column(
             children: [
@@ -278,14 +278,14 @@ class _LocationMapState extends State<LocationMap>
         },
       ),
       Marker(
-        width: 60.0,
-        height: 60.0,
+        width: 45.0,
+        height: 45.0,
         point: LatLng(17.288904, 104.107397), // Bus ID 4 (Online)
         builder: (ctx) {
           // Get the current zoom level
           double zoom = _mapController.zoom;
-          double iconSize = 30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 12.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
+          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
           return Column(
             children: [
@@ -370,14 +370,14 @@ class _LocationMapState extends State<LocationMap>
         setState(() {
           _userMarkers.add(
             Marker(
-              width: 80.0,
-              height: 80.0,
+              width: 50.0,
+              height: 50.0,
               point: _lastSentUserLocation!,
               builder: (ctx) {
                 // Get the current zoom level
                 double zoom = _mapController.zoom;
                 double iconSize =
-                    30.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
+                    20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
                 double textSize =
                     10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
 
