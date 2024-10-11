@@ -110,7 +110,7 @@ class _SendLocationButtonState extends State<SendLocationButton> {
                         : 'Send location', // ข้อความเริ่มต้น
                 style: const TextStyle(
                   color: Colors.white, // สีข้อความ
-                  fontSize: 14, // ขนาดข้อความ
+                  fontSize: 12, // ขนาดข้อความ
                 ),
               ),
               icon: const Icon(Icons.send, color: Colors.white), // สีไอคอน
