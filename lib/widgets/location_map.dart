@@ -72,8 +72,8 @@ class _LocationMapState extends State<LocationMap>
       );
     }
 
-    // Fetch bus location every 5 seconds
-    _refreshTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+    // Fetch bus location every 1 seconds
+    _refreshTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       _fetchLatestBusLocation();
     });
 

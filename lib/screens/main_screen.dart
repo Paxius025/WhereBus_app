@@ -3,11 +3,11 @@ import 'package:wherebus_app/widgets/location_map.dart';
 import 'package:wherebus_app/widgets/navigation_bar.dart';
 import 'package:wherebus_app/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart'; // เพิ่มบรรทัดนี้
-import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:wherebus_app/screens/edit_profile_screen.dart';
-import 'package:stroke_text/stroke_text.dart'; // เพิ่ม StrokeText เพื่อสร้างตัวอักษรขอบดำ
+import 'package:stroke_text/stroke_text.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_map/flutter_map.dart';
 
 class MainScreen extends StatefulWidget {
   final String role;
@@ -28,15 +28,13 @@ class _MainScreenState extends State<MainScreen>
 
   String _currentUsername = '';
   String _currentEmail = '';
-  LatLng? _initialBusLocation; // เก็บตำแหน่งเริ่มต้นของรถบัส
-  List<Marker> _userMarkers = []; // เก็บตำแหน่งของผู้ใช้
+  LatLng? _initialBusLocation;
+  List<Marker> _userMarkers = [];
 
   final ApiService apiService = ApiService();
 
-  // ฟังก์ชันสำหรับอัปเดตตำแหน่งจาก location_map.dart
   void updateLocation(double lat, double lon) {
     setState(() {
-      // อัปเดตตำแหน่งของผู้ใช้
       _userMarkers.add(Marker(
         width: 80.0,
         height: 80.0,
@@ -68,15 +66,14 @@ class _MainScreenState extends State<MainScreen>
       context,
       MaterialPageRoute(
         builder: (context) => EditProfileScreen(
-          username: _currentUsername, // ใช้ _currentUsername ที่ได้รับจาก API
-          email: _currentEmail, // ใช้ _currentEmail ที่ได้รับจาก API
-          userId: widget.userId, // ใช้ userId จาก widget
-          role: widget.role, // ใช้ role จาก widget
+          username: _currentUsername,
+          email: _currentEmail,
+          userId: widget.userId,
+          role: widget.role,
         ),
       ),
     );
 
-    // อัปเดตข้อมูลที่ได้จากหน้าการแก้ไขโปรไฟล์
     if (result != null) {
       setState(() {
         _currentUsername = result['username'];
@@ -85,7 +82,6 @@ class _MainScreenState extends State<MainScreen>
     }
   }
 
-  // ฟังก์ชันสำหรับดึงข้อมูลผู้ใช้ปัจจุบัน
   Future<void> _fetchUserProfile() async {
     try {
       final response = await apiService.getUserProfile(widget.userId);
@@ -93,7 +89,6 @@ class _MainScreenState extends State<MainScreen>
         setState(() {
           _currentUsername = response['username'];
           _currentEmail = response['email'];
-          // กำหนดตำแหน่งเริ่มต้นของรถบัสที่นี่
           double busLatitude = response['bus_latitude'] ?? 0.0;
           double busLongitude = response['bus_longitude'] ?? 0.0;
           _initialBusLocation = LatLng(busLatitude, busLongitude);
@@ -106,7 +101,6 @@ class _MainScreenState extends State<MainScreen>
     }
   }
 
-  // ฟังก์ชันสำหรับขออนุญาตตำแหน่ง
   Future<void> _requestLocationPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
 
@@ -115,11 +109,9 @@ class _MainScreenState extends State<MainScreen>
     }
 
     if (permission == LocationPermission.deniedForever) {
-      // แจ้งผู้ใช้ว่าต้องไปตั้งค่าอนุญาตตำแหน่ง
       print(
           'Location permissions are permanently denied, we cannot request permissions.');
     } else {
-      // อนุญาตให้เข้าถึงตำแหน่ง
       print('Location permission granted.');
     }
   }
@@ -128,7 +120,7 @@ class _MainScreenState extends State<MainScreen>
   void initState() {
     super.initState();
     _fetchUserProfile();
-    _requestLocationPermission(); // เรียกฟังก์ชันเพื่อขออนุญาตตำแหน่ง
+    _requestLocationPermission();
   }
 
   @override
@@ -136,7 +128,6 @@ class _MainScreenState extends State<MainScreen>
     super.build(context);
     Icon icon;
 
-    // เปรียบเทียบ role เพื่อกำหนดไอคอน
     switch (widget.role) {
       case 'admin':
         icon = const Icon(Icons.handyman, color: Colors.grey);
@@ -152,56 +143,55 @@ class _MainScreenState extends State<MainScreen>
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        automaticallyImplyLeading: false,
-        title: StrokeText(
-          text: 'WhereBus', // ข้อความ WhereBus พร้อมขอบ
-          textStyle: GoogleFonts.lilitaOne(
-            // ใช้ฟอนต์จาก Google Fonts ที่คุณเลือก
-            textStyle: const TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 2, // เพิ่มความห่างระหว่างตัวอักษร
-            ),
-          ),
-          strokeColor: Colors.black, // ขอบสีดำ
-          strokeWidth: 3.5, // ความกว้างของขอบ
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-                right: 18.0, top: 5.0), // ขยับออก 25px จากขวา
-            child: Row(
-              children: [
-                SizedBox(width: 8),
-                Text(
-                  widget.username,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                SizedBox(width: 8),
-                icon,
-              ],
-            ),
-          ),
-        ],
-      ),
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: LocationMap(
-              username: _currentUsername,
-              role: widget.role,
-              userId: widget.userId,
-              updateLocation: updateLocation,
-              initialBusLocation:
-                  _initialBusLocation, // ส่งตำแหน่งเริ่มต้นไปที่ LocationMap
-              userMarkers: _userMarkers, // ส่งตำแหน่งของผู้ใช้ไปที่ LocationMap
+          LocationMap(
+            username: _currentUsername,
+            role: widget.role,
+            userId: widget.userId,
+            updateLocation: updateLocation,
+            initialBusLocation: _initialBusLocation,
+            userMarkers: _userMarkers,
+          ),
+          // Overlay for the title and user info
+          Positioned(
+            top: 20, // Adjust this to position it as needed
+            left: 16,
+            right: 16,
+            child: Container(
+              color: Colors.transparent, // Background color if needed
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  StrokeText(
+                    text: 'WhereBus',
+                    textStyle: GoogleFonts.lilitaOne(
+                      textStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    strokeColor: Colors.black,
+                    strokeWidth: 3.5,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        widget.username,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      icon,
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
