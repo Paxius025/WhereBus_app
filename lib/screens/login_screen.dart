@@ -16,9 +16,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final ApiService apiService = ApiService();
-
   bool _isLoading = false;
   String _errorMessage = '';
+  bool _isPasswordVisible = false; // ตัวแปรสำหรับควบคุมการแสดง/ซ่อนรหัสผ่าน
 
   void _login() async {
     setState(() {
@@ -175,8 +175,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(3),
                           ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible =
+                                    !_isPasswordVisible; // สลับสถานะการแสดง/ซ่อนรหัสผ่าน
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText:
+                            !_isPasswordVisible, // ควบคุมการแสดงรหัสผ่าน
                       ),
                       const SizedBox(height: 30),
                       _isLoading
@@ -218,7 +232,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              // แอนิเมชันเลื่อนขวาเมื่อกด Register
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(

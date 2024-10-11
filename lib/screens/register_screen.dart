@@ -13,6 +13,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false; // สถานะสำหรับการแสดง/ซ่อนรหัสผ่าน
   String _selectedRole = 'user'; // กำหนดค่าเริ่มต้นเป็น user
   final RegExp passwordRegex =
       RegExp(r'^(?=.*[A-Z])(?=.*[!-/:-@[-`{-~]).{7,20}$');
@@ -245,8 +246,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(3),
                           ),
+                          // เพิ่ม IconButton สำหรับการแสดง/ซ่อนรหัสผ่าน
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _isPasswordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              });
+                            },
+                          ),
                         ),
-                        obscureText: true,
+                        obscureText:
+                            !_isPasswordVisible, // ควบคุมการแสดงรหัสผ่าน
                       ),
                       const SizedBox(height: 10),
                       _isLoading
