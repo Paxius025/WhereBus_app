@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wherebus_app/services/api_service.dart';
+import 'package:wherebus_app/widgets/static/admin_dashboard/static_bus_status.dart'; // Import the static bus status
 
 class BusStatusScreen extends StatefulWidget {
   final String username;
@@ -61,12 +62,8 @@ class _BusStatusScreenState extends State<BusStatusScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
 
-    // Add mock data at the end of the list
-    List<Map<String, dynamic>> mockBuses = [
-      {'bus_id': 2, 'status': 'Offline'}, // Mock data
-      {'bus_id': 3, 'status': 'Online'}, // Mock data
-      {'bus_id': 4, 'status': 'Online'}, // Mock data
-    ];
+    // Get static bus data
+    List<Map<String, dynamic>> mockBuses = getStaticBusStatus(); // Use the static data
 
     return Scaffold(
       appBar: AppBar(
