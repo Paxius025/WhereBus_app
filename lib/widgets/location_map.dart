@@ -5,6 +5,7 @@ import 'package:wherebus_app/services/api_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:async';
 import 'package:wherebus_app/widgets/send_location_button.dart';
+import 'package:wherebus_app/widgets/static/location_map/buses.dart'; // Import the static buses
 
 class LocationMap extends StatefulWidget {
   final String role;
@@ -220,92 +221,8 @@ class _LocationMapState extends State<LocationMap>
 
   // Static markers for bus ID 2, 3, 4, 5
   List<Marker> _getStaticBusMarkers() {
-    return [
-      Marker(
-        width: 45.0,
-        height: 45.0,
-        point: LatLng(17.289014, 104.111125), // Bus ID 2 (Offline)
-        builder: (ctx) {
-          // Get the current zoom level
-          double zoom = _mapController.zoom;
-          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
-
-          return Column(
-            children: [
-              Icon(
-                Icons.directions_bus,
-                color: Colors.red,
-                size: iconSize,
-              ),
-              Text(
-                'Bus 2',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: textSize,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      Marker(
-        width: 45.0,
-        height: 45.0,
-        point: LatLng(17.287491, 104.112630), // Bus 3 (Online)
-        builder: (ctx) {
-          // Get the current zoom level
-          double zoom = _mapController.zoom;
-          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
-
-          return Column(
-            children: [
-              Icon(
-                Icons.directions_bus,
-                color: Colors.green,
-                size: iconSize,
-              ),
-              Text(
-                'Bus 3',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: textSize,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      Marker(
-        width: 45.0,
-        height: 45.0,
-        point: LatLng(17.288904, 104.107397), // Bus ID 4 (Online)
-        builder: (ctx) {
-          // Get the current zoom level
-          double zoom = _mapController.zoom;
-          double iconSize = 20.0 * (zoom / 14); // ปรับขนาดไอคอนตามระดับซูม
-          double textSize = 10.0 * (zoom / 14); // ปรับขนาดข้อความตามระดับซูม
-
-          return Column(
-            children: [
-              Icon(
-                Icons.directions_bus,
-                color: Colors.green,
-                size: iconSize,
-              ),
-              Text(
-                'Bus 4',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: textSize,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-    ];
+    return getStaticBusMarkers(
+        _mapController); // Call the static bus markers function
   }
 
   // Handle location permission
