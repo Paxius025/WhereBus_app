@@ -14,7 +14,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   String _selectedRole = 'user'; // กำหนดค่าเริ่มต้นเป็น user
-  final RegExp passwordRegex = RegExp(r'^(?=.*[A-Z])(?=.*[!@#\$&*~]).{8,20}$');
+  final RegExp passwordRegex =
+      RegExp(r'^(?=.*[A-Z])(?=.*[!-/:-@[-`{-~]).{7,20}$');
+
   final ApiService apiService = ApiService();
 
   bool _isLoading = false;
